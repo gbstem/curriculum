@@ -1,0 +1,131 @@
+/* Curriculum-specific styles */
+
+.curriculum-content {
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+.curriculum-content h3 {
+    color: #1D2256;
+    border-bottom: 2px solid #67aeda;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.curriculum-content h4 {
+    color: #2c3e50;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.curriculum-content pre {
+    background-color: #2d3748;
+    color: #e2e8f0;
+    border-radius: 8px;
+    border-left: 4px solid #67aeda;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.curriculum-content code {
+    background-color: #f7fafc;
+    color: #2d3748;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.curriculum-content ul {
+    padding-left: 1.5rem;
+}
+
+.curriculum-content li {
+    margin-bottom: 0.5rem;
+}
+
+.curriculum-content strong {
+    color: #1D2256;
+    font-weight: 600;
+}
+
+.curriculum-content .alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.curriculum-content .card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.curriculum-content .card:hover {
+    transform: translateY(-2px);
+}
+
+.curriculum-content .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.curriculum-content .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Navigation buttons */
+.lesson-navigation {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Module cards */
+.module-card {
+    transition: all 0.3s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Lesson links */
+.lesson-link {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.lesson-link:hover {
+    text-decoration: none;
+    color: #67aeda;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .curriculum-content {
+        font-size: 1rem;
+    }
+    
+    .curriculum-content pre {
+        font-size: 0.8rem;
+        overflow-x: auto;
+    }
+    
+    .lesson-navigation {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .lesson-navigation .btn {
+        width: 100%;
+    }
+} 

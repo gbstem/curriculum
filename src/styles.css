@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Space+Mono&display=swap');
+
+.navbar-brand {
+  font-family: 'Space Mono', monospace;
+  font-size: 40px;
+}
+
+.navbar-nav .nav-link {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+  text-transform: lowercase;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+.rounded-div-blue {
+  background-color: #67aeda;
+  border-radius: 20px;
+  padding: 10px;
+  display: inline-block;
+}
+
+.rounded-div-green {
+  background-color: #4CAF50;
+  border-radius: 20px;
+  padding: 10px;
+  display: inline-block;
+}
+
+.rounded-div-gray {
+  background-color: #aaaaaa;
+  border-radius: 20px;
+  padding: 10px;
+  display: inline-block;
+}
+
+.fillButtonYellow:hover {
+  color: #ffc819;
+  background-color:  transparent !important;
+  border-color:#ffc819;
+}
+
+.fillButtonGreen:hover {
+  color: #4CAF50;
+  background-color: transparent !important;
+  border-color:#4CAF50;
+}
+
+.fillButtonBlue:hover {
+  color: #67aeda;
+  background-color: transparent !important;
+  border-color: #67aeda;
+}
+
+.square-cropped-image {
+  border-radius: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover; 
+}
+
+.banner {
+  width: 100%;
+  height: auto; 
+  object-fit: cover;
+}
+
+.dropdown-item {
+  color: white;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+}
+
+.classButton {
+  width:10rem;
+}
+
+.donation-banner {
+  font-size: larger;
+  padding: 1rem;
+  font-family: 'Space Mono', monospace;
+  display: inline-block;
+  text-align: center;
+  box-shadow: 0 0 10px #000000;
+  width: 100%;
+}
+
+@media(min-width:580px) {
+  .classButton {
+    width:15rem;
+  }
+}
+
+.dropdown-menu {
+  background-color: #1D2256;
+  color: white;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+}
+
+@media (max-width: 991.98px) {
+  .dropdown-menu {
+    text-align: right;
+  }
+}
+
+p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+}
+
+.accordion-button {
+  font-size: 1.2rem;
+}
+
+.button:hover {
+  opacity:0.5;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.link {
+  text-decoration: none;
+}
+
+a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  color:inherit;
+}
+
+a:hover{
+  opacity:0.8;
+}
+
+li {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+}
+
+strong {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+}
+
+.btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  background-color: #1D2256;
+  border-radius: 10px;
+}
+
+.scrolling-wrapper {
+  display: flex;
+  overflow-x: hidden; /* Changed from auto to hidden to disable manual scrolling */
+  scroll-behavior: smooth;
+  white-space: nowrap; /* Ensures inline-block elements stay in a single line */
+}
+
+.college-logo {
+  display: inline-block; /* Changed from flex to inline-block for continuous scrolling */
+  width: 150px; /* Adjust as needed */
+  margin-right: 20px; /* Adjust spacing between logos */
+  text-align: center;
+}
+
+.first-slide {
+  font-size: 100px;
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  /* position:absolute; */
+}
+
+.first-slide span {
+  display: inline-block;
+  animation-name: slide-then-hide;
+  animation-duration: 10s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: forwards;
+  border: 3px solid green;
+}
+
+@keyframes slide-then-hide {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    display: none;
+    transform: translate(-100%, 0);
+  }
+}
+
+@keyframes slide {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+.college-logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.svg-container { 
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	vertical-align: middle; 
+	overflow: hidden; 
+  background: #f5f3e7;
+}
+
+.svg-content { 
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
