@@ -54,6 +54,33 @@ import Python2Lesson15 from './CS/Python2/lesson15';
 import Python2Lesson16 from './CS/Python2/lesson16';
 import Python2Lesson17 from './CS/Python2/lesson17';
 
+// Import Scratch Curriculum component
+import ScratchCurriculum from './CS/Scratch1/curriculum';
+import ScratchLesson1 from './CS/Scratch1/lesson1';
+import ScratchLesson2 from './CS/Scratch1/lesson2';
+import ScratchLesson3 from './CS/Scratch1/lesson3';
+import ScratchLesson4 from './CS/Scratch1/lesson4';
+import ScratchLesson5 from './CS/Scratch1/lesson5';
+import ScratchLesson6 from './CS/Scratch1/lesson6';
+import ScratchLesson7 from './CS/Scratch1/lesson7';
+import ScratchLesson8 from './CS/Scratch1/lesson8';
+import ScratchLesson9 from './CS/Scratch1/lesson9';
+import ScratchLesson10 from './CS/Scratch1/lesson10';
+import ScratchLesson11 from './CS/Scratch1/lesson11';
+import ScratchLesson12 from './CS/Scratch1/lesson12';
+import ScratchLesson13 from './CS/Scratch1/lesson13';
+import ScratchLesson14 from './CS/Scratch1/lesson14';
+import ScratchLesson15 from './CS/Scratch1/lesson15';
+import ScratchLesson16 from './CS/Scratch1/lesson16';
+import ScratchLesson17 from './CS/Scratch1/lesson17';
+import ScratchLesson18 from './CS/Scratch1/lesson18';
+import ScratchLesson19 from './CS/Scratch1/lesson19';
+import ScratchLesson20 from './CS/Scratch1/lesson20';
+import ScratchLesson21 from './CS/Scratch1/lesson21';
+import ScratchLesson22 from './CS/Scratch1/lesson22';
+import ScratchLesson23 from './CS/Scratch1/lesson23';
+import ScratchLesson24 from './CS/Scratch1/lesson24';
+
 // Track homepages
 function Math() {
   return (
@@ -140,6 +167,7 @@ function App() {
             <NavDropdown title="CS" id="cs-dropdown" className="text-center">
               <NavDropdown.Item as={Link} to="/cs/python1" className="text-center text-lg-start">Python 1</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/cs/python2" className="text-center text-lg-start">Python 2</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/cs/scratch1" className="text-center text-lg-start">Scratch</NavDropdown.Item>
             </NavDropdown>
             {/* Math Dropdown */}
             <NavDropdown title="Math" id="math-dropdown" className="text-center">
@@ -206,6 +234,31 @@ function App() {
         <Route path="/cs/python2/lesson15" element={<Python2Lesson15 />} />
         <Route path="/cs/python2/lesson16" element={<Python2Lesson16 />} />
         <Route path="/cs/python2/lesson17" element={<Python2Lesson17 />} />
+        <Route path="/cs/scratch1" element={<ScratchCurriculum />} />
+        <Route path="/cs/scratch1/lesson1" element={<ScratchLesson1 />} />
+        <Route path="/cs/scratch1/lesson2" element={<ScratchLesson2 />} />
+        <Route path="/cs/scratch1/lesson3" element={<ScratchLesson3 />} />
+        <Route path="/cs/scratch1/lesson4" element={<ScratchLesson4 />} />
+        <Route path="/cs/scratch1/lesson5" element={<ScratchLesson5 />} />
+        <Route path="/cs/scratch1/lesson6" element={<ScratchLesson6 />} />
+        <Route path="/cs/scratch1/lesson7" element={<ScratchLesson7 />} />
+        <Route path="/cs/scratch1/lesson8" element={<ScratchLesson8 />} />
+        <Route path="/cs/scratch1/lesson9" element={<ScratchLesson9 />} />
+        <Route path="/cs/scratch1/lesson10" element={<ScratchLesson10 />} />
+        <Route path="/cs/scratch1/lesson11" element={<ScratchLesson11 />} />
+        <Route path="/cs/scratch1/lesson12" element={<ScratchLesson12 />} />
+        <Route path="/cs/scratch1/lesson13" element={<ScratchLesson13 />} />
+        <Route path="/cs/scratch1/lesson14" element={<ScratchLesson14 />} />
+        <Route path="/cs/scratch1/lesson15" element={<ScratchLesson15 />} />
+        <Route path="/cs/scratch1/lesson16" element={<ScratchLesson16 />} />
+        <Route path="/cs/scratch1/lesson17" element={<ScratchLesson17 />} />
+        <Route path="/cs/scratch1/lesson18" element={<ScratchLesson18 />} />
+        <Route path="/cs/scratch1/lesson19" element={<ScratchLesson19 />} />
+        <Route path="/cs/scratch1/lesson20" element={<ScratchLesson20 />} />
+        <Route path="/cs/scratch1/lesson21" element={<ScratchLesson21 />} />
+        <Route path="/cs/scratch1/lesson22" element={<ScratchLesson22 />} />
+        <Route path="/cs/scratch1/lesson23" element={<ScratchLesson23 />} />
+        <Route path="/cs/scratch1/lesson24" element={<ScratchLesson24 />} />
       </Routes>
     </HashRouter >
   );

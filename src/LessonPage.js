@@ -5,6 +5,7 @@ import './curriculum.css';
 
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ScratchBlocks from 'scratchblocks-react';
 
 const LessonPage = ({ 
     title, 
@@ -31,23 +32,33 @@ const LessonPage = ({
             if (line.startsWith('```')) {
                 if (!inCodeBlock) {
                     inCodeBlock = true;
-                    // Try to get language (e.g., \`\`\`python)
+                    // Try to get language (e.g., ```python or ```scratch)
                     const langMatch = line.match(/^```(\w+)/);
                     codeBlockLang = langMatch ? langMatch[1] : 'python';
                     codeBlockLines = [];
                 } else {
                     // End of code block
                     inCodeBlock = false;
-                    elements.push(
-                        <SyntaxHighlighter
-                            key={`codeblock-${index}`}
-                            language={codeBlockLang}
-                            style={oneLight}
-                            customStyle={{ borderRadius: '8px', fontSize: '1rem', margin: '1rem 0' }}
-                        >
-                            {codeBlockLines.join('\n')}
-                        </SyntaxHighlighter>
-                    );
+                    if (codeBlockLang === 'scratch' || codeBlockLang === 'scratchblocks') {
+                        elements.push(
+                            <div key={`scratchblock-${index}`} style={{ margin: '1rem 0' }}>
+                                <ScratchBlocks blockStyle="scratch3">
+                                    {codeBlockLines.join('\n')}
+                                </ScratchBlocks>
+                            </div>
+                        );
+                    } else {
+                        elements.push(
+                            <SyntaxHighlighter
+                                key={`codeblock-${index}`}
+                                language={codeBlockLang}
+                                style={oneLight}
+                                customStyle={{ borderRadius: '8px', fontSize: '1rem', margin: '1rem 0' }}
+                            >
+                                {codeBlockLines.join('\n')}
+                            </SyntaxHighlighter>
+                        );
+                    }
                     codeBlockLines = [];
                 }
                 return;
