@@ -207,9 +207,9 @@ In the next lesson, we'll learn about in-game currencies and shops!`;
             moduleTitle="Advanced Game Design in Scratch (bonus lessons) (continued)"
             lessonNumber={22}
             content={content}
-            prevLesson="/cs/scratch1/lesson21"
-            nextLesson="/cs/scratch1/lesson23"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson21"
+            nextLesson="/cs/scratch/lesson23"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

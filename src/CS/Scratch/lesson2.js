@@ -200,9 +200,9 @@ In the next lesson, we'll learn about the coordinate plane and create constellat
             moduleTitle="Motion"
             lessonNumber={2}
             content={content}
-            prevLesson="/cs/scratch1/lesson1"
-            nextLesson="/cs/scratch1/lesson3"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson1"
+            nextLesson="/cs/scratch/lesson3"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

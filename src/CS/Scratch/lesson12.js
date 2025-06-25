@@ -257,7 +257,7 @@ end
 ## Resources
 
 - [Dodge Game Examples](https://scratch.mit.edu/explore/projects/tag:dodge)
-- [Scratch Game Design Guide](https://scratch.mit.edu/help/scratch1/2.0/Game_Design)
+- [Scratch Game Design Guide](https://scratch.mit.edu/help/scratch/2.0/Game_Design)
 - [Collision Detection Tutorial](https://scratch.mit.edu/help/videos/)
 
 ## Next Steps
@@ -270,9 +270,9 @@ In the next lesson, we'll learn about custom blocks and create a racecar game!`;
             moduleTitle="Clones and Broadcasting (continued)"
             lessonNumber={12}
             content={content}
-            prevLesson="/cs/scratch1/lesson11"
-            nextLesson="/cs/scratch1/lesson13"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson11"
+            nextLesson="/cs/scratch/lesson13"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

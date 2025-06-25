@@ -252,7 +252,7 @@ say [Click Start when ready!] for (2) seconds
 
 ## Resources
 
-- [Scratch UI Design Guide](https://scratch.mit.edu/help/scratch1/2.0/UI_Design)
+- [Scratch UI Design Guide](https://scratch.mit.edu/help/scratch/2.0/UI_Design)
 - [Button Design Examples](https://scratch.mit.edu/explore/projects/tag:ui)
 - [Game State Management Tutorial](https://scratch.mit.edu/help/videos/)
 
@@ -266,9 +266,9 @@ In the next lesson, we'll learn about physics engines and create more realistic 
             moduleTitle="Advanced Game Design in Scratch (bonus lessons) (continued)"
             lessonNumber={20}
             content={content}
-            prevLesson="/cs/scratch1/lesson19"
-            nextLesson="/cs/scratch1/lesson21"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson19"
+            nextLesson="/cs/scratch/lesson21"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

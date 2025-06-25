@@ -245,9 +245,9 @@ In the next lesson, we'll create interactive stories using motion, looks, and so
             moduleTitle="Looks and Sounds"
             lessonNumber={4}
             content={content}
-            prevLesson="/cs/scratch1/lesson3"
-            nextLesson="/cs/scratch1/lesson5"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson3"
+            nextLesson="/cs/scratch/lesson5"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

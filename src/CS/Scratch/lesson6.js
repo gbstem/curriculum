@@ -320,9 +320,9 @@ In the next lesson, we'll learn about conditionals and create a maze game!`;
             moduleTitle="Loops + Control Blocks"
             lessonNumber={6}
             content={content}
-            prevLesson="/cs/scratch1/lesson5"
-            nextLesson="/cs/scratch1/lesson7"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson5"
+            nextLesson="/cs/scratch/lesson7"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

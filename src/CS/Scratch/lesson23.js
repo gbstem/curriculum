@@ -182,7 +182,7 @@ end
 
 - [Scratch Shop Examples](https://scratch.mit.edu/explore/projects/tag:shop)
 - [Inventory System Tutorial](https://scratch.mit.edu/help/videos/)
-- [Game Economy Design](https://scratch.mit.edu/help/scratch1/2.0/Game_Design)
+- [Game Economy Design](https://scratch.mit.edu/help/scratch/2.0/Game_Design)
 
 ## Next Steps
 
@@ -194,9 +194,9 @@ In the next lesson, we'll learn about remixing and independent exploration!`;
             moduleTitle="Advanced Game Design in Scratch (bonus lessons) (continued)"
             lessonNumber={23}
             content={content}
-            prevLesson="/cs/scratch1/lesson22"
-            nextLesson="/cs/scratch1/lesson24"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson22"
+            nextLesson="/cs/scratch/lesson24"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

@@ -245,7 +245,7 @@ end
 ## Resources
 
 - [Moving Landscape Example](https://scratch.mit.edu/projects/525598190/)
-- [Scratch Animation Guide](https://scratch.mit.edu/help/scratch1/2.0/Animation)
+- [Scratch Animation Guide](https://scratch.mit.edu/help/scratch/2.0/Animation)
 - [Parallax Scrolling Tutorial](https://scratch.mit.edu/help/videos/)
 
 ## Next Steps
@@ -258,9 +258,9 @@ In the next lesson, we'll explore Scratch extensions and add new capabilities to
             moduleTitle="Rehashing the Basics"
             lessonNumber={14}
             content={content}
-            prevLesson="/cs/scratch1/lesson13"
-            nextLesson="/cs/scratch1/lesson15"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson13"
+            nextLesson="/cs/scratch/lesson15"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

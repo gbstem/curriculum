@@ -229,8 +229,8 @@ Basic working example: https://scratch.mit.edu/projects/522590218
 ## Resources
 
 - [Chatbot Example](https://scratch.mit.edu/projects/522590218)
-- [Scratch String Operators](https://scratch.mit.edu/help/scratch1/2.0/Operators)
-- [Scratch Sensing Blocks](https://scratch.mit.edu/help/scratch1/2.0/Sensing)
+- [Scratch String Operators](https://scratch.mit.edu/help/scratch/2.0/Operators)
+- [Scratch Sensing Blocks](https://scratch.mit.edu/help/scratch/2.0/Sensing)
 
 ## Next Steps
 
@@ -242,9 +242,9 @@ In the next lesson, we'll create a "Choose Your Own Adventure" game!`;
             moduleTitle="String manipulation from user input"
             lessonNumber={9}
             content={content}
-            prevLesson="/cs/scratch1/lesson8"
-            nextLesson="/cs/scratch1/lesson10"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson8"
+            nextLesson="/cs/scratch/lesson10"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

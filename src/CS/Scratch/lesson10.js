@@ -227,7 +227,7 @@ end
 ## Resources
 
 - [Choose Your Own Adventure Examples](https://scratch.mit.edu/studios/example-studio)
-- [Scratch Storytelling Guide](https://scratch.mit.edu/help/scratch1/2.0/Storytelling)
+- [Scratch Storytelling Guide](https://scratch.mit.edu/help/scratch/2.0/Storytelling)
 - [Interactive Fiction Examples](https://scratch.mit.edu/explore/projects/tag:interactive-fiction)
 
 ## Next Steps
@@ -240,9 +240,9 @@ In the next lesson, we'll learn about cloning and broadcasting to create more co
             moduleTitle="String manipulation from user input (continued)"
             lessonNumber={10}
             content={content}
-            prevLesson="/cs/scratch1/lesson9"
-            nextLesson="/cs/scratch1/lesson11"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson9"
+            nextLesson="/cs/scratch/lesson11"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

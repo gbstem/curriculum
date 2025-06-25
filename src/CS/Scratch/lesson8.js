@@ -303,8 +303,8 @@ Basic working example: https://scratch.mit.edu/projects/492915111
 ## Resources
 
 - [Guess My Number Example](https://scratch.mit.edu/projects/492915111)
-- [Scratch Variables Guide](https://scratch.mit.edu/help/scratch1/2.0/Variables)
-- [Scratch Operators Guide](https://scratch.mit.edu/help/scratch1/2.0/Operators)
+- [Scratch Variables Guide](https://scratch.mit.edu/help/scratch/2.0/Variables)
+- [Scratch Operators Guide](https://scratch.mit.edu/help/scratch/2.0/Operators)
 
 ## Next Steps
 
@@ -316,9 +316,9 @@ In the next lesson, we'll learn about string manipulation and create a chatbot!`
             moduleTitle="Conditionals with Operators and Variables"
             lessonNumber={8}
             content={content}
-            prevLesson="/cs/scratch1/lesson7"
-            nextLesson="/cs/scratch1/lesson9"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson7"
+            nextLesson="/cs/scratch/lesson9"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

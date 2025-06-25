@@ -296,7 +296,7 @@ end
 
 ## Resources
 
-- [Custom Blocks Guide](https://scratch.mit.edu/help/scratch1/2.0/Custom_Blocks)
+- [Custom Blocks Guide](https://scratch.mit.edu/help/scratch/2.0/Custom_Blocks)
 - [Racing Game Examples](https://scratch.mit.edu/explore/projects/tag:racing)
 - [Game Development Tutorial](https://scratch.mit.edu/help/videos/)
 
@@ -310,9 +310,9 @@ In the next lesson, we'll learn about moving landscapes and create dynamic backg
             moduleTitle="Clones and Broadcasting (continued)"
             lessonNumber={13}
             content={content}
-            prevLesson="/cs/scratch1/lesson12"
-            nextLesson="/cs/scratch1/lesson14"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson12"
+            nextLesson="/cs/scratch/lesson14"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

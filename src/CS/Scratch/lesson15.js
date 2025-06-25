@@ -223,7 +223,7 @@ say [Drawing cleared!] using [text to speech v]
 
 ## Resources
 
-- [Scratch Extensions Guide](https://scratch.mit.edu/help/scratch1/2.0/Extensions)
+- [Scratch Extensions Guide](https://scratch.mit.edu/help/scratch/2.0/Extensions)
 - [Extension Examples](https://scratch.mit.edu/explore/projects/tag:extensions)
 - [Extension Tutorials](https://scratch.mit.edu/help/videos/)
 
@@ -237,9 +237,9 @@ In the next lesson, we'll learn about code efficiency and debugging techniques!`
             moduleTitle="Rehashing the Basics (continued)"
             lessonNumber={15}
             content={content}
-            prevLesson="/cs/scratch1/lesson14"
-            nextLesson="/cs/scratch1/lesson16"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson14"
+            nextLesson="/cs/scratch/lesson16"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

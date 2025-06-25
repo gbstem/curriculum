@@ -215,7 +215,7 @@ end
 ## Resources
 
 - [Physics Engine Examples](https://scratch.mit.edu/explore/projects/tag:physics)
-- [Physics in Scratch Guide](https://scratch.mit.edu/help/scratch1/2.0/Physics)
+- [Physics in Scratch Guide](https://scratch.mit.edu/help/scratch/2.0/Physics)
 - [Physics Engine Tutorial](https://scratch.mit.edu/help/videos/)
 
 ## Next Steps
@@ -228,9 +228,9 @@ In the next lesson, we'll create platformer games using physics engines!`;
             moduleTitle="Advanced Game Design in Scratch (bonus lessons) (continued)"
             lessonNumber={21}
             content={content}
-            prevLesson="/cs/scratch1/lesson20"
-            nextLesson="/cs/scratch1/lesson22"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson20"
+            nextLesson="/cs/scratch/lesson22"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

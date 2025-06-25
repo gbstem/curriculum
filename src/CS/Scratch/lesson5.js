@@ -223,9 +223,9 @@ In the next lesson, we'll learn about loops and create realistic animations!`;
             moduleTitle="Looks and Sounds"
             lessonNumber={5}
             content={content}
-            prevLesson="/cs/scratch1/lesson4"
-            nextLesson="/cs/scratch1/lesson6"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson4"
+            nextLesson="/cs/scratch/lesson6"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

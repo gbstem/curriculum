@@ -281,8 +281,8 @@ say (join [High Score: ] (high score)) for (2) seconds
 ## Resources
 
 - [Whack a Mole Examples](https://scratch.mit.edu/explore/projects/tag:whack-a-mole)
-- [Scratch Cloning Guide](https://scratch.mit.edu/help/scratch1/2.0/Cloning)
-- [Scratch Broadcasting Guide](https://scratch.mit.edu/help/scratch1/2.0/Events_Blocks)
+- [Scratch Cloning Guide](https://scratch.mit.edu/help/scratch/2.0/Cloning)
+- [Scratch Broadcasting Guide](https://scratch.mit.edu/help/scratch/2.0/Events_Blocks)
 
 ## Next Steps
 
@@ -294,9 +294,9 @@ In the next lesson, we'll create a "Dodge the Obstacle" game!`;
             moduleTitle="Clones and Broadcasting"
             lessonNumber={11}
             content={content}
-            prevLesson="/cs/scratch1/lesson10"
-            nextLesson="/cs/scratch1/lesson12"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson10"
+            nextLesson="/cs/scratch/lesson12"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

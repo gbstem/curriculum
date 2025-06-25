@@ -209,9 +209,9 @@ In the next lesson, we'll learn about variables and create a "Guess My Number" g
             moduleTitle="Conditionals with Sensing"
             lessonNumber={7}
             content={content}
-            prevLesson="/cs/scratch1/lesson6"
-            nextLesson="/cs/scratch1/lesson8"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson6"
+            nextLesson="/cs/scratch/lesson8"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

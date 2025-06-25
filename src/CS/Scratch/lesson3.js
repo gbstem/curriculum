@@ -185,9 +185,9 @@ In the next lesson, we'll learn about looks and sound blocks and create a musica
             moduleTitle="Motion"
             lessonNumber={3}
             content={content}
-            prevLesson="/cs/scratch1/lesson2"
-            nextLesson="/cs/scratch1/lesson4"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson2"
+            nextLesson="/cs/scratch/lesson4"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

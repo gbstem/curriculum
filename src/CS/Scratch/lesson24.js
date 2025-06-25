@@ -110,7 +110,7 @@ end
 ## Resources
 
 - [Scratch Explore Page](https://scratch.mit.edu/explore)
-- [Remixing Guide](https://scratch.mit.edu/help/scratch1/2.0/Remixing)
+- [Remixing Guide](https://scratch.mit.edu/help/scratch/2.0/Remixing)
 - [Commenting Code Tutorial](https://scratch.mit.edu/help/videos/)
 
 ## Next Steps
@@ -123,9 +123,9 @@ In the next module, students will begin their final projects and portfolios!`;
             moduleTitle="Advanced Game Design in Scratch (bonus lessons) (continued)"
             lessonNumber={24}
             content={content}
-            prevLesson="/cs/scratch1/lesson23"
+            prevLesson="/cs/scratch/lesson23"
             nextLesson={null}
-            backToCurriculum="/cs/scratch1"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

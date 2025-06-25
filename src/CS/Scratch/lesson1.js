@@ -153,8 +153,8 @@ In the next lesson, we'll learn about motion blocks and create our first interac
             lessonNumber={1}
             content={content}
             prevLesson={null}
-            nextLesson="/cs/scratch1/lesson2"
-            backToCurriculum="/cs/scratch1"
+            nextLesson="/cs/scratch/lesson2"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

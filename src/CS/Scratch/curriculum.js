@@ -10,7 +10,7 @@ const ScratchCurriculum = () => {
             title: "Scratch environment",
             description: "Introduction to Scratch interface, creating projects, and basic navigation",
             lessons: [
-                { id: 1, title: "Scratch Environment & Scene Creation", path: "/cs/scratch1/lesson1" }
+                { id: 1, title: "Scratch Environment & Scene Creation", path: "/cs/scratch/lesson1" }
             ]
         },
         {
@@ -18,8 +18,8 @@ const ScratchCurriculum = () => {
             title: "Motion",
             description: "Learning motion blocks, coordinate plane, and sprite movement",
             lessons: [
-                { id: 2, title: "Motion Blocks & Simon Says", path: "/cs/scratch1/lesson2" },
-                { id: 3, title: "Coordinate Plane & Constellations", path: "/cs/scratch1/lesson3" }
+                { id: 2, title: "Motion Blocks & Simon Says", path: "/cs/scratch/lesson2" },
+                { id: 3, title: "Coordinate Plane & Constellations", path: "/cs/scratch/lesson3" }
             ]
         },
         {
@@ -27,8 +27,8 @@ const ScratchCurriculum = () => {
             title: "Looks and Sounds",
             description: "Working with appearance changes, costumes, and audio",
             lessons: [
-                { id: 4, title: "Looks & Sound Blocks", path: "/cs/scratch1/lesson4" },
-                { id: 5, title: "Storytelling Project", path: "/cs/scratch1/lesson5" }
+                { id: 4, title: "Looks & Sound Blocks", path: "/cs/scratch/lesson4" },
+                { id: 5, title: "Storytelling Project", path: "/cs/scratch/lesson5" }
             ]
         },
         {
@@ -36,7 +36,7 @@ const ScratchCurriculum = () => {
             title: "Loops + Control Blocks",
             description: "Understanding loops, repeat blocks, and animation",
             lessons: [
-                { id: 6, title: "Loops & Animation", path: "/cs/scratch1/lesson6" }
+                { id: 6, title: "Loops & Animation", path: "/cs/scratch/lesson6" }
             ]
         },
         {
@@ -44,7 +44,7 @@ const ScratchCurriculum = () => {
             title: "Conditionals with Sensing",
             description: "Using sensing blocks and conditional statements",
             lessons: [
-                { id: 7, title: "Conditionals & Maze Game", path: "/cs/scratch1/lesson7" }
+                { id: 7, title: "Conditionals & Maze Game", path: "/cs/scratch/lesson7" }
             ]
         },
         {
@@ -52,7 +52,7 @@ const ScratchCurriculum = () => {
             title: "Conditionals with Operators and Variables",
             description: "Working with variables, operators, and user input",
             lessons: [
-                { id: 8, title: "Variables & Guess My Number", path: "/cs/scratch1/lesson8" }
+                { id: 8, title: "Variables & Guess My Number", path: "/cs/scratch/lesson8" }
             ]
         },
         {
@@ -60,8 +60,8 @@ const ScratchCurriculum = () => {
             title: "String manipulation from user input",
             description: "Creating interactive programs with user input",
             lessons: [
-                { id: 9, title: "String Manipulation & Chatbot", path: "/cs/scratch1/lesson9" },
-                { id: 10, title: "Choose Your Own Adventure", path: "/cs/scratch1/lesson10" }
+                { id: 9, title: "String Manipulation & Chatbot", path: "/cs/scratch/lesson9" },
+                { id: 10, title: "Choose Your Own Adventure", path: "/cs/scratch/lesson10" }
             ]
         },
         {
@@ -69,9 +69,9 @@ const ScratchCurriculum = () => {
             title: "Clones and Broadcasting",
             description: "Creating multiple sprites and sprite communication",
             lessons: [
-                { id: 11, title: "Clones & Broadcasting", path: "/cs/scratch1/lesson11" },
-                { id: 12, title: "Dodge the Obstacle Game", path: "/cs/scratch1/lesson12" },
-                { id: 13, title: "Custom Blocks & Racecar Game", path: "/cs/scratch1/lesson13" }
+                { id: 11, title: "Clones & Broadcasting", path: "/cs/scratch/lesson11" },
+                { id: 12, title: "Dodge the Obstacle Game", path: "/cs/scratch/lesson12" },
+                { id: 13, title: "Custom Blocks & Racecar Game", path: "/cs/scratch/lesson13" }
             ]
         },
         {
@@ -79,8 +79,8 @@ const ScratchCurriculum = () => {
             title: "Rehashing the Basics",
             description: "Review and advanced techniques",
             lessons: [
-                { id: 14, title: "Moving Landscapes", path: "/cs/scratch1/lesson14" },
-                { id: 15, title: "Scratch Extensions", path: "/cs/scratch1/lesson15" }
+                { id: 14, title: "Moving Landscapes", path: "/cs/scratch/lesson14" },
+                { id: 15, title: "Scratch Extensions", path: "/cs/scratch/lesson15" }
             ]
         },
         {
@@ -88,8 +88,8 @@ const ScratchCurriculum = () => {
             title: "Refining our code",
             description: "Code efficiency and debugging",
             lessons: [
-                { id: 16, title: "Code Efficiency", path: "/cs/scratch1/lesson16" },
-                { id: 17, title: "Debugging", path: "/cs/scratch1/lesson17" }
+                { id: 16, title: "Code Efficiency", path: "/cs/scratch/lesson16" },
+                { id: 17, title: "Debugging", path: "/cs/scratch/lesson17" }
             ]
         },
         {
@@ -97,13 +97,13 @@ const ScratchCurriculum = () => {
             title: "Advanced Game Design in Scratch (bonus lessons)",
             description: "Advanced game development techniques",
             lessons: [
-                { id: 18, title: "Flappy Bird Game", path: "/cs/scratch1/lesson18" },
-                { id: 19, title: "Game Improvements", path: "/cs/scratch1/lesson19" },
-                { id: 20, title: "User Interface Design", path: "/cs/scratch1/lesson20" },
-                { id: 21, title: "Physics Engines", path: "/cs/scratch1/lesson21" },
-                { id: 22, title: "Platformer Games", path: "/cs/scratch1/lesson22" },
-                { id: 23, title: "In-Game Shop", path: "/cs/scratch1/lesson23" },
-                { id: 24, title: "Independent Exploration", path: "/cs/scratch1/lesson24" }
+                { id: 18, title: "Flappy Bird Game", path: "/cs/scratch/lesson18" },
+                { id: 19, title: "Game Improvements", path: "/cs/scratch/lesson19" },
+                { id: 20, title: "User Interface Design", path: "/cs/scratch/lesson20" },
+                { id: 21, title: "Physics Engines", path: "/cs/scratch/lesson21" },
+                { id: 22, title: "Platformer Games", path: "/cs/scratch/lesson22" },
+                { id: 23, title: "In-Game Shop", path: "/cs/scratch/lesson23" },
+                { id: 24, title: "Independent Exploration", path: "/cs/scratch/lesson24" }
             ]
         },
         {
@@ -111,7 +111,7 @@ const ScratchCurriculum = () => {
             title: "Final Projects",
             description: "Portfolio development and final project creation",
             lessons: [
-                { id: 25, title: "Final Project Development", path: "/cs/scratch1/lesson25" }
+                { id: 25, title: "Final Project Development", path: "/cs/scratch/lesson25" }
             ]
         }
     ];

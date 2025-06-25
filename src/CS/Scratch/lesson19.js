@@ -260,8 +260,8 @@ end
 
 ## Resources
 
-- [Scratch Visual Effects Guide](https://scratch.mit.edu/help/scratch1/2.0/Visual_Effects)
-- [Game Design Principles](https://scratch.mit.edu/help/scratch1/2.0/Game_Design)
+- [Scratch Visual Effects Guide](https://scratch.mit.edu/help/scratch/2.0/Visual_Effects)
+- [Game Design Principles](https://scratch.mit.edu/help/scratch/2.0/Game_Design)
 - [Sound Design Tutorial](https://scratch.mit.edu/help/videos/)
 
 ## Next Steps
@@ -274,9 +274,9 @@ In the next lesson, we'll learn about UI design and create polished game interfa
             moduleTitle="Advanced Game Design in Scratch (bonus lessons) (continued)"
             lessonNumber={19}
             content={content}
-            prevLesson="/cs/scratch1/lesson18"
-            nextLesson="/cs/scratch1/lesson20"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson18"
+            nextLesson="/cs/scratch/lesson20"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

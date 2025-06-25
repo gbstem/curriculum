@@ -254,8 +254,8 @@ broadcast [game started v]
 
 ## Resources
 
-- [Scratch Custom Blocks Guide](https://scratch.mit.edu/help/scratch1/2.0/Custom_Blocks)
-- [Code Organization Tips](https://scratch.mit.edu/help/scratch1/2.0/Code_Organization)
+- [Scratch Custom Blocks Guide](https://scratch.mit.edu/help/scratch/2.0/Custom_Blocks)
+- [Code Organization Tips](https://scratch.mit.edu/help/scratch/2.0/Code_Organization)
 - [Debugging Techniques](https://scratch.mit.edu/help/videos/)
 
 ## Next Steps
@@ -268,9 +268,9 @@ In the next lesson, we'll learn about debugging techniques and how to fix broken
             moduleTitle="Refining our code"
             lessonNumber={16}
             content={content}
-            prevLesson="/cs/scratch1/lesson15"
-            nextLesson="/cs/scratch1/lesson17"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson15"
+            nextLesson="/cs/scratch/lesson17"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

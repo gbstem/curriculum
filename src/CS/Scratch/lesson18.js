@@ -215,8 +215,8 @@ end
 ## Resources
 
 - [Flappy Bird Example](https://scratch.mit.edu/projects/example)
-- [Physics in Scratch Guide](https://scratch.mit.edu/help/scratch1/2.0/Physics)
-- [Game Design Principles](https://scratch.mit.edu/help/scratch1/2.0/Game_Design)
+- [Physics in Scratch Guide](https://scratch.mit.edu/help/scratch/2.0/Physics)
+- [Game Design Principles](https://scratch.mit.edu/help/scratch/2.0/Game_Design)
 
 ## Next Steps
 
@@ -228,9 +228,9 @@ In the next lesson, we'll improve our games with better graphics, sound effects,
             moduleTitle="Advanced Game Design in Scratch (bonus lessons)"
             lessonNumber={18}
             content={content}
-            prevLesson="/cs/scratch1/lesson17"
-            nextLesson="/cs/scratch1/lesson19"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson17"
+            nextLesson="/cs/scratch/lesson19"
+            backToCurriculum="/cs/scratch"
         />
     );
 };

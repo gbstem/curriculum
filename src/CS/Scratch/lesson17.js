@@ -230,8 +230,8 @@ end
 
 ## Resources
 
-- [Scratch Debugging Guide](https://scratch.mit.edu/help/scratch1/2.0/Debugging)
-- [Common Scratch Bugs](https://scratch.mit.edu/help/scratch1/2.0/Common_Problems)
+- [Scratch Debugging Guide](https://scratch.mit.edu/help/scratch/2.0/Debugging)
+- [Common Scratch Bugs](https://scratch.mit.edu/help/scratch/2.0/Common_Problems)
 - [Debugging Tutorial](https://scratch.mit.edu/help/videos/)
 
 ## Next Steps
@@ -244,9 +244,9 @@ In the next lesson, we'll start working on advanced game design with Flappy Bird
             moduleTitle="Refining our code (continued)"
             lessonNumber={17}
             content={content}
-            prevLesson="/cs/scratch1/lesson16"
-            nextLesson="/cs/scratch1/lesson18"
-            backToCurriculum="/cs/scratch1"
+            prevLesson="/cs/scratch/lesson16"
+            nextLesson="/cs/scratch/lesson18"
+            backToCurriculum="/cs/scratch"
         />
     );
 };
