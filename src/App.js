@@ -1,7 +1,7 @@
-import { React } from 'react';
+import { React, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import { HashRouter } from "react-router-dom";
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Modal, Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './styles.css'
@@ -80,6 +80,68 @@ import ScratchLesson21 from './CS/Scratch/lesson21';
 import ScratchLesson22 from './CS/Scratch/lesson22';
 import ScratchLesson23 from './CS/Scratch/lesson23';
 import ScratchLesson24 from './CS/Scratch/lesson24';
+
+// Login Modal Component
+function LoginModal({ show, onLogin }) {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (password === 'antarctica') {
+      localStorage.setItem('gbstem_authenticated', 'true');
+      onLogin();
+      setPassword('');
+      setError('');
+    } else {
+      setError('Incorrect password. Please try again.');
+    }
+  };
+
+  return (
+    <Modal show={show} onHide={() => {}} backdrop="static" keyboard={false} centered>
+      <Modal.Header className="bg-primary text-white">
+        <Modal.Title>
+          <i className="fas fa-lock me-2"></i>
+          gbSTEM Curriculum Access
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="text-center mb-4">
+          <img
+            src={penguin}
+            alt="gbSTEM Logo"
+            className="img-fluid mb-3"
+            style={{ maxWidth: '150px' }}
+          />
+          <h4>Welcome to gbSTEM Curriculum</h4>
+          <p className="text-muted">Please enter the password to access the curriculum.</p>
+        </div>
+        
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              autoFocus
+            />
+            {error && <div className="text-danger mt-2">{error}</div>}
+          </Form.Group>
+          
+          <div className="d-grid">
+            <Button type="submit" variant="primary" size="lg">
+              <i className="fas fa-sign-in-alt me-2"></i>
+              Access Curriculum
+            </Button>
+          </div>
+        </Form>
+      </Modal.Body>
+    </Modal>
+  );
+}
 
 // Track homepages
 function Math() {
@@ -377,6 +439,39 @@ function CS() {
 }
 
 function App() {  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const authenticated = localStorage.getItem('gbstem_authenticated') === 'true';
+    setIsAuthenticated(authenticated);
+    setIsLoading(false);
+  }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  // Show loading spinner while checking authentication
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-3">Loading gbSTEM Curriculum...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login modal if not authenticated
+  if (!isAuthenticated) {
+    return <LoginModal show={true} onLogin={handleLogin} />;
+  }
+
   return (
     <HashRouter>
       <Navbar variant="dark" expand="lg" style={{ backgroundColor: '#1D2256' }}>
@@ -409,6 +504,18 @@ function App() {
             <NavDropdown title="Science" id="science-dropdown" className="text-center">
               <NavDropdown.Item disabled>Coming Soon</NavDropdown.Item>
             </NavDropdown>
+          </Nav>
+          <Nav className="ms-auto">
+            <Nav.Link 
+              onClick={() => {
+                localStorage.removeItem('gbstem_authenticated');
+                setIsAuthenticated(false);
+              }}
+              className="text-white"
+            >
+              <i className="fas fa-sign-out-alt me-1"></i>
+              Logout
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>      
