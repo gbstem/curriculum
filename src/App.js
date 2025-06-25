@@ -118,31 +118,260 @@ function Engineering() {
     </div>
   );
 }
-function CS() {
-  return (
-    <div className="container mt-5">
-      <h1>Computer Science Curriculum</h1>
-      <ul>
-        <li><a href="/#/cs/scratch">View the Scratch Curriculum</a></li>
-        <li><a href="/#/cs/python1">View the Python I Curriculum</a></li>
-        <li><a href="/#/cs/python2">View the Python II Curriculum</a></li>
-        <li><a href="/#/cs/webdev">View the Web Development Curriculum</a></li>
-      </ul>
-    </div>
-  );
-}
+
 // Main site homepage
 function Home() {
   return (
-    <div className="container mt-5">
-      <h1>Welcome to gbSTEM Curriculum</h1>
-      <p>Select a track to explore:</p>
-      <ul>
-        <li><a href="/#/math">Math</a></li>
-        <li><a href="/#/science">Science</a></li>
-        <li><a href="/#/cs">Computer Science</a></li>
-        <li><a href="/#/engineering">Engineering</a></li>
-      </ul>
+    <div className="container-fluid p-0">
+      {/* Hero Section */}
+      <div className="bg-primary text-white py-5" style={{ backgroundColor: '#1D2256' }}>
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-lg-6">
+              <h1 className="display-4 fw-bold mb-4">Welcome to gbSTEM Curriculum</h1>
+              <p className="mb-4">Choose a track below to begin your teaching journey!</p>
+            </div>
+            <div className="col-lg-6 text-center">
+              <img
+                src={penguin}
+                alt="gbSTEM Logo"
+                className="img-fluid"
+                style={{ maxWidth: '300px' }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tracks Section */}
+      <div className="container py-5">
+        <div className="row g-4">
+          <div className="col-md-6 col-lg-3">
+            <div className="card h-100 shadow-sm border-0 hover-lift">
+              <div className="card-body text-center p-4">
+                <div className="mb-3">
+                  <i className="fas fa-laptop-code fa-3x text-primary"></i>
+                </div>
+                <h5 className="card-title fw-bold">Computer Science</h5>
+                <p className="card-text text-muted">Learn programming with Python and Scratch, build games, and create interactive projects.</p>
+                <a href="/#/cs" className="btn btn-primary">Explore CS</a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="col-md-6 col-lg-3">
+            <div className="card h-100 shadow-sm border-0 hover-lift">
+              <div className="card-body text-center p-4">
+                <div className="mb-3">
+                  <i className="fas fa-calculator fa-3x text-success"></i>
+                </div>
+                <h5 className="card-title fw-bold">Mathematics</h5>
+                <p className="card-text text-muted">Teach mathematical concepts through interactive lessons and real-world applications.</p>
+                <a href="/#/math" className="btn btn-success">Explore Math</a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="col-md-6 col-lg-3">
+            <div className="card h-100 shadow-sm border-0 hover-lift">
+              <div className="card-body text-center p-4">
+                <div className="mb-3">
+                  <i className="fas fa-flask fa-3x text-info"></i>
+                </div>
+                <h5 className="card-title fw-bold">Science</h5>
+                <p className="card-text text-muted">Discover physics, environmental science, and conduct virtual experiments.</p>
+                <a href="/#/science" className="btn btn-info text-white">Explore Science</a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="col-md-6 col-lg-3">
+            <div className="card h-100 shadow-sm border-0 hover-lift">
+              <div className="card-body text-center p-4">
+                <div className="mb-3">
+                  <i className="fas fa-cogs fa-3x text-warning"></i>
+                </div>
+                <h5 className="card-title fw-bold">Engineering</h5>
+                <p className="card-text text-muted">Design, build, and test solutions to real-world engineering challenges.</p>
+                <a href="/#/engineering" className="btn btn-warning text-white">Explore Engineering</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+    </div>
+  );
+}
+
+function CS() {
+  return (
+    <div className="container-fluid p-0">
+      {/* Hero Section */}
+      <div className="bg-primary text-white py-5" style={{ backgroundColor: '#1D2256' }}>
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-lg-8">
+              <h1 className="display-4 fw-bold mb-4">Computer Science Curriculum</h1>
+              <p className="lead mb-4">Teach programming fundamentals and advanced concepts through hands-on projects and interactive learning experiences.</p>
+            </div>
+            <div className="col-lg-4 text-center">
+              <i className="fas fa-laptop-code fa-5x"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Courses Section */}
+      <div className="container py-5">
+        <div className="row g-4">
+          <div className="col-lg-6">
+            <div className="card h-100 shadow-sm border-0 hover-lift">
+              <div className="card-body p-4">
+                <div className="d-flex align-items-center mb-3">
+                  <div className="bg-warning bg-opacity-10 p-3 rounded me-3">
+                    <i className="fas fa-puzzle-piece fa-2x text-warning"></i>
+                  </div>
+                  <div>
+                    <h4 className="card-title fw-bold mb-1">Scratch Programming</h4>
+                    <span className="badge bg-warning text-dark">Beginner Friendly</span>
+                  </div>
+                </div>
+                <p className="card-text text-muted mb-3">
+                  Learn programming fundamentals through visual block-based coding. Create games, animations, and interactive stories while developing computational thinking skills.
+                </p>
+                <ul className="list-unstyled mb-4">
+                  <li><i className="fas fa-check text-success me-2"></i>24 comprehensive lessons</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Visual programming concepts</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Game development projects</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Interactive storytelling</li>
+                </ul>
+                <a href="/#/cs/scratch" className="btn btn-warning text-white">Start Teaching</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-6">
+            <div className="card h-100 shadow-sm border-0 hover-lift">
+              <div className="card-body p-4">
+                <div className="d-flex align-items-center mb-3">
+                  <div className="bg-primary bg-opacity-10 p-3 rounded me-3">
+                    <i className="fab fa-python fa-2x text-primary"></i>
+                  </div>
+                  <div>
+                    <h4 className="card-title fw-bold mb-1">Python I</h4>
+                    <span className="badge bg-primary">Intermediate</span>
+                  </div>
+                </div>
+                <p className="card-text text-muted mb-3">
+                  Dive into text-based programming with Python. Learn syntax, data structures, and problem-solving techniques through engaging projects.
+                </p>
+                <ul className="list-unstyled mb-4">
+                  <li><i className="fas fa-check text-success me-2"></i>24 structured lessons</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Python fundamentals</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Data structures & algorithms</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Real-world applications</li>
+                </ul>
+                <a href="/#/cs/python1" className="btn btn-primary">Start Teaching</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-6">
+            <div className="card h-100 shadow-sm border-0 hover-lift">
+              <div className="card-body p-4">
+                <div className="d-flex align-items-center mb-3">
+                  <div className="bg-success bg-opacity-10 p-3 rounded me-3">
+                    <i className="fab fa-python fa-2x text-success"></i>
+                  </div>
+                  <div>
+                    <h4 className="card-title fw-bold mb-1">Python II</h4>
+                    <span className="badge bg-success">Advanced</span>
+                  </div>
+                </div>
+                <p className="card-text text-muted mb-3">
+                  Advanced Python programming concepts including object-oriented programming, file handling, and complex data manipulation.
+                </p>
+                <ul className="list-unstyled mb-4">
+                  <li><i className="fas fa-check text-success me-2"></i>17 advanced lessons</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Object-oriented programming</li>
+                  <li><i className="fas fa-check text-success me-2"></i>File I/O & data processing</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Advanced algorithms</li>
+                </ul>
+                <a href="/#/cs/python2" className="btn btn-success">Start Teaching</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-6">
+            <div className="card h-100 shadow-sm border-0 hover-lift">
+              <div className="card-body p-4">
+                <div className="d-flex align-items-center mb-3">
+                  <div className="bg-info bg-opacity-10 p-3 rounded me-3">
+                    <i className="fas fa-globe fa-2x text-info"></i>
+                  </div>
+                  <div>
+                    <h4 className="card-title fw-bold mb-1">Web Development</h4>
+                    <span className="badge bg-info">Coming Soon</span>
+                  </div>
+                </div>
+                <p className="card-text text-muted mb-3">
+                  Learn to build modern websites using HTML, CSS, and JavaScript. Create responsive designs and interactive web applications.
+                </p>
+                <ul className="list-unstyled mb-4">
+                  <li><i className="fas fa-clock text-muted me-2"></i>HTML & CSS fundamentals</li>
+                  <li><i className="fas fa-clock text-muted me-2"></i>JavaScript programming</li>
+                  <li><i className="fas fa-clock text-muted me-2"></i>Responsive design</li>
+                  <li><i className="fas fa-clock text-muted me-2"></i>Web applications</li>
+                </ul>
+                <button className="btn btn-secondary" disabled>Coming Soon</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Learning Path Section */}
+      <div className="bg-light py-5">
+        <div className="container">
+          <div className="row text-center mb-4">
+            <div className="col-12">
+              <h2 className="fw-bold">Recommended Learning Path</h2>
+              <p className="lead text-muted">Follow this progression to build your programming skills</p>
+            </div>
+          </div>
+          <div className="row align-items-center">
+            <div className="col-md-3 text-center">
+              <div className="bg-warning bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                <i className="fas fa-puzzle-piece fa-2x text-warning"></i>
+              </div>
+              <h5>1. Scratch</h5>
+              <p className="text-muted">Learn programming concepts visually</p>
+            </div>
+            <div className="col-md-1 text-center">
+              <i className="fas fa-arrow-right fa-2x text-muted"></i>
+            </div>
+            <div className="col-md-3 text-center">
+              <div className="bg-primary bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                <i className="fab fa-python fa-2x text-primary"></i>
+              </div>
+              <h5>2. Python I</h5>
+              <p className="text-muted">Learn text-based programming</p>
+            </div>
+            <div className="col-md-1 text-center">
+              <i className="fas fa-arrow-right fa-2x text-muted"></i>
+            </div>
+            <div className="col-md-3 text-center">
+              <div className="bg-success bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                <i className="fab fa-python fa-2x text-success"></i>
+              </div>
+              <h5>3. Python II</h5>
+              <p className="text-muted">Advanced programming concepts</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -264,3 +493,4 @@ function App() {
 }
 
 export default App;
+
