@@ -97,7 +97,7 @@ def make_change(amount):
 amount = 67.43
 change = make_change(amount)
 
-print(f"Making change for ${amount}:")
+print(f"Making change for \${amount}:")
 for denomination, count in change.items():
     print(f"{count} {denomination}")
 
@@ -136,7 +136,7 @@ def make_change_detailed(amount):
     result = {}
     remaining = round(amount, 2)
     
-    print(f"Starting with: ${remaining}")
+    print(f"Starting with: \${remaining}")
     print("-" * 40)
     
     for name, value in denominations:
@@ -144,7 +144,7 @@ def make_change_detailed(amount):
         if count > 0:
             result[name] = count
             remaining = round(remaining - (count * value), 2)
-            print(f"Use {count} {name}: ${remaining} remaining")
+            print(f"Use {count} {name}: \${remaining} remaining")
     
     print("-" * 40)
     return result
@@ -157,7 +157,7 @@ change = make_change_detailed(23.67)
 **Ask students:**
 - Why do we start with the largest denomination first?
 - What would happen if we used pennies first?
-- Why do we use `round()` in the calculations?
+- Why do we use \`round()\` in the calculations?
 
 ## Challenge Activity: Different Coin Systems
 **What if we had different coin denominations?**

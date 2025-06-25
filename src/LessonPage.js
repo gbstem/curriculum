@@ -28,11 +28,11 @@ const LessonPage = ({
         
         lines.forEach((line, index) => {
             // Code block start/end
-            if (line.startsWith('\`\`\`')) {
+            if (line.startsWith('```')) {
                 if (!inCodeBlock) {
                     inCodeBlock = true;
                     // Try to get language (e.g., \`\`\`python)
-                    const langMatch = line.match(/^\`\`\`(\w+)/);
+                    const langMatch = line.match(/^```(\w+)/);
                     codeBlockLang = langMatch ? langMatch[1] : 'python';
                     codeBlockLines = [];
                 } else {

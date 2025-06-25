@@ -1,7 +1,7 @@
-import { React, useState, useEffect } from 'react';
+import { React } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import { HashRouter } from "react-router-dom";
-import { Navbar, Nav, NavDropdown, Modal } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './styles.css'
@@ -41,6 +41,18 @@ import Python2Lesson2 from './CS/Python2/lesson2';
 import Python2Lesson3 from './CS/Python2/lesson3';
 import Python2Lesson4 from './CS/Python2/lesson4';
 import Python2Lesson5 from './CS/Python2/lesson5';
+import Python2Lesson6 from './CS/Python2/lesson6';
+import Python2Lesson7 from './CS/Python2/lesson7';
+import Python2Lesson8 from './CS/Python2/lesson8';
+import Python2Lesson9 from './CS/Python2/lesson9';
+import Python2Lesson10 from './CS/Python2/lesson10';
+import Python2Lesson11 from './CS/Python2/lesson11';
+import Python2Lesson12 from './CS/Python2/lesson12';
+import Python2Lesson13 from './CS/Python2/lesson13';
+import Python2Lesson14 from './CS/Python2/lesson14';
+import Python2Lesson15 from './CS/Python2/lesson15';
+import Python2Lesson16 from './CS/Python2/lesson16';
+import Python2Lesson17 from './CS/Python2/lesson17';
 
 // Track homepages
 function Math() {
@@ -109,9 +121,7 @@ function Home() {
   );
 }
 
-function App() {
-  const [show, setShow] = useState(false);
-  
+function App() {  
   return (
     <HashRouter>
       <Navbar variant="dark" expand="lg" style={{ backgroundColor: '#1D2256' }}>
@@ -129,6 +139,7 @@ function App() {
             {/* CS Dropdown */}
             <NavDropdown title="CS" id="cs-dropdown" className="text-center">
               <NavDropdown.Item as={Link} to="/cs/python1" className="text-center text-lg-start">Python 1</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/cs/python2" className="text-center text-lg-start">Python 2</NavDropdown.Item>
             </NavDropdown>
             {/* Math Dropdown */}
             <NavDropdown title="Math" id="math-dropdown" className="text-center">
@@ -183,6 +194,18 @@ function App() {
         <Route path="/cs/python2/lesson3" element={<Python2Lesson3 />} />
         <Route path="/cs/python2/lesson4" element={<Python2Lesson4 />} />
         <Route path="/cs/python2/lesson5" element={<Python2Lesson5 />} />
+        <Route path="/cs/python2/lesson6" element={<Python2Lesson6 />} />
+        <Route path="/cs/python2/lesson7" element={<Python2Lesson7 />} />
+        <Route path="/cs/python2/lesson8" element={<Python2Lesson8 />} />
+        <Route path="/cs/python2/lesson9" element={<Python2Lesson9 />} />
+        <Route path="/cs/python2/lesson10" element={<Python2Lesson10 />} />
+        <Route path="/cs/python2/lesson11" element={<Python2Lesson11 />} />
+        <Route path="/cs/python2/lesson12" element={<Python2Lesson12 />} />
+        <Route path="/cs/python2/lesson13" element={<Python2Lesson13 />} />
+        <Route path="/cs/python2/lesson14" element={<Python2Lesson14 />} />
+        <Route path="/cs/python2/lesson15" element={<Python2Lesson15 />} />
+        <Route path="/cs/python2/lesson16" element={<Python2Lesson16 />} />
+        <Route path="/cs/python2/lesson17" element={<Python2Lesson17 />} />
       </Routes>
     </HashRouter >
   );
