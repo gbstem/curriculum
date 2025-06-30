@@ -7,79 +7,9 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './styles.css'
 import penguin from './penguin.png'
 
-// Import Python 1 Curriculum components
-import Python1Curriculum from './CS/Python1/curriculum';
-import Lesson1 from './CS/Python1/lesson1';
-import Lesson2 from './CS/Python1/lesson2';
-import Lesson3 from './CS/Python1/lesson3';
-import Lesson4 from './CS/Python1/lesson4';
-import Lesson5 from './CS/Python1/lesson5';
-import Lesson6 from './CS/Python1/lesson6';
-import Lesson7 from './CS/Python1/lesson7';
-import Lesson8 from './CS/Python1/lesson8';
-import Lesson9 from './CS/Python1/lesson9';
-import Lesson10 from './CS/Python1/lesson10';
-import Lesson11 from './CS/Python1/lesson11';
-import Lesson12 from './CS/Python1/lesson12';
-import Lesson13 from './CS/Python1/lesson13';
-import Lesson14 from './CS/Python1/lesson14';
-import Lesson15 from './CS/Python1/lesson15';
-import Lesson16 from './CS/Python1/lesson16';
-import Lesson17 from './CS/Python1/lesson17';
-import Lesson18 from './CS/Python1/lesson18';
-import Lesson19 from './CS/Python1/lesson19';
-import Lesson20 from './CS/Python1/lesson20';
-import Lesson21 from './CS/Python1/lesson21';
-import Lesson22 from './CS/Python1/lesson22';
-import Lesson23 from './CS/Python1/lesson23';
-import Lesson24 from './CS/Python1/lesson24';
-
-// Import Python 2 Curriculum components
-import Python2Curriculum from './CS/Python2/curriculum';
-import Python2Lesson1 from './CS/Python2/lesson1';
-import Python2Lesson2 from './CS/Python2/lesson2';
-import Python2Lesson3 from './CS/Python2/lesson3';
-import Python2Lesson4 from './CS/Python2/lesson4';
-import Python2Lesson5 from './CS/Python2/lesson5';
-import Python2Lesson6 from './CS/Python2/lesson6';
-import Python2Lesson7 from './CS/Python2/lesson7';
-import Python2Lesson8 from './CS/Python2/lesson8';
-import Python2Lesson9 from './CS/Python2/lesson9';
-import Python2Lesson10 from './CS/Python2/lesson10';
-import Python2Lesson11 from './CS/Python2/lesson11';
-import Python2Lesson12 from './CS/Python2/lesson12';
-import Python2Lesson13 from './CS/Python2/lesson13';
-import Python2Lesson14 from './CS/Python2/lesson14';
-import Python2Lesson15 from './CS/Python2/lesson15';
-import Python2Lesson16 from './CS/Python2/lesson16';
-import Python2Lesson17 from './CS/Python2/lesson17';
-
-// Import Scratch Curriculum component
-import ScratchCurriculum from './CS/Scratch/curriculum';
-import ScratchLesson1 from './CS/Scratch/lesson1';
-import ScratchLesson2 from './CS/Scratch/lesson2';
-import ScratchLesson3 from './CS/Scratch/lesson3';
-import ScratchLesson4 from './CS/Scratch/lesson4';
-import ScratchLesson5 from './CS/Scratch/lesson5';
-import ScratchLesson6 from './CS/Scratch/lesson6';
-import ScratchLesson7 from './CS/Scratch/lesson7';
-import ScratchLesson8 from './CS/Scratch/lesson8';
-import ScratchLesson9 from './CS/Scratch/lesson9';
-import ScratchLesson10 from './CS/Scratch/lesson10';
-import ScratchLesson11 from './CS/Scratch/lesson11';
-import ScratchLesson12 from './CS/Scratch/lesson12';
-import ScratchLesson13 from './CS/Scratch/lesson13';
-import ScratchLesson14 from './CS/Scratch/lesson14';
-import ScratchLesson15 from './CS/Scratch/lesson15';
-import ScratchLesson16 from './CS/Scratch/lesson16';
-import ScratchLesson17 from './CS/Scratch/lesson17';
-import ScratchLesson18 from './CS/Scratch/lesson18';
-import ScratchLesson19 from './CS/Scratch/lesson19';
-import ScratchLesson20 from './CS/Scratch/lesson20';
-import ScratchLesson21 from './CS/Scratch/lesson21';
-import ScratchLesson22 from './CS/Scratch/lesson22';
-import ScratchLesson23 from './CS/Scratch/lesson23';
-import ScratchLesson24 from './CS/Scratch/lesson24';
+// Import Firebase components
+import FirebaseCurriculum from './components/FirebaseCurriculum';
+import LessonPage from './LessonPage';
 
 // Login Modal Component
 function LoginModal({ show, onLogin }) {
@@ -526,74 +456,14 @@ function App() {
         <Route path="/science" element={<Science />} />
         <Route path="/cs" element={<CS />} />
         <Route path="/engineering" element={<Engineering />} />
-        <Route path="/cs/python1/" element={<Python1Curriculum />} />
-        <Route path="/cs/python1/lesson1" element={<Lesson1 />} />
-        <Route path="/cs/python1/lesson2" element={<Lesson2 />} />
-        <Route path="/cs/python1/lesson3" element={<Lesson3 />} />
-        <Route path="/cs/python1/lesson4" element={<Lesson4 />} />
-        <Route path="/cs/python1/lesson5" element={<Lesson5 />} />
-        <Route path="/cs/python1/lesson6" element={<Lesson6 />} />
-        <Route path="/cs/python1/lesson7" element={<Lesson7 />} />
-        <Route path="/cs/python1/lesson8" element={<Lesson8 />} />
-        <Route path="/cs/python1/lesson9" element={<Lesson9 />} />
-        <Route path="/cs/python1/lesson10" element={<Lesson10 />} />
-        <Route path="/cs/python1/lesson11" element={<Lesson11 />} />
-        <Route path="/cs/python1/lesson12" element={<Lesson12 />} />
-        <Route path="/cs/python1/lesson13" element={<Lesson13 />} />
-        <Route path="/cs/python1/lesson14" element={<Lesson14 />} />
-        <Route path="/cs/python1/lesson15" element={<Lesson15 />} />
-        <Route path="/cs/python1/lesson16" element={<Lesson16 />} />
-        <Route path="/cs/python1/lesson17" element={<Lesson17 />} />
-        <Route path="/cs/python1/lesson18" element={<Lesson18 />} />
-        <Route path="/cs/python1/lesson19" element={<Lesson19 />} />
-        <Route path="/cs/python1/lesson20" element={<Lesson20 />} />
-        <Route path="/cs/python1/lesson21" element={<Lesson21 />} />
-        <Route path="/cs/python1/lesson22" element={<Lesson22 />} />
-        <Route path="/cs/python1/lesson23" element={<Lesson23 />} />
-        <Route path="/cs/python1/lesson24" element={<Lesson24 />} />
-        <Route path="/cs/python2" element={<Python2Curriculum />} />
-        <Route path="/cs/python2/lesson1" element={<Python2Lesson1 />} />
-        <Route path="/cs/python2/lesson2" element={<Python2Lesson2 />} />
-        <Route path="/cs/python2/lesson3" element={<Python2Lesson3 />} />
-        <Route path="/cs/python2/lesson4" element={<Python2Lesson4 />} />
-        <Route path="/cs/python2/lesson5" element={<Python2Lesson5 />} />
-        <Route path="/cs/python2/lesson6" element={<Python2Lesson6 />} />
-        <Route path="/cs/python2/lesson7" element={<Python2Lesson7 />} />
-        <Route path="/cs/python2/lesson8" element={<Python2Lesson8 />} />
-        <Route path="/cs/python2/lesson9" element={<Python2Lesson9 />} />
-        <Route path="/cs/python2/lesson10" element={<Python2Lesson10 />} />
-        <Route path="/cs/python2/lesson11" element={<Python2Lesson11 />} />
-        <Route path="/cs/python2/lesson12" element={<Python2Lesson12 />} />
-        <Route path="/cs/python2/lesson13" element={<Python2Lesson13 />} />
-        <Route path="/cs/python2/lesson14" element={<Python2Lesson14 />} />
-        <Route path="/cs/python2/lesson15" element={<Python2Lesson15 />} />
-        <Route path="/cs/python2/lesson16" element={<Python2Lesson16 />} />
-        <Route path="/cs/python2/lesson17" element={<Python2Lesson17 />} />
-        <Route path="/cs/scratch" element={<ScratchCurriculum />} />
-        <Route path="/cs/scratch/lesson1" element={<ScratchLesson1 />} />
-        <Route path="/cs/scratch/lesson2" element={<ScratchLesson2 />} />
-        <Route path="/cs/scratch/lesson3" element={<ScratchLesson3 />} />
-        <Route path="/cs/scratch/lesson4" element={<ScratchLesson4 />} />
-        <Route path="/cs/scratch/lesson5" element={<ScratchLesson5 />} />
-        <Route path="/cs/scratch/lesson6" element={<ScratchLesson6 />} />
-        <Route path="/cs/scratch/lesson7" element={<ScratchLesson7 />} />
-        <Route path="/cs/scratch/lesson8" element={<ScratchLesson8 />} />
-        <Route path="/cs/scratch/lesson9" element={<ScratchLesson9 />} />
-        <Route path="/cs/scratch/lesson10" element={<ScratchLesson10 />} />
-        <Route path="/cs/scratch/lesson11" element={<ScratchLesson11 />} />
-        <Route path="/cs/scratch/lesson12" element={<ScratchLesson12 />} />
-        <Route path="/cs/scratch/lesson13" element={<ScratchLesson13 />} />
-        <Route path="/cs/scratch/lesson14" element={<ScratchLesson14 />} />
-        <Route path="/cs/scratch/lesson15" element={<ScratchLesson15 />} />
-        <Route path="/cs/scratch/lesson16" element={<ScratchLesson16 />} />
-        <Route path="/cs/scratch/lesson17" element={<ScratchLesson17 />} />
-        <Route path="/cs/scratch/lesson18" element={<ScratchLesson18 />} />
-        <Route path="/cs/scratch/lesson19" element={<ScratchLesson19 />} />
-        <Route path="/cs/scratch/lesson20" element={<ScratchLesson20 />} />
-        <Route path="/cs/scratch/lesson21" element={<ScratchLesson21 />} />
-        <Route path="/cs/scratch/lesson22" element={<ScratchLesson22 />} />
-        <Route path="/cs/scratch/lesson23" element={<ScratchLesson23 />} />
-        <Route path="/cs/scratch/lesson24" element={<ScratchLesson24 />} />
+        
+        {/* Curriculum routes */}
+        <Route path="/cs/python1" element={<FirebaseCurriculum course="python1" courseTitle="Python 1" />} />
+        <Route path="/cs/python2" element={<FirebaseCurriculum course="python2" courseTitle="Python 2" />} />
+        <Route path="/cs/scratch" element={<FirebaseCurriculum course="scratch" courseTitle="Scratch" />} />
+        <Route path="/cs/:course/lesson/:lessonNumber" element={<LessonPage useFirebase={true} />} />
+        
+        {/* Static curriculum files are kept in the file system for reference but not used in the app */}
       </Routes>
     </HashRouter >
   );
