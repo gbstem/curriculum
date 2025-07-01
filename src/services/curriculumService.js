@@ -34,10 +34,13 @@ export const getAllCurriculum = async () => {
 // Get curriculum by course and lesson
 export const getCurriculumByCourseAndLesson = async (course, lessonNumber) => {
   try {
+    // Convert lessonNumber to number to ensure proper comparison
+    const lessonNum = parseInt(lessonNumber);
+    
     const q = query(
       collection(db, CURRICULUM_COLLECTION),
       where('course', '==', course),
-      where('lessonNumber', '==', lessonNumber)
+      where('lessonNumber', '==', lessonNum)
     );
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {

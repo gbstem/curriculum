@@ -4,17 +4,16 @@ import { Button, Alert, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './curriculum.css';
 
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/vs2015.css';
 import ScratchBlocks from 'scratchblocks-react';
 import { marked } from 'marked';
 import { getCurriculumByCourseAndLesson } from './services/curriculumService';
 import EditorModal from './components/EditorModal';
 import VersionHistoryModal from './components/VersionHistoryModal';
 
-// Configure marked for scratchblocks support
+// Configure marked for scratchblocks and highlight.js support
 const renderer = new marked.Renderer();
-const originalCodeRenderer = renderer.code.bind(renderer);
 
 renderer.code = (code, language) => {
     if (language === 'scratch' || language === 'scratchblocks') {
@@ -24,23 +23,37 @@ renderer.code = (code, language) => {
             </div>
         `;
     }
-    return originalCodeRenderer(code, language);
+    // For other code blocks, use highlight.js
+    const validLang = language && hljs.getLanguage(language);
+    const highlighted = validLang
+        ? hljs.highlight(code, { language }).value
+        : hljs.highlightAuto(code).value;
+    return `<pre><code class="hljs ${language}">${highlighted}</code></pre>`;
 };
+
+marked.setOptions({
+    highlight: function(code, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            return hljs.highlight(code, { language: lang }).value;
+        }
+        return hljs.highlightAuto(code).value;
+    }
+});
 
 marked.use({ renderer });
 
 const LessonPage = ({ 
     title, 
     moduleTitle, 
-    lessonNumber, 
+    lessonNumber: propLessonNumber, 
     content, 
     prevLesson, 
     nextLesson, 
     backToCurriculum = "/cs/python1/",
     useFirebase = false,
-    course = null
+    course: propCourse = null
 }) => {
-    const { courseParam, lessonParam } = useParams();
+    const { course, lessonNumber } = useParams();
     const [lessonData, setLessonData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -49,9 +62,11 @@ const LessonPage = ({
     const [saving, setSaving] = useState(false);
 
     // Determine if we should use Firebase data
-    const shouldUseFirebase = useFirebase || (courseParam && lessonParam);
-    const currentCourse = course || courseParam;
-    const currentLessonNumber = lessonNumber || parseInt(lessonParam);
+    const shouldUseFirebase = useFirebase || (course && lessonNumber);
+    const currentCourse = propCourse || course;
+    const currentLessonNumber = propLessonNumber || parseInt(lessonNumber);
+
+    console.log('LessonPage params:', { course, lessonNumber, currentCourse, currentLessonNumber, shouldUseFirebase });
 
     useEffect(() => {
         if (shouldUseFirebase && currentCourse && currentLessonNumber) {
@@ -63,13 +78,16 @@ const LessonPage = ({
         setLoading(true);
         setError('');
         try {
+            console.log('Loading lesson data:', { currentCourse, currentLessonNumber });
             const data = await getCurriculumByCourseAndLesson(currentCourse, currentLessonNumber);
+            console.log('Lesson data received:', data);
             if (data) {
                 setLessonData(data);
             } else {
                 setError('Lesson not found');
             }
         } catch (err) {
+            console.error('Error loading lesson:', err);
             setError('Error loading lesson: ' + err.message);
         } finally {
             setLoading(false);
@@ -98,10 +116,7 @@ const LessonPage = ({
     // Function to render content with markdown-like formatting
     const renderContent = (text) => {
         if (!text) return null;
-        
-        // Use marked for better markdown rendering
         const htmlContent = marked(text);
-        
         return (
             <div 
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
