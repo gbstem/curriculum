@@ -55,10 +55,27 @@ export function renderContent(text) {
             const level = line.match(/^#+/)[0].length;
             const text = line.replace(/^#+\s*/, '');
             const HeaderTag = `h${Math.min(level + 2, 6)}`;
+            
+            // Add special styling for different header levels
+            let headerClassName = "mt-4 mb-3";
+            if (level === 1) {
+                // Main headers (h3) - keep original styling
+                headerClassName = "mt-4 mb-3";
+            } else if (level === 2) {
+                // Sub headers (h4) - pretty purple with accent
+                headerClassName = "mt-3 mb-2 text-purple fw-semibold border-start border-3 border-purple ps-3";
+            } else if (level === 3) {
+                // Sub-sub headers (h5) - classy dark gray with subtle styling
+                headerClassName = "mt-2 mb-2 text-dark fw-medium border-bottom border-1 border-light pb-1";
+            } else {
+                // Other headers (h6) - soft teal
+                headerClassName = "mt-2 mb-1 text-info fw-normal";
+            }
+            
             elements.push(
                 React.createElement(HeaderTag, {
                     key: `header-${index}`,
-                    className: "mt-4 mb-3"
+                    className: headerClassName
                 }, text)
             );
             return;
