@@ -161,9 +161,9 @@ const EditorModal = ({
           {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
           
           <Form>
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3">
+            <Row className="mb-3">
+              <Col md={4}>
+                <Form.Group>
                   <Form.Label>Course</Form.Label>
                   <Form.Select 
                     value={course} 
@@ -187,8 +187,8 @@ const EditorModal = ({
                   </Form.Select>
                 </Form.Group>
               </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
+              <Col md={2}>
+                <Form.Group>
                   <Form.Label>Lesson Number</Form.Label>
                   <Form.Control
                     type="number"
@@ -198,18 +198,19 @@ const EditorModal = ({
                   />
                 </Form.Group>
               </Col>
+              <Col md={6}>
+                <Form.Group>
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Lesson title"
+                  />
+                </Form.Group>
+              </Col>
             </Row>
             
-            <Form.Group className="mb-3">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Lesson title"
-              />
-            </Form.Group>
-
             <Form.Group className="mb-3">
               <Form.Label>Content</Form.Label>
               <div className="d-flex flex-column flex-md-row gap-3" style={{ width: '100%' }}>
@@ -260,13 +261,13 @@ const EditorModal = ({
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Enter lesson content in Markdown format..."
-                    style={{ fontFamily: 'monospace', height: '350px', width: '100%', resize: 'vertical', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                    style={{ fontFamily: 'monospace', height: '25rem', width: '100%', resize: 'vertical', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
                   />
                 </div>
                 {/* Preview Side */}
                 <div style={{ width: '50%' }}>
                 <Form.Label className="mb-2" style={{ fontWeight: 500 }}>Preview</Form.Label>
-                <div style={{ height: '350px', overflowY: 'auto' }}>
+                <div style={{ height: '25rem', overflowY: 'auto' }}>
                 <div className="preview-col d-flex flex-column" style={{minWidth: 0, overflowY: 'auto' }}>
                   <div
                     className="curriculum-content card shadow-sm flex-grow-1"
