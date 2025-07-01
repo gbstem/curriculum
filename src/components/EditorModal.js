@@ -170,9 +170,19 @@ const EditorModal = ({
                     onChange={(e) => setCourse(e.target.value)}
                   >
                     <option value="">Select Course</option>
-                    <option value="python1">Python 1</option>
-                    <option value="python2">Python 2</option>
+                    <option value="python1">Python I</option>
+                    <option value="python2">Python II</option>
                     <option value="scratch">Scratch</option>
+                    <option value="math1">Math I</option>
+                    <option value="math2">Math II</option>
+                    <option value="math3">Math III</option>
+                    <option value="math4">Math IV</option>
+                    <option value="math5">Math V</option>
+                    <option value="engineering1">Engineering I</option>
+                    <option value="engineering2">Engineering II</option>
+                    <option value="engineering3">Engineering III</option>
+                    <option value="environmental">Environmental Science</option>
+                    <option value="physics">Physics</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
