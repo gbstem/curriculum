@@ -133,8 +133,11 @@ const EditorModal = ({
               {error && <Alert variant="danger" className="mt-2">{error}</Alert>}
             </Form.Group>
             
-            <div className="d-grid">
-              <Button type="submit" variant="primary" size="lg">
+            <div className="d-flex gap-2">
+              <Button variant="secondary" onClick={onHide} className="flex-fill">
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" className="flex-fill">
                 <i className="fas fa-sign-in-alt me-2"></i>
                 Access Editor
               </Button>
