@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Alert, Row, Col } from 'react-bootstrap';
-import { marked } from 'marked';
 import CodeBlockModal from './CodeBlockModal';
 import { renderContent } from './renderContent';
+import { deleteCurriculum } from '../services/curriculumService';
 
 const EditorModal = ({ 
   show, 
@@ -54,6 +54,19 @@ const EditorModal = ({
       onHide();
     } catch (error) {
       setError('Error saving curriculum: ' + error.message);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!curriculumData.id) return;
+    if (!window.confirm('Are you sure you want to delete this lesson? This cannot be undone.')) return;
+    try {
+      await deleteCurriculum(curriculumData.id);
+      onHide();
+      // Optionally, reload the page or refresh the curriculum list
+      window.location.reload();
+    } catch (error) {
+      setError('Error deleting curriculum: ' + error.message);
     }
   };
 
@@ -192,7 +205,7 @@ const EditorModal = ({
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm d-flex align-items-center gap-1 text-white"
+                      className="shadow-sm d-flex align-items-center gap-1 text-white btn-primary"
                       onClick={() => insertMarkdown('**{text}**')}
                       title="Bold"
                     >
@@ -201,7 +214,7 @@ const EditorModal = ({
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm d-flex align-items-center gap-1 text-white"
+                      className="shadow-sm d-flex align-items-center gap-1 text-white btn-primary"
                       onClick={() => insertMarkdown('*{text}*')}
                       title="Italic"
                     >
@@ -210,7 +223,7 @@ const EditorModal = ({
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm d-flex align-items-center gap-1 text-white"
+                      className="shadow-sm d-flex align-items-center gap-1 text-white btn-primary"
                       onClick={() => insertMarkdown('- {text}')}
                       title="Bullet List"
                     >
@@ -219,7 +232,7 @@ const EditorModal = ({
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm d-flex align-items-center gap-1 text-white"
+                      className="shadow-sm d-flex align-items-center gap-1 text-white btn-primary"
                       onClick={() => insertMarkdown('1. {text}')}
                       title="Numbered List"
                     >
@@ -259,6 +272,12 @@ const EditorModal = ({
           <Button variant="secondary" onClick={onHide}>
             Cancel
           </Button>
+          {curriculumData.id && (
+            <Button variant="danger" onClick={handleDelete}>
+              <i className="fas fa-trash me-2"></i>
+              Delete
+            </Button>
+          )}
           <Button 
             variant="primary" 
             onClick={handleSave}

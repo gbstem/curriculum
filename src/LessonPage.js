@@ -186,7 +186,7 @@ const LessonPage = ({
                             <Button 
                                 variant="outline-light" 
                                 size="sm" 
-                                className="me-2"
+                                className="me-2 btn-primary"
                                 onClick={() => setShowEditor(true)}
                             >
                                 <i className="fas fa-edit me-1"></i>
@@ -195,6 +195,7 @@ const LessonPage = ({
                             <Button 
                                 variant="outline-light" 
                                 size="sm"
+                                className="btn-primary"
                                 onClick={() => setShowVersionHistory(true)}
                             >
                                 <i className="fas fa-history me-1"></i>
@@ -222,7 +223,7 @@ const LessonPage = ({
                                     )}
                                 </div>
                                 <div>
-                                    <Link to={backToCurriculum} className="btn btn-secondary me-2">
+                                    <Link to={backToCurriculum} className="btn btn-primary me-2">
                                         📚 Curriculum
                                     </Link>
                                     {nextLesson && (

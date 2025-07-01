@@ -41,17 +41,8 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
         }
     };
 
-    const groupLessonsByModule = (lessons) => {
-        const modules = {};
-        lessons.forEach(lesson => {
-            const moduleTitle = lesson.moduleTitle || 'General';
-            if (!modules[moduleTitle]) {
-                modules[moduleTitle] = [];
-            }
-            modules[moduleTitle].push(lesson);
-        });
-        return modules;
-    };
+    // Sort lessons by lessonNumber
+    const sortedLessons = [...curriculum].sort((a, b) => (a.lessonNumber || 0) - (b.lessonNumber || 0));
 
     if (loading) {
         return (
@@ -89,8 +80,6 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
         );
     }
 
-    const modules = groupLessonsByModule(curriculum);
-
     return (
         <div>
             <main>
@@ -100,6 +89,7 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
                     <div className="mt-3">
                         <Button 
                             variant="outline-light" 
+                            className="btn-primary"
                             size="sm"
                             onClick={() => setShowEditor(true)}
                         >
@@ -119,6 +109,7 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
                                     <p className="text-muted">Start by adding your first lesson!</p>
                                     <Button 
                                         variant="primary"
+                                        className="btn-primary"
                                         onClick={() => setShowEditor(true)}
                                     >
                                         <i className="fas fa-plus me-1"></i>
@@ -126,29 +117,18 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
                                     </Button>
                                 </div>
                             ) : (
-                                <>                                    
-                                    {Object.entries(modules).map(([moduleTitle, lessons], moduleIndex) => (
-                                        <div key={moduleIndex} className="card shadow-sm mb-4 module-card">
-                                            <div className="card-header bg-primary text-white">
-                                                <h4 className="mb-0">Module {moduleIndex + 1}: {moduleTitle}</h4>
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="row">
-                                                    {lessons.map((lesson) => (
-                                                        <div key={lesson.id} className="col-md-6 mb-2">
-                                                            <Link 
-                                                                to={`/cs/${course}/lesson/${lesson.lessonNumber}`}
-                                                                className="btn text-white btn-outline-primary btn-sm w-100 lesson-link"
-                                                            >
-                                                                Lesson {lesson.lessonNumber}: {lesson.title}
-                                                            </Link>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
+                                <div className="row">
+                                    {sortedLessons.map((lesson) => (
+                                        <div key={lesson.id} className="col-md-6 mb-2">
+                                            <Link 
+                                                to={`/cs/${course}/lesson/${lesson.lessonNumber}`}
+                                                className="btn text-white btn-primary btn-sm w-100 lesson-link"
+                                            >
+                                                Lesson {lesson.lessonNumber}: {lesson.title}
+                                            </Link>
                                         </div>
                                     ))}
-                                </>
+                                </div>
                             )}
 
                             <div className="text-center mt-5 mb-4">

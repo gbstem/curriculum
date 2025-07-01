@@ -172,8 +172,11 @@ strong {
 .btn {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.2rem;
-  background-color: #1D2256;
   border-radius: 10px;
+}
+
+.btn-primary {
+  background-color: #1D2256;
 }
 
 .scrolling-wrapper {
