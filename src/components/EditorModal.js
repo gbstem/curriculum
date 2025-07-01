@@ -191,38 +191,38 @@ const EditorModal = ({
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm d-flex align-items-center gap-1"
+                      className="shadow-sm d-flex align-items-center gap-1 text-white"
                       onClick={() => insertMarkdown('**{text}**')}
                       title="Bold"
                     >
-                      <i className="fas fa-bold"></i> <span>Bold</span>
+                      <i className="fas fa-bold"></i>
                     </Button>
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm d-flex align-items-center gap-1"
+                      className="shadow-sm d-flex align-items-center gap-1 text-white"
                       onClick={() => insertMarkdown('*{text}*')}
                       title="Italic"
                     >
-                      <i className="fas fa-italic"></i> <span>Italic</span>
+                      <i className="fas fa-italic"></i>
                     </Button>
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm d-flex align-items-center gap-1"
+                      className="shadow-sm d-flex align-items-center gap-1 text-white"
                       onClick={() => insertMarkdown('- {text}')}
                       title="Bullet List"
                     >
-                      <i className="fas fa-list-ul"></i> <span>Bullet</span>
+                      <i className="fas fa-list-ul"></i>
                     </Button>
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm d-flex align-items-center gap-1"
+                      className="shadow-sm d-flex align-items-center gap-1 text-white"
                       onClick={() => insertMarkdown('1. {text}')}
                       title="Numbered List"
                     >
-                      <i className="fas fa-list-ol"></i> <span>Number</span>
+                      <i className="fas fa-list-ol"></i>
                     </Button>
                   </div>
                   <Form.Control
