@@ -507,24 +507,24 @@ function CS() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-info bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-globe fa-2x text-info"></i>
+                  <div className="bg-primary bg-opacity-10 p-3 rounded me-3">
+                    <i className="fas fa-globe fa-2x text-primary"></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Web Development</h4>
-                    <span className="badge bg-info">Coming Soon</span>
+                    <span className="badge bg-primary">Modern Web</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
                   Learn to build modern websites using HTML, CSS, and JavaScript. Create responsive designs and interactive web applications.
                 </p>
                 <ul className="list-unstyled mb-4">
-                  <li><i className="fas fa-clock text-muted me-2"></i>HTML & CSS fundamentals</li>
-                  <li><i className="fas fa-clock text-muted me-2"></i>JavaScript programming</li>
-                  <li><i className="fas fa-clock text-muted me-2"></i>Responsive design</li>
-                  <li><i className="fas fa-clock text-muted me-2"></i>Web applications</li>
+                  <li><i className="fas fa-check text-success me-2"></i>HTML & CSS fundamentals</li>
+                  <li><i className="fas fa-check text-success me-2"></i>JavaScript programming</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Responsive design</li>
+                  <li><i className="fas fa-check text-success me-2"></i>Web applications</li>
                 </ul>
-                <button className="btn btn-secondary" disabled>Coming Soon</button>
+                <Link to="/cs/webdev" className="btn btn-primary">Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -628,6 +628,7 @@ function App() {
               <NavDropdown.Item as={Link} to="/cs/python1" className="text-center text-lg-start">Python I</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/cs/python2" className="text-center text-lg-start">Python II</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/cs/scratch" className="text-center text-lg-start">Scratch</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/cs/webdev" className="text-center text-lg-start">Web Development</NavDropdown.Item>
             </NavDropdown>
             {/* Math Dropdown */}
             <NavDropdown title="Math" id="math-dropdown" className="text-center">
@@ -675,6 +676,7 @@ function App() {
         <Route path="/cs/python1" element={<FirebaseCurriculum course="python1" courseTitle="Python I" />} />
         <Route path="/cs/python2" element={<FirebaseCurriculum course="python2" courseTitle="Python II" />} />
         <Route path="/cs/scratch" element={<FirebaseCurriculum course="scratch" courseTitle="Scratch" />} />
+        <Route path="/cs/webdev" element={<FirebaseCurriculum course="webdev" courseTitle="Web Development" />} />
         <Route path="/cs/:course/lesson/:lessonNumber" element={<LessonPage useFirebase={true} />} />
         
         {/* Math Curriculum routes */}
