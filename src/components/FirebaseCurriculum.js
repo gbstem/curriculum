@@ -126,29 +126,7 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
                                     </Button>
                                 </div>
                             ) : (
-                                <>
-                                    <div className="card shadow-sm mb-4">
-                                        <div className="card-body">
-                                            <h2 className="card-title text-primary mb-3">Course Overview</h2>
-                                            <p className="lead">
-                                                Welcome to the gbSTEM {courseTitle} curriculum! This course is designed to 
-                                                provide an interactive and project-based learning experience.
-                                            </p>
-                                            
-                                            <div className="alert alert-info">
-                                                <h5>📚 Course Goals</h5>
-                                                <ul className="mb-0">
-                                                    <li><strong>Understanding:</strong> Students will gain a solid foundation in programming</li>
-                                                    <li><strong>Communication:</strong> Foster a collaborative learning environment</li>
-                                                    <li><strong>Fun:</strong> Make learning enjoyable through hands-on projects</li>
-                                                    <li><strong>Community:</strong> Build connections between coding and real-world experiences</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <h2 className="text-center mb-4">Module Structure</h2>
-                                    
+                                <>                                    
                                     {Object.entries(modules).map(([moduleTitle, lessons], moduleIndex) => (
                                         <div key={moduleIndex} className="card shadow-sm mb-4 module-card">
                                             <div className="card-header bg-primary text-white">
