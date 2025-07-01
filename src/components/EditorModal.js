@@ -264,11 +264,12 @@ const EditorModal = ({
                   />
                 </div>
                 {/* Preview Side */}
-                <div className="preview-col" style={{ width: '50%', minWidth: 0, height: '350px', display: 'flex', flexDirection: 'column' }}>
+                <div className="preview-col d-flex flex-column" style={{ width: '50%', minWidth: 0 }}>
+                  <Form.Label className="mb-2" style={{ fontWeight: 500 }}>Preview</Form.Label>
                   <div
-                    className="curriculum-content card shadow-sm"
+                    className="curriculum-content card shadow-sm flex-grow-1"
                     style={{
-                      height: '100%',
+                      height: '350px',
                       overflowY: 'auto',
                       background: '#f8f9fa',
                       border: '1px solid #e0e0e0',
