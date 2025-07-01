@@ -191,38 +191,38 @@ const EditorModal = ({
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm"
+                      className="shadow-sm d-flex align-items-center gap-1"
                       onClick={() => insertMarkdown('**{text}**')}
                       title="Bold"
                     >
-                      <i className="fas fa-bold"></i>
+                      <i className="fas fa-bold"></i> <span>Bold</span>
                     </Button>
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm"
+                      className="shadow-sm d-flex align-items-center gap-1"
                       onClick={() => insertMarkdown('*{text}*')}
                       title="Italic"
                     >
-                      <i className="fas fa-italic"></i>
+                      <i className="fas fa-italic"></i> <span>Italic</span>
                     </Button>
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm"
+                      className="shadow-sm d-flex align-items-center gap-1"
                       onClick={() => insertMarkdown('- {text}')}
                       title="Bullet List"
                     >
-                      <i className="fas fa-list-ul"></i>
+                      <i className="fas fa-list-ul"></i> <span>Bullet</span>
                     </Button>
                     <Button 
                       variant="outline-primary" 
                       size="sm"
-                      className="shadow-sm"
+                      className="shadow-sm d-flex align-items-center gap-1"
                       onClick={() => insertMarkdown('1. {text}')}
                       title="Numbered List"
                     >
-                      <i className="fas fa-list-ol"></i>
+                      <i className="fas fa-list-ol"></i> <span>Number</span>
                     </Button>
                   </div>
                   <Form.Control
