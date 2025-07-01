@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { Button, Alert, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './curriculum.css';
@@ -58,6 +58,7 @@ const LessonPage = ({
     course: propCourse = null
 }) => {
     const { course, lessonNumber } = useParams();
+    const location = useLocation();
     const [lessonData, setLessonData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -117,6 +118,11 @@ const LessonPage = ({
     const displayLessonNumber = lessonData?.lessonNumber || currentLessonNumber;
     const displayContent = lessonData?.content || content;
 
+    // Dynamically generate the curriculum path for any subject
+    const pathParts = location.pathname.split('/');
+    const subject = pathParts[1] || 'cs'; // fallback to 'cs' if not found
+    const curriculumPath = `/${subject}/${currentCourse}`;
+
     // Render scratchblocks after the component mounts
     useEffect(() => {
         if (displayContent) {
@@ -162,7 +168,7 @@ const LessonPage = ({
                             <p>{error}</p>
                             <hr />
                             <div className="d-flex justify-content-end">
-                                <Link to={backToCurriculum} className="btn btn-outline-danger">
+                                <Link to={curriculumPath} className="btn btn-outline-danger">
                                     Back to Curriculum
                                 </Link>
                             </div>
@@ -223,7 +229,7 @@ const LessonPage = ({
                                     )}
                                 </div>
                                 <div>
-                                    <Link to={backToCurriculum} className="btn btn-primary me-2">
+                                    <Link to={curriculumPath} className="btn btn-primary me-2">
                                         📚 Curriculum
                                     </Link>
                                     {nextLesson && (
