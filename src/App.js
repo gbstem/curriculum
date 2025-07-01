@@ -99,18 +99,18 @@ function Math() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-success bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-calculator fa-2x text-success"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(25,135,84,0.10)' }}>
+                    <i className="fas fa-calculator fa-2x" style={{ color: '#198754' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Math I</h4>
-                    <span className="badge bg-success">Foundation</span>
+                    <span className="badge" style={{ background: '#198754', color: '#fff' }}>Foundation</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
                   Build a strong foundation in mathematical concepts and problem-solving skills.
                 </p>
-                <a href="/#/math/math1" className="btn btn-success">Start Teaching</a>
+                <Link to="/math/math1" className="btn w-100" style={{ background: '#198754', color: '#fff' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -119,18 +119,18 @@ function Math() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-success bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-chart-line fa-2x text-success"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(13,110,253,0.10)' }}>
+                    <i className="fas fa-chart-line fa-2x" style={{ color: '#0d6efd' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Math II</h4>
-                    <span className="badge bg-success">Intermediate</span>
+                    <span className="badge" style={{ background: '#0d6efd', color: '#fff' }}>Intermediate</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
                   Explore advanced mathematical concepts and analytical thinking.
                 </p>
-                <a href="/#/math/math2" className="btn btn-success">Start Teaching</a>
+                <Link to="/math/math2" className="btn w-100" style={{ background: '#0d6efd', color: '#fff' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -139,18 +139,18 @@ function Math() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-success bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-square-root-alt fa-2x text-success"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(111,66,193,0.10)' }}>
+                    <i className="fas fa-square-root-alt fa-2x" style={{ color: '#6f42c1' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Math III</h4>
-                    <span className="badge bg-success">Advanced</span>
+                    <span className="badge" style={{ background: '#6f42c1', color: '#fff' }}>Advanced</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
                   Master complex mathematical theories and applications.
                 </p>
-                <a href="/#/math/math3" className="btn btn-success">Start Teaching</a>
+                <Link to="/math/math3" className="btn w-100" style={{ background: '#6f42c1', color: '#fff' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -159,18 +159,18 @@ function Math() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-success bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-infinity fa-2x text-success"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(32,201,151,0.10)' }}>
+                    <i className="fas fa-infinity fa-2x" style={{ color: '#20c997' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Math IV</h4>
-                    <span className="badge bg-success">Expert</span>
+                    <span className="badge" style={{ background: '#20c997', color: '#fff' }}>Expert</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
                   Delve into advanced mathematical analysis and proofs.
                 </p>
-                <a href="/#/math/math4" className="btn btn-success">Start Teaching</a>
+                <Link to="/math/math4" className="btn w-100" style={{ background: '#20c997', color: '#fff' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -179,18 +179,18 @@ function Math() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-success bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-brain fa-2x text-success"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(253,126,20,0.10)' }}>
+                    <i className="fas fa-brain fa-2x" style={{ color: '#fd7e14' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Math V</h4>
-                    <span className="badge bg-success">Master</span>
+                    <span className="badge" style={{ background: '#fd7e14', color: '#fff' }}>Master</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
                   Explore the frontiers of mathematical knowledge and research.
                 </p>
-                <a href="/#/math/math5" className="btn btn-success">Start Teaching</a>
+                <Link to="/math/math5" className="btn w-100" style={{ background: '#fd7e14', color: '#fff' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -203,7 +203,7 @@ function Science() {
   return (
     <div className="container-fluid p-0">
       {/* Hero Section */}
-      <div className="bg-info text-white py-5" style={{ backgroundColor: '#0dcaf0' }}>
+      <div className="text-white py-5" style={{ backgroundColor: '#20c997' }}>
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-8">
@@ -224,18 +224,18 @@ function Science() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-info bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-leaf fa-2x text-info"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(32,201,151,0.10)' }}>
+                    <i className="fas fa-leaf fa-2x" style={{ color: '#20c997' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Environmental Science</h4>
-                    <span className="badge bg-info">Ecology</span>
+                    <span className="badge" style={{ background: '#20c997', color: '#fff' }}>Ecology</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
                   Explore environmental systems, sustainability, and the impact of human activities on our planet.
                 </p>
-                <a href="/#/science/environmental" className="btn btn-info text-white">Start Teaching</a>
+                <Link to="/science/environmental" className="btn w-100 text-white" style={{ background: '#20c997' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -244,18 +244,18 @@ function Science() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-info bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-atom fa-2x text-info"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(13,110,253,0.10)' }}>
+                    <i className="fas fa-atom fa-2x" style={{ color: '#0d6efd' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Physics</h4>
-                    <span className="badge bg-info">Mechanics</span>
+                    <span className="badge" style={{ background: '#0d6efd', color: '#fff' }}>Mechanics</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
                   Understand the fundamental laws of nature, motion, energy, and the universe around us.
                 </p>
-                <a href="/#/science/physics" className="btn btn-info text-white">Start Teaching</a>
+                <Link to="/science/physics" className="btn w-100 text-white" style={{ background: '#0d6efd' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -289,18 +289,18 @@ function Engineering() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-warning bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-tools fa-2x text-warning"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(255,193,7,0.10)' }}>
+                    <i className="fas fa-cogs fa-2x" style={{ color: '#ffc107' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Engineering I</h4>
-                    <span className="badge bg-warning text-dark">Foundation</span>
+                    <span className="badge" style={{ background: '#ffc107', color: '#212529' }}>Intro</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
-                  Learn fundamental engineering principles and design thinking methodologies.
+                  Introduction to engineering principles and hands-on projects.
                 </p>
-                <a href="/#/engineering/engineering1" className="btn btn-warning text-dark">Start Teaching</a>
+                <Link to="/engineering/engineering1" className="btn w-100 text-dark" style={{ background: '#ffc107' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -309,18 +309,18 @@ function Engineering() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-warning bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-cogs fa-2x text-warning"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(253,126,20,0.10)' }}>
+                    <i className="fas fa-tools fa-2x" style={{ color: '#fd7e14' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Engineering II</h4>
-                    <span className="badge bg-warning text-dark">Intermediate</span>
+                    <span className="badge" style={{ background: '#fd7e14', color: '#fff' }}>Intermediate</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
-                  Apply engineering concepts to solve complex problems and build functional prototypes.
+                  Dive deeper into engineering design, prototyping, and teamwork.
                 </p>
-                <a href="/#/engineering/engineering2" className="btn btn-warning text-dark">Start Teaching</a>
+                <Link to="/engineering/engineering2" className="btn w-100 text-white" style={{ background: '#fd7e14' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -329,18 +329,18 @@ function Engineering() {
             <div className="card h-100 shadow-sm border-0 hover-lift">
               <div className="card-body p-4">
                 <div className="d-flex align-items-center mb-3">
-                  <div className="bg-warning bg-opacity-10 p-3 rounded me-3">
-                    <i className="fas fa-industry fa-2x text-warning"></i>
+                  <div className="p-3 rounded me-3" style={{ background: 'rgba(111,66,193,0.10)' }}>
+                    <i className="fas fa-drafting-compass fa-2x" style={{ color: '#6f42c1' }}></i>
                   </div>
                   <div>
                     <h4 className="card-title fw-bold mb-1">Engineering III</h4>
-                    <span className="badge bg-warning text-dark">Advanced</span>
+                    <span className="badge" style={{ background: '#6f42c1', color: '#fff' }}>Advanced</span>
                   </div>
                 </div>
                 <p className="card-text text-muted mb-3">
-                  Master advanced engineering systems and lead innovative design projects.
+                  Advanced engineering concepts, innovation, and real-world problem solving.
                 </p>
-                <a href="/#/engineering/engineering3" className="btn btn-warning text-dark">Start Teaching</a>
+                <Link to="/engineering/engineering3" className="btn w-100 text-white" style={{ background: '#6f42c1' }}>Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -353,85 +353,53 @@ function Engineering() {
 // Main site homepage
 function Home() {
   return (
-    <div className="container-fluid p-0">
-      {/* Hero Section */}
-      <div className="bg-primary text-white py-5" style={{ backgroundColor: '#1D2256' }}>
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-6">
-              <h1 className="display-4 fw-bold mb-4">Welcome to gbSTEM Curriculum</h1>
-              <p className="mb-4">Choose a track below to begin your teaching journey!</p>
+    <div className="container py-5" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
+      <div className="row w-100 justify-content-center g-4">
+        <div className="col-12 mb-4 text-center">
+          <h1 className="fw-bold mb-2">Choose a Curriculum Track</h1>
+          <p className="text-muted mb-0">Select a subject to get started.</p>
+        </div>
+        <div className="col-md-6 col-lg-3">
+          <div className="card h-100 shadow-sm border-0">
+            <div className="card-body text-center p-4">
+              <i className="fas fa-laptop-code fa-3x text-primary mb-3"></i>
+              <h5 className="card-title fw-bold mb-2">Computer Science</h5>
+              <p className="card-text text-muted mb-3">Learn programming with Python and Scratch, build games, and create interactive projects.</p>
+              <Link to="/cs" className="btn btn-primary w-100">Explore CS</Link>
             </div>
-            <div className="col-lg-6 text-center">
-              <img
-                src={penguin}
-                alt="gbSTEM Logo"
-                className="img-fluid"
-                style={{ maxWidth: '300px' }}
-              />
+          </div>
+        </div>
+        <div className="col-md-6 col-lg-3">
+          <div className="card h-100 shadow-sm border-0">
+            <div className="card-body text-center p-4">
+              <i className="fas fa-calculator fa-3x text-success mb-3"></i>
+              <h5 className="card-title fw-bold mb-2">Mathematics</h5>
+              <p className="card-text text-muted mb-3">Teach mathematical concepts through interactive lessons and real-world applications.</p>
+              <Link to="/math" className="btn btn-success w-100">Explore Math</Link>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-lg-3">
+          <div className="card h-100 shadow-sm border-0">
+            <div className="card-body text-center p-4">
+              <i className="fas fa-flask fa-3x text-info mb-3"></i>
+              <h5 className="card-title fw-bold mb-2">Science</h5>
+              <p className="card-text text-muted mb-3">Discover physics, environmental science, and conduct virtual experiments.</p>
+              <Link to="/science" className="btn btn-info text-white w-100">Explore Science</Link>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-lg-3">
+          <div className="card h-100 shadow-sm border-0">
+            <div className="card-body text-center p-4">
+              <i className="fas fa-cogs fa-3x text-warning mb-3"></i>
+              <h5 className="card-title fw-bold mb-2">Engineering</h5>
+              <p className="card-text text-muted mb-3">Design, build, and test solutions to real-world engineering challenges.</p>
+              <Link to="/engineering" className="btn btn-warning text-white w-100">Explore Engineering</Link>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Tracks Section */}
-      <div className="container py-5">
-        <div className="row g-4">
-          <div className="col-md-6 col-lg-3">
-            <div className="card h-100 shadow-sm border-0 hover-lift">
-              <div className="card-body text-center p-4">
-                <div className="mb-3">
-                  <i className="fas fa-laptop-code fa-3x text-primary"></i>
-                </div>
-                <h5 className="card-title fw-bold">Computer Science</h5>
-                <p className="card-text text-muted">Learn programming with Python and Scratch, build games, and create interactive projects.</p>
-                <a href="/#/cs" className="btn btn-primary">Explore CS</a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="col-md-6 col-lg-3">
-            <div className="card h-100 shadow-sm border-0 hover-lift">
-              <div className="card-body text-center p-4">
-                <div className="mb-3">
-                  <i className="fas fa-calculator fa-3x text-success"></i>
-                </div>
-                <h5 className="card-title fw-bold">Mathematics</h5>
-                <p className="card-text text-muted">Teach mathematical concepts through interactive lessons and real-world applications.</p>
-                <a href="/#/math" className="btn btn-success">Explore Math</a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="col-md-6 col-lg-3">
-            <div className="card h-100 shadow-sm border-0 hover-lift">
-              <div className="card-body text-center p-4">
-                <div className="mb-3">
-                  <i className="fas fa-flask fa-3x text-info"></i>
-                </div>
-                <h5 className="card-title fw-bold">Science</h5>
-                <p className="card-text text-muted">Discover physics, environmental science, and conduct virtual experiments.</p>
-                <a href="/#/science" className="btn btn-info text-white">Explore Science</a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="col-md-6 col-lg-3">
-            <div className="card h-100 shadow-sm border-0 hover-lift">
-              <div className="card-body text-center p-4">
-                <div className="mb-3">
-                  <i className="fas fa-cogs fa-3x text-warning"></i>
-                </div>
-                <h5 className="card-title fw-bold">Engineering</h5>
-                <p className="card-text text-muted">Design, build, and test solutions to real-world engineering challenges.</p>
-                <a href="/#/engineering" className="btn btn-warning text-white">Explore Engineering</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    
     </div>
   );
 }
@@ -478,7 +446,7 @@ function CS() {
                   <li><i className="fas fa-check text-success me-2"></i>Game development projects</li>
                   <li><i className="fas fa-check text-success me-2"></i>Interactive storytelling</li>
                 </ul>
-                <a href="/#/cs/scratch" className="btn btn-warning text-white">Start Teaching</a>
+                <Link to="/cs/scratch" className="btn btn-warning text-white">Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -504,7 +472,7 @@ function CS() {
                   <li><i className="fas fa-check text-success me-2"></i>Data structures & algorithms</li>
                   <li><i className="fas fa-check text-success me-2"></i>Real-world applications</li>
                 </ul>
-                <a href="/#/cs/python1" className="btn btn-primary">Start Teaching</a>
+                <Link to="/cs/python1" className="btn btn-primary">Start Teaching</Link>
               </div>
             </div>
           </div>
@@ -530,7 +498,7 @@ function CS() {
                   <li><i className="fas fa-check text-success me-2"></i>File I/O & data processing</li>
                   <li><i className="fas fa-check text-success me-2"></i>Advanced algorithms</li>
                 </ul>
-                <a href="/#/cs/python2" className="btn btn-success">Start Teaching</a>
+                <Link to="/cs/python2" className="btn btn-success">Start Teaching</Link>
               </div>
             </div>
           </div>
