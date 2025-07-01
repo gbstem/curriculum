@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Table, Badge, Alert } from 'react-bootstrap';
+import { Modal, Button, Table, Badge, Alert, Form } from 'react-bootstrap';
 import { getVersionHistory, restoreVersion } from '../services/curriculumService';
 
 const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId }) => {
@@ -7,6 +7,10 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [restoring, setRestoring] = useState(null);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [pendingRestoreVersionId, setPendingRestoreVersionId] = useState(null);
 
   useEffect(() => {
     if (show && course && lessonNumber) {
@@ -28,6 +32,23 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
   };
 
   const handleRestore = async (versionId) => {
+    setPendingRestoreVersionId(versionId);
+    setShowPasswordModal(true);
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (password === 'snow') {
+      setPasswordError('');
+      setShowPasswordModal(false);
+      setPassword('');
+      performRestore(pendingRestoreVersionId);
+    } else {
+      setPasswordError('Incorrect password. Please try again.');
+    }
+  };
+
+  const performRestore = async (versionId) => {
     console.log('Restoring version:', versionId);
     setRestoring(versionId);
     try {
@@ -39,6 +60,7 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
       setError('Error restoring version: ' + err.message);
     } finally {
       setRestoring(null);
+      setPendingRestoreVersionId(null);
     }
   };
 
@@ -49,7 +71,8 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg" centered>
+    <>
+      <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header className="bg-info text-white">
         <Modal.Title>
           <i className="fas fa-history me-2"></i>
@@ -130,6 +153,47 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
         </Button>
       </Modal.Footer>
     </Modal>
+
+    {/* Password Modal */}
+    <Modal show={showPasswordModal} onHide={() => setShowPasswordModal(false)} backdrop="static" keyboard={false} centered>
+      <Modal.Header className="bg-primary text-white">
+        <Modal.Title>
+          <i className="fas fa-lock me-2"></i>
+          Version Restore Access
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="text-center mb-4">
+          <h4>Password Required</h4>
+          <p className="text-muted">Please enter the password to restore this version.</p>
+        </div>
+        
+        <Form onSubmit={handlePasswordSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              autoFocus
+            />
+            {passwordError && <Alert variant="danger" className="mt-2">{passwordError}</Alert>}
+          </Form.Group>
+          
+          <div className="d-flex gap-2">
+            <Button variant="secondary" onClick={() => setShowPasswordModal(false)} className="flex-fill">
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" className="flex-fill">
+              <i className="fas fa-sign-in-alt me-2"></i>
+              Restore Version
+            </Button>
+          </div>
+        </Form>
+      </Modal.Body>
+    </Modal>
+    </>
   );
 };
 
