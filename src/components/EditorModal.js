@@ -184,74 +184,66 @@ const EditorModal = ({
 
             <Form.Group className="mb-3">
               <Form.Label>Content</Form.Label>
-              <div className="mb-2">
-                <div className="btn-group me-2" role="group">
-                  <Button 
-                    variant="outline-secondary" 
-                    size="sm"
-                    onClick={() => insertMarkdown('**{text}**')}
-                    title="Bold"
-                  >
-                    <i className="fas fa-bold"></i>
-                  </Button>
-                  <Button 
-                    variant="outline-secondary" 
-                    size="sm"
-                    onClick={() => insertMarkdown('*{text}*')}
-                    title="Italic"
-                  >
-                    <i className="fas fa-italic"></i>
-                  </Button>
-                  <Button 
-                    variant="outline-secondary" 
-                    size="sm"
-                    onClick={() => insertMarkdown('- {text}')}
-                    title="Bullet List"
-                  >
-                    <i className="fas fa-list-ul"></i>
-                  </Button>
-                  <Button 
-                    variant="outline-secondary" 
-                    size="sm"
-                    onClick={() => insertMarkdown('1. {text}')}
-                    title="Numbered List"
-                  >
-                    <i className="fas fa-list-ol"></i>
-                  </Button>
+              <div className="d-flex flex-column flex-md-row gap-3" style={{ width: '100%' }}>
+                {/* Editor Side */}
+                <div className="editor-col" style={{ width: '50%', minWidth: 0 }}>
+                  <div className="mb-2 d-flex gap-2">
+                    <Button 
+                      variant="outline-primary" 
+                      size="sm"
+                      className="shadow-sm"
+                      onClick={() => insertMarkdown('**{text}**')}
+                      title="Bold"
+                    >
+                      <i className="fas fa-bold"></i>
+                    </Button>
+                    <Button 
+                      variant="outline-primary" 
+                      size="sm"
+                      className="shadow-sm"
+                      onClick={() => insertMarkdown('*{text}*')}
+                      title="Italic"
+                    >
+                      <i className="fas fa-italic"></i>
+                    </Button>
+                    <Button 
+                      variant="outline-primary" 
+                      size="sm"
+                      className="shadow-sm"
+                      onClick={() => insertMarkdown('- {text}')}
+                      title="Bullet List"
+                    >
+                      <i className="fas fa-list-ul"></i>
+                    </Button>
+                    <Button 
+                      variant="outline-primary" 
+                      size="sm"
+                      className="shadow-sm"
+                      onClick={() => insertMarkdown('1. {text}')}
+                      title="Numbered List"
+                    >
+                      <i className="fas fa-list-ol"></i>
+                    </Button>
+                  </div>
+                  <Form.Control
+                    id="content-textarea"
+                    as="textarea"
+                    rows={15}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Enter lesson content in Markdown format..."
+                    style={{ fontFamily: 'monospace', height: '350px', width: '100%', resize: 'vertical', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                  />
                 </div>
-                <Button 
-                  variant="outline-secondary" 
-                  size="sm"
-                  onClick={() => setShowCodeBlockModal(true)}
-                >
-                  <i className="fas fa-code me-1"></i>
-                  Insert Code Block
-                </Button>
+                {/* Preview Side */}
+                <div className="preview-col" style={{ width: '50%', minWidth: 0, height: '350px', display: 'flex', flexDirection: 'column' }}>
+                  <div 
+                    className="border rounded bg-light p-3 h-100"
+                    style={{ height: '100%', overflowY: 'auto' }}
+                    dangerouslySetInnerHTML={{ __html: marked(content || '') }}
+                  />
+                </div>
               </div>
-              <Form.Control
-                id="content-textarea"
-                as="textarea"
-                rows={15}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Enter lesson content in Markdown format..."
-                style={{ fontFamily: 'monospace' }}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Preview</Form.Label>
-              <div 
-                className="border p-3 rounded"
-                style={{ 
-                  maxHeight: '300px', 
-                  overflowY: 'auto',
-                  backgroundColor: '#f8f9fa'
-                }}
-                dangerouslySetInnerHTML={{ 
-                  __html: marked(content || '') 
-                }}
-              />
             </Form.Group>
           </Form>
         </Modal.Body>
