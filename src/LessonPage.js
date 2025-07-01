@@ -256,6 +256,7 @@ const LessonPage = ({
                     onHide={() => setShowVersionHistory(false)}
                     course={currentCourse}
                     lessonNumber={currentLessonNumber}
+                    curriculumId={lessonData?.id}
                 />
             )}
         </div>

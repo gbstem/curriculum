@@ -78,8 +78,10 @@ export const getCurriculumByCourse = async (course) => {
 export const saveCurriculum = async (curriculumData) => {
   try {
     // First, save the current version to versions collection
+    // Remove the id field to avoid conflicts with Firestore's auto-generated ID
+    const { id, ...curriculumDataWithoutId } = curriculumData;
     const versionData = {
-      ...curriculumData,
+      ...curriculumDataWithoutId,
       versionTimestamp: serverTimestamp(),
       versionNumber: Date.now() // Simple version numbering
     };
@@ -123,6 +125,7 @@ export const getVersionHistory = async (course, lessonNumber) => {
     querySnapshot.forEach((doc) => {
       versions.push({ id: doc.id, ...doc.data() });
     });
+    console.log('Versions:', versions);
     // Sort in memory instead of using orderBy to avoid index requirement
     return versions.sort((a, b) => {
       const aTime = a.versionTimestamp?.toDate?.() || new Date(a.versionTimestamp || 0);
@@ -136,16 +139,22 @@ export const getVersionHistory = async (course, lessonNumber) => {
 };
 
 // Restore a specific version
-export const restoreVersion = async (versionId) => {
+export const restoreVersion = async (versionId, originalCurriculumId) => {
   try {
     const versionDoc = await getDoc(doc(db, VERSIONS_COLLECTION, versionId));
     if (versionDoc.exists()) {
       const versionData = versionDoc.data();
       // Remove version-specific fields
-      const { versionTimestamp, versionNumber, id, ...curriculumData } = versionData;
+      const { versionTimestamp, versionNumber, ...curriculumData } = versionData;
+      
+      // Add back the original curriculum ID so it updates the existing document
+      const curriculumDataWithId = {
+        ...curriculumData,
+        id: originalCurriculumId
+      };
       
       // Save as current version
-      return await saveCurriculum(curriculumData);
+      return await saveCurriculum(curriculumDataWithId);
     }
     throw new Error('Version not found');
   } catch (error) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Table, Badge, Alert } from 'react-bootstrap';
 import { getVersionHistory, restoreVersion } from '../services/curriculumService';
 
-const VersionHistoryModal = ({ show, onHide, course, lessonNumber }) => {
+const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId }) => {
   const [versions, setVersions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -28,9 +28,10 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber }) => {
   };
 
   const handleRestore = async (versionId) => {
+    console.log('Restoring version:', versionId);
     setRestoring(versionId);
     try {
-      await restoreVersion(versionId);
+      await restoreVersion(versionId, curriculumId);
       onHide();
       // You might want to refresh the current lesson data here
       window.location.reload();
