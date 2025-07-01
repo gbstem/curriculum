@@ -173,6 +173,7 @@ const EditorModal = ({
                     <option value="python1">Python I</option>
                     <option value="python2">Python II</option>
                     <option value="scratch">Scratch</option>
+                    <option value="webdev">Web Development</option>
                     <option value="math1">Math I</option>
                     <option value="math2">Math II</option>
                     <option value="math3">Math III</option>
