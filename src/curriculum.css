@@ -271,4 +271,38 @@
   padding: 1em;
   font-size: 1em;
   overflow-x: auto;
+}
+
+/* Pretty markdown preview styles */
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.markdown-preview p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.markdown-preview code,
+.markdown-preview pre {
+  font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+  font-size: 1em;
+}
+
+.markdown-preview strong {
+  font-weight: bold;
+  color: #1d2256;
 } 

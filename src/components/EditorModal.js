@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Alert, Row, Col } from 'react-bootstrap';
 import { marked } from 'marked';
 import CodeBlockModal from './CodeBlockModal';
+import { renderContent } from './renderContent';
 
 const EditorModal = ({ 
   show, 
@@ -237,11 +238,18 @@ const EditorModal = ({
                 </div>
                 {/* Preview Side */}
                 <div className="preview-col" style={{ width: '50%', minWidth: 0, height: '350px', display: 'flex', flexDirection: 'column' }}>
-                  <div 
-                    className="border rounded bg-light p-3 h-100"
-                    style={{ height: '100%', overflowY: 'auto' }}
-                    dangerouslySetInnerHTML={{ __html: marked(content || '') }}
-                  />
+                  <div
+                    className="curriculum-content card shadow-sm"
+                    style={{
+                      height: '100%',
+                      overflowY: 'auto',
+                      background: '#f8f9fa',
+                      border: '1px solid #e0e0e0',
+                      padding: '1.5rem'
+                    }}
+                  >
+                    {renderContent(content)}
+                  </div>
                 </div>
               </div>
             </Form.Group>
