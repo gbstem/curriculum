@@ -25,7 +25,33 @@ function parseItalics(text) {
     return elements.length > 0 ? elements : text;
 }
 
-// Helper to parse a line and return an array of text and <a> elements for Markdown links and URLs, and handle italics
+// Helper to parse inline code with backticks
+function parseInlineCode(text) {
+    const elements = [];
+    let remaining = text;
+    let match;
+    // Regex for `code`
+    const codeRegex = /`([^`]+)`/g;
+    let lastIndex = 0;
+    while ((match = codeRegex.exec(remaining)) !== null) {
+        if (match.index > lastIndex) {
+            elements.push(remaining.slice(lastIndex, match.index));
+        }
+        const codeText = match[1];
+        elements.push(
+            <code key={Math.random()} className="bg-light px-1 rounded">
+                {codeText}
+            </code>
+        );
+        lastIndex = codeRegex.lastIndex;
+    }
+    if (lastIndex < remaining.length) {
+        elements.push(remaining.slice(lastIndex));
+    }
+    return elements.length > 0 ? elements : text;
+}
+
+// Helper to parse a line and return an array of text and <a> elements for Markdown links and URLs, and handle italics and inline code
 function parseLinks(line) {
     const elements = [];
     let remaining = line;
@@ -55,13 +81,18 @@ function parseLinks(line) {
             nextMatch = urlMatch;
         }
         if (!nextMatch) {
-            // Handle italics in the remaining text
-            elements.push(...[].concat(parseItalics(remaining)));
+            // Handle italics and inline code in the remaining text
+            const withItalics = parseItalics(remaining);
+            const withCode = parseInlineCode(withItalics);
+            elements.push(...[].concat(withCode));
             break;
         }
         // Text before the match
         if (nextMatch.index > 0) {
-            elements.push(...[].concat(parseItalics(remaining.slice(0, nextMatch.index))));
+            const beforeText = remaining.slice(0, nextMatch.index);
+            const withItalics = parseItalics(beforeText);
+            const withCode = parseInlineCode(withItalics);
+            elements.push(...[].concat(withCode));
         }
         if (isMd) {
             // Markdown link
@@ -96,20 +127,105 @@ function parseLinks(line) {
     return elements;
 }
 
+// Helper to parse HTML content safely
+function parseHTML(htmlString) {
+    // Simple HTML parser for common tags
+    const allowedTags = ['b', 'i', 'em', 'strong', 'u', 'br', 'span', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+    const allowedAttributes = ['class', 'style', 'href', 'target', 'rel'];
+    
+    // Create a temporary div to parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlString;
+    
+    // Recursively process nodes
+    function processNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return node.textContent;
+        }
+        
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            const tagName = node.tagName.toLowerCase();
+            
+            // Only allow safe tags
+            if (!allowedTags.includes(tagName)) {
+                return node.textContent;
+            }
+            
+            // Create React element
+            const props = {};
+            
+            // Copy allowed attributes
+            for (let attr of allowedAttributes) {
+                if (node.hasAttribute(attr)) {
+                    props[attr] = node.getAttribute(attr);
+                }
+            }
+            
+            // Process children
+            const children = [];
+            for (let child of node.childNodes) {
+                const processedChild = processNode(child);
+                if (processedChild !== null) {
+                    children.push(processedChild);
+                }
+            }
+            
+            return React.createElement(tagName, props, ...children);
+        }
+        
+        return null;
+    }
+    
+    const processedContent = [];
+    for (let child of tempDiv.childNodes) {
+        const processed = processNode(child);
+        if (processed !== null) {
+            processedContent.push(processed);
+        }
+    }
+    
+    return processedContent.length > 0 ? processedContent : htmlString;
+}
+
 export function renderContent(text) {
     if (!text) return null;
     const lines = text.split('\n');
     const elements = [];
     let inCodeBlock = false;
-    let codeBlockLang = 'python';
+    let codeBlockLang = '';
     let codeBlockLines = [];
+    let inBlockquote = false;
+    let blockquoteLines = [];
+    
     lines.forEach((line, index) => {
         if (line.startsWith('```')) {
+            // End blockquote if we're in one
+            if (inBlockquote) {
+                elements.push(
+                    <blockquote key={`blockquote-${index}`} className="border-start border-3 border-secondary ps-3 py-2 bg-light">
+                        {blockquoteLines.map((quoteLine, quoteIndex) => (
+                            <p key={`quote-${index}-${quoteIndex}`} className="mb-1">
+                                {parseLinks(quoteLine)}
+                            </p>
+                        ))}
+                    </blockquote>
+                );
+                blockquoteLines = [];
+                inBlockquote = false;
+            }
+            
             if (!inCodeBlock) {
                 inCodeBlock = true;
                 const langMatch = line.match(/^```(\w+)/);
-                codeBlockLang = langMatch ? langMatch[1] : 'python';
-                codeBlockLines = [];
+                if (langMatch) {
+                    codeBlockLang = langMatch[1];
+                    codeBlockLines = [];
+                } else {
+                    // No language specified, treat as blockquote
+                    inCodeBlock = false;
+                    inBlockquote = true;
+                    blockquoteLines = [];
+                }
             } else {
                 inCodeBlock = false;
                 if (codeBlockLang === 'scratch' || codeBlockLang === 'scratchblocks') {
@@ -120,11 +236,45 @@ export function renderContent(text) {
                             </ScratchBlocks>
                         </div>
                     );
-                } else {
+                } else if (codeBlockLang === 'html') {
                     elements.push(
                         <SyntaxHighlighter
                             key={`codeblock-${index}`}
-                            language={codeBlockLang}
+                            language="html"
+                            style={oneLight}
+                            customStyle={{ borderRadius: '8px', fontSize: '1rem', margin: '1rem 0' }}
+                        >
+                            {codeBlockLines.join('\n')}
+                        </SyntaxHighlighter>
+                    );
+                } else if (codeBlockLang === 'python') {
+                    elements.push(
+                        <SyntaxHighlighter
+                            key={`codeblock-${index}`}
+                            language="python"
+                            style={oneLight}
+                            customStyle={{ borderRadius: '8px', fontSize: '1rem', margin: '1rem 0' }}
+                        >
+                            {codeBlockLines.join('\n')}
+                        </SyntaxHighlighter>
+                    );
+                } else if (codeBlockLang === 'javascript') {
+                    elements.push(
+                        <SyntaxHighlighter
+                            key={`codeblock-${index}`}
+                            language="javascript"
+                            style={oneLight}
+                            customStyle={{ borderRadius: '8px', fontSize: '1rem', margin: '1rem 0' }}
+                        >
+                            {codeBlockLines.join('\n')}
+                        </SyntaxHighlighter>
+                    );
+                } else {
+                    // Default to python for other languages
+                    elements.push(
+                        <SyntaxHighlighter
+                            key={`codeblock-${index}`}
+                            language={codeBlockLang || 'python'}
                             style={oneLight}
                             customStyle={{ borderRadius: '8px', fontSize: '1rem', margin: '1rem 0' }}
                         >
@@ -133,17 +283,57 @@ export function renderContent(text) {
                     );
                 }
                 codeBlockLines = [];
+                codeBlockLang = '';
             }
             return;
         }
+        
         if (inCodeBlock) {
             codeBlockLines.push(line);
             return;
         }
+        
+        // Handle blockquotes
+        if (line.startsWith('>')) {
+            if (!inBlockquote) {
+                inBlockquote = true;
+                blockquoteLines = [];
+            }
+            const quoteText = line.replace(/^>\s*/, '');
+            blockquoteLines.push(quoteText);
+            return;
+        } else if (inBlockquote) {
+            // End blockquote
+            elements.push(
+                <blockquote key={`blockquote-${index}`} className="border-start border-3 border-secondary ps-3 py-2 bg-light">
+                    {blockquoteLines.map((quoteLine, quoteIndex) => (
+                        <p key={`quote-${index}-${quoteIndex}`} className="mb-1">
+                            {parseLinks(quoteLine)}
+                        </p>
+                    ))}
+                </blockquote>
+            );
+            blockquoteLines = [];
+            inBlockquote = false;
+        }
+        
         if (!line || line.trim() === '') {
             elements.push(<br key={`br-${index}`} />);
             return;
         }
+        
+        // Check if line contains HTML
+        if (line.includes('<') && line.includes('>')) {
+            try {
+                const htmlContent = parseHTML(line);
+                elements.push(<div key={`html-${index}`} className="mb-2">{htmlContent}</div>);
+                return;
+            } catch (error) {
+                // If HTML parsing fails, treat as regular text
+                console.warn('HTML parsing failed for line:', line, error);
+            }
+        }
+        
         if (line.startsWith('#')) {
             const level = line.match(/^#+/)[0].length;
             const text = line.replace(/^#+\s*/, '');
@@ -173,6 +363,7 @@ export function renderContent(text) {
             );
             return;
         }
+        
         if (line.includes('**')) {
             const parts = line.split('**');
             const formattedParts = parts.map((part, partIndex) => {
@@ -184,6 +375,7 @@ export function renderContent(text) {
             elements.push(<p key={`p-${index}`} className="mb-2">{formattedParts}</p>);
             return;
         }
+        
         // List item
         if (line.match(/^[\s]*[-*]\s/)) {
             const text = line.replace(/^[\s]*[-*]\s/, '');
@@ -192,7 +384,22 @@ export function renderContent(text) {
             );
             return;
         }
+        
         elements.push(<p key={`p-${index}`} className="mb-2">{parseLinks(line)}</p>);
     });
+    
+    // Handle any remaining blockquote
+    if (inBlockquote) {
+        elements.push(
+            <blockquote key={`blockquote-final`} className="border-start border-3 border-secondary ps-3 py-2 bg-light">
+                {blockquoteLines.map((quoteLine, quoteIndex) => (
+                    <p key={`quote-final-${quoteIndex}`} className="mb-1">
+                        {parseLinks(quoteLine)}
+                    </p>
+                ))}
+            </blockquote>
+        );
+    }
+    
     return elements;
 } 

@@ -9,15 +9,16 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.3.7",
     "firebase": "^10.7.1",
+    "marked": "^9.1.6",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
+    "react-diff-viewer": "^3.1.1",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "react-scripts": "5.0.1",
     "react-syntax-highlighter": "^15.6.1",
     "scratchblocks": "^3.6.4",
     "scratchblocks-react": "^1.0.1",
-    "marked": "^9.1.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

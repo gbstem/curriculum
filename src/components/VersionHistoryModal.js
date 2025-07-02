@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Table, Badge, Alert, Form } from 'react-bootstrap';
 import { getVersionHistory, restoreVersion } from '../services/curriculumService';
+import DiffModal from './DiffModal';
 
-const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId }) => {
+const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId, currentContent }) => {
   const [versions, setVersions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -11,6 +12,8 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [pendingRestoreVersionId, setPendingRestoreVersionId] = useState(null);
+  const [showDiffModal, setShowDiffModal] = useState(false);
+  const [diffVersion, setDiffVersion] = useState(null);
 
   useEffect(() => {
     if (show && course && lessonNumber) {
@@ -34,6 +37,11 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
   const handleRestore = async (versionId) => {
     setPendingRestoreVersionId(versionId);
     setShowPasswordModal(true);
+  };
+
+  const handleShowDiff = (version) => {
+    setDiffVersion(version);
+    setShowDiffModal(true);
   };
 
   const handlePasswordSubmit = (e) => {
@@ -105,6 +113,7 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
                 <th>Version</th>
                 <th>Date</th>
                 <th>Title</th>
+                <th>Diff</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -118,6 +127,18 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
                   </td>
                   <td>{formatDate(version.versionTimestamp)}</td>
                   <td>{version.title || 'Untitled'}</td>
+                  <td>
+                    {index > 0 && (
+                      <Button
+                        variant="outline-info"
+                        size="sm"
+                        onClick={() => handleShowDiff(version)}
+                      >
+                        <i className="fas fa-columns me-1"></i>
+                        Diff
+                      </Button>
+                    )}
+                  </td>
                   <td>
                     {index > 0 && (
                       <Button
@@ -152,6 +173,14 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
         </Button>
       </Modal.Footer>
     </Modal>
+
+    {/* Diff Modal */}
+    <DiffModal
+      show={showDiffModal}
+      onHide={() => setShowDiffModal(false)}
+      currentContent={currentContent}
+      version={diffVersion}
+    />
 
     {/* Password Modal */}
     <Modal show={showPasswordModal} onHide={() => setShowPasswordModal(false)} backdrop="static" keyboard={false} centered>

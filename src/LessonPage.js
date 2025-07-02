@@ -258,6 +258,7 @@ const LessonPage = ({
                     course={currentCourse}
                     lessonNumber={currentLessonNumber}
                     curriculumId={lessonData?.id}
+                    currentContent={lessonData?.content}
                 />
             )}
         </div>
