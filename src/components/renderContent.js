@@ -91,6 +91,22 @@ export function renderContent(text) {
             elements.push(<p key={`p-${index}`} className="mb-2">{formattedParts}</p>);
             return;
         }
+        
+        // Handle Markdown-style links [text](url) and automatic URL detection
+        if (line.includes('[') || line.includes('http://') || line.includes('https://')) {
+            // First handle Markdown-style links [text](url)
+            let processedLine = line.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+                return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-primary">${text}</a>`;
+            });
+            
+            // Then handle automatic URL detection for http:// and https://
+            processedLine = processedLine.replace(/(https?:\/\/[^\s]+)/g, (match, url) => {
+                return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-primary">${url}</a>`;
+            });
+            
+            elements.push(<p key={`p-${index}`} className="mb-2" dangerouslySetInnerHTML={{ __html: processedLine }} />);
+            return;
+        }
         if (line.match(/^[\s]*[-*]\s/)) {
             const text = line.replace(/^[\s]*[-*]\s/, '');
             elements.push(
