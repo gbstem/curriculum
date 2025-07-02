@@ -20,7 +20,6 @@ const renderer = new marked.Renderer();
 
 renderer.code = (code, language) => {
     if (language === 'scratch' || language === 'scratchblocks') {
-        console.log('Rendering scratch blocks:', code);
         return `
             <div style="margin: 1rem 0;">
                 <div class="scratch-blocks-container" data-code="${encodeURIComponent(code)}"></div>
@@ -71,8 +70,6 @@ const LessonPage = ({
     const currentCourse = propCourse || course;
     const currentLessonNumber = propLessonNumber || parseInt(lessonNumber);
 
-    console.log('LessonPage params:', { course, lessonNumber, currentCourse, currentLessonNumber, shouldUseFirebase });
-
     useEffect(() => {
         if (shouldUseFirebase && currentCourse && currentLessonNumber) {
             loadLessonData();
@@ -83,9 +80,7 @@ const LessonPage = ({
         setLoading(true);
         setError('');
         try {
-            console.log('Loading lesson data:', { currentCourse, currentLessonNumber });
             const data = await getCurriculumByCourseAndLesson(currentCourse, currentLessonNumber);
-            console.log('Lesson data received:', data);
             if (data) {
                 setLessonData(data);
             } else {

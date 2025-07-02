@@ -49,7 +49,6 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId 
   };
 
   const performRestore = async (versionId) => {
-    console.log('Restoring version:', versionId);
     setRestoring(versionId);
     try {
       await restoreVersion(versionId, curriculumId);

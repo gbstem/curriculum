@@ -125,7 +125,6 @@ export const getVersionHistory = async (course, lessonNumber) => {
     querySnapshot.forEach((doc) => {
       versions.push({ id: doc.id, ...doc.data() });
     });
-    console.log('Versions:', versions);
     // Sort in memory instead of using orderBy to avoid index requirement
     return versions.sort((a, b) => {
       const aTime = a.versionTimestamp?.toDate?.() || new Date(a.versionTimestamp || 0);
