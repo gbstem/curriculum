@@ -3,7 +3,29 @@ import ScratchBlocks from 'scratchblocks-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-// Helper to parse a line and return an array of text and <a> elements for Markdown links and URLs
+// Helper to parse italics in a string (handles *text* and _text_)
+function parseItalics(text) {
+    const elements = [];
+    let remaining = text;
+    let match;
+    // Regex for *text* or _text_ (not bold)
+    const italicsRegex = /(?<!\*)\*(?!\*)([^*]+)(?<!\*)\*(?!\*)|_(?!_)([^_]+)_(?!_)/g;
+    let lastIndex = 0;
+    while ((match = italicsRegex.exec(remaining)) !== null) {
+        if (match.index > lastIndex) {
+            elements.push(remaining.slice(lastIndex, match.index));
+        }
+        const italicText = match[1] || match[2];
+        elements.push(<em key={Math.random()}>{italicText}</em>);
+        lastIndex = italicsRegex.lastIndex;
+    }
+    if (lastIndex < remaining.length) {
+        elements.push(remaining.slice(lastIndex));
+    }
+    return elements.length > 0 ? elements : text;
+}
+
+// Helper to parse a line and return an array of text and <a> elements for Markdown links and URLs, and handle italics
 function parseLinks(line) {
     const elements = [];
     let remaining = line;
@@ -33,12 +55,13 @@ function parseLinks(line) {
             nextMatch = urlMatch;
         }
         if (!nextMatch) {
-            elements.push(remaining);
+            // Handle italics in the remaining text
+            elements.push(...[].concat(parseItalics(remaining)));
             break;
         }
         // Text before the match
         if (nextMatch.index > 0) {
-            elements.push(remaining.slice(0, nextMatch.index));
+            elements.push(...[].concat(parseItalics(remaining.slice(0, nextMatch.index))));
         }
         if (isMd) {
             // Markdown link
