@@ -96,11 +96,21 @@ const EditorModal = ({
       const newText = markdown.replace('{text}', selectedText);
       const newContent = content.substring(0, start) + newText + content.substring(end);
       setContent(newContent);
-      
       // Set cursor position after the inserted markdown
       setTimeout(() => {
         textarea.focus();
-        textarea.setSelectionRange(start + newText.length, start + newText.length);
+        // If no text is selected, move cursor back inside the formatting
+        if (start === end) {
+          if (markdown === '**{text}**') {
+            textarea.setSelectionRange(start + 2, start + 2);
+          } else if (markdown === '*{text}*') {
+            textarea.setSelectionRange(start + 1, start + 1);
+          } else {
+            textarea.setSelectionRange(start + newText.length, start + newText.length);
+          }
+        } else {
+          textarea.setSelectionRange(start + newText.length, start + newText.length);
+        }
       }, 0);
     }
   };
