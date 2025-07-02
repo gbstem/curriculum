@@ -3,6 +3,76 @@ import ScratchBlocks from 'scratchblocks-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+// Helper to parse a line and return an array of text and <a> elements for Markdown links and URLs
+function parseLinks(line) {
+    const elements = [];
+    let remaining = line;
+    let match;
+    // Regex for Markdown link
+    const mdLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
+    // Regex for plain URL
+    const urlRegex = /(https?:\/\/[^\s]+)/;
+    while (remaining.length > 0) {
+        // Find the first match (Markdown or URL)
+        const mdMatch = mdLinkRegex.exec(remaining);
+        const urlMatch = urlRegex.exec(remaining);
+        let nextMatch = null;
+        let isMd = false;
+        if (mdMatch && urlMatch) {
+            // Pick the one that comes first
+            if (mdMatch.index < urlMatch.index) {
+                nextMatch = mdMatch;
+                isMd = true;
+            } else {
+                nextMatch = urlMatch;
+            }
+        } else if (mdMatch) {
+            nextMatch = mdMatch;
+            isMd = true;
+        } else if (urlMatch) {
+            nextMatch = urlMatch;
+        }
+        if (!nextMatch) {
+            elements.push(remaining);
+            break;
+        }
+        // Text before the match
+        if (nextMatch.index > 0) {
+            elements.push(remaining.slice(0, nextMatch.index));
+        }
+        if (isMd) {
+            // Markdown link
+            elements.push(
+                <a
+                    key={Math.random()}
+                    href={nextMatch[2]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary"
+                >
+                    {nextMatch[1]}
+                </a>
+            );
+            remaining = remaining.slice(nextMatch.index + nextMatch[0].length);
+        } else {
+            // Plain URL
+            elements.push(
+                <a
+                    key={Math.random()}
+                    href={nextMatch[1]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary"
+                >
+                    {nextMatch[1]}
+                </a>
+            );
+            remaining = remaining.slice(nextMatch.index + nextMatch[0].length);
+        }
+    }
+    return elements;
+}
+
 export function renderContent(text) {
     if (!text) return null;
     const lines = text.split('\n');
@@ -91,30 +161,15 @@ export function renderContent(text) {
             elements.push(<p key={`p-${index}`} className="mb-2">{formattedParts}</p>);
             return;
         }
-        
-        // Handle Markdown-style links [text](url) and automatic URL detection
-        if (line.includes('[') || line.includes('http://') || line.includes('https://')) {
-            // First handle Markdown-style links [text](url)
-            let processedLine = line.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
-                return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-primary">${text}</a>`;
-            });
-            
-            // Then handle automatic URL detection for http:// and https://
-            processedLine = processedLine.replace(/(https?:\/\/[^\s]+)/g, (match, url) => {
-                return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-primary">${url}</a>`;
-            });
-            
-            elements.push(<p key={`p-${index}`} className="mb-2" dangerouslySetInnerHTML={{ __html: processedLine }} />);
-            return;
-        }
+        // List item
         if (line.match(/^[\s]*[-*]\s/)) {
             const text = line.replace(/^[\s]*[-*]\s/, '');
             elements.push(
-                <li key={`li-${index}`} className="mb-1">{text}</li>
+                <li key={`li-${index}`} className="mb-1">{parseLinks(text)}</li>
             );
             return;
         }
-        elements.push(<p key={`p-${index}`} className="mb-2">{line}</p>);
+        elements.push(<p key={`p-${index}`} className="mb-2">{parseLinks(line)}</p>);
     });
     return elements;
 } 
