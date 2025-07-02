@@ -25,49 +25,19 @@ function parseItalics(text) {
     return elements.length > 0 ? elements : text;
 }
 
-// Helper to parse inline code with backticks
-function parseInlineCode(text) {
+// Helper to parse links and italics, but NOT code (used by parseLinks)
+function parseLinksNoCode(text) {
     const elements = [];
     let remaining = text;
     let match;
-    // Regex for `code`
-    const codeRegex = /`([^`]+)`/g;
-    let lastIndex = 0;
-    while ((match = codeRegex.exec(remaining)) !== null) {
-        if (match.index > lastIndex) {
-            elements.push(remaining.slice(lastIndex, match.index));
-        }
-        const codeText = match[1];
-        elements.push(
-            <code key={Math.random()} className="bg-light px-1 rounded">
-                {codeText}
-            </code>
-        );
-        lastIndex = codeRegex.lastIndex;
-    }
-    if (lastIndex < remaining.length) {
-        elements.push(remaining.slice(lastIndex));
-    }
-    return elements.length > 0 ? elements : text;
-}
-
-// Helper to parse a line and return an array of text and <a> elements for Markdown links and URLs, and handle italics and inline code
-function parseLinks(line) {
-    const elements = [];
-    let remaining = line;
-    let match;
-    // Regex for Markdown link
     const mdLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
-    // Regex for plain URL
     const urlRegex = /(https?:\/\/[^\s]+)/;
     while (remaining.length > 0) {
-        // Find the first match (Markdown or URL)
         const mdMatch = mdLinkRegex.exec(remaining);
         const urlMatch = urlRegex.exec(remaining);
         let nextMatch = null;
         let isMd = false;
         if (mdMatch && urlMatch) {
-            // Pick the one that comes first
             if (mdMatch.index < urlMatch.index) {
                 nextMatch = mdMatch;
                 isMd = true;
@@ -81,21 +51,13 @@ function parseLinks(line) {
             nextMatch = urlMatch;
         }
         if (!nextMatch) {
-            // Handle italics and inline code in the remaining text
-            const withItalics = parseItalics(remaining);
-            const withCode = parseInlineCode(withItalics);
-            elements.push(...[].concat(withCode));
+            elements.push(...[].concat(parseItalics(remaining)));
             break;
         }
-        // Text before the match
         if (nextMatch.index > 0) {
-            const beforeText = remaining.slice(0, nextMatch.index);
-            const withItalics = parseItalics(beforeText);
-            const withCode = parseInlineCode(withItalics);
-            elements.push(...[].concat(withCode));
+            elements.push(...[].concat(parseItalics(remaining.slice(0, nextMatch.index))));
         }
         if (isMd) {
-            // Markdown link
             elements.push(
                 <a
                     key={Math.random()}
@@ -109,7 +71,6 @@ function parseLinks(line) {
             );
             remaining = remaining.slice(nextMatch.index + nextMatch[0].length);
         } else {
-            // Plain URL
             elements.push(
                 <a
                     key={Math.random()}
@@ -123,6 +84,33 @@ function parseLinks(line) {
             );
             remaining = remaining.slice(nextMatch.index + nextMatch[0].length);
         }
+    }
+    return elements;
+}
+
+// Helper to parse links and italics, but NOT code (used by parseLinks)
+function parseLinks(line) {
+    const elements = [];
+    let remaining = line;
+    let match;
+    // Regex for inline code (single backticks, not part of code block)
+    const codeRegex = /(?<!`)`([^`]+)`(?!`)/g;
+    let lastIndex = 0;
+    while ((match = codeRegex.exec(remaining)) !== null) {
+        if (match.index > lastIndex) {
+            // Text before code: apply link and italics logic
+            const beforeText = remaining.slice(lastIndex, match.index);
+            elements.push(...[].concat(parseLinksNoCode(beforeText)));
+        }
+        // Inline code
+        elements.push(
+            <code key={Math.random()}>{match[1]}</code>
+        );
+        lastIndex = codeRegex.lastIndex;
+    }
+    if (lastIndex < remaining.length) {
+        // Remaining text after last code: apply link and italics logic
+        elements.push(...[].concat(parseLinksNoCode(remaining.slice(lastIndex))));
     }
     return elements;
 }
