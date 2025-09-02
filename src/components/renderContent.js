@@ -311,7 +311,7 @@ export function renderContent(text) {
         }
         
         // Check if line contains HTML
-        if (line.includes('<') && line.includes('>')) {
+        if (line.includes('<') && line.includes('>') && !line.includes('`')) {
             try {
                 const htmlContent = parseHTML(line);
                 elements.push(<div key={`html-${index}`} className="mb-2">{htmlContent}</div>);
