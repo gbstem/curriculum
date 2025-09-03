@@ -29,7 +29,6 @@ function parseItalics(text) {
 function parseLinksNoCode(text) {
     const elements = [];
     let remaining = text;
-    let match;
     const mdLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
     const urlRegex = /(https?:\/\/[^\s]+)/;
     while (remaining.length > 0) {
@@ -184,9 +183,60 @@ export function renderContent(text) {
     let codeBlockLines = [];
     let inBlockquote = false;
     let blockquoteLines = [];
+    let inList = false;
+    let listItems = [];
+    
+    // Helper function to process accumulated list items
+    function processListItems() {
+        if (listItems.length === 0) return null;
+        
+        // Group items by level
+        const groupedItems = {};
+        listItems.forEach(item => {
+            if (!groupedItems[item.level]) {
+                groupedItems[item.level] = [];
+            }
+            groupedItems[item.level].push(item);
+        });
+        
+        // Create nested structure
+        function createNestedList(items, level = 0) {
+            const currentLevelItems = items.filter(item => item.level === level);
+            if (currentLevelItems.length === 0) return null;
+            
+            const listElements = currentLevelItems.map((item, index) => {
+                const children = createNestedList(items, level + 1);
+                return (
+                    <li key={`li-${item.originalIndex}-${index}`} className="mb-1">
+                        {item.content}
+                        {children}
+                    </li>
+                );
+            });
+            
+            return (
+                <ul key={`ul-${level}-${currentLevelItems[0].originalIndex}`} className="mb-2">
+                    {listElements}
+                </ul>
+            );
+        }
+        
+        const listElement = createNestedList(listItems);
+        listItems = [];
+        return listElement;
+    }
     
     lines.forEach((line, index) => {
         if (line.startsWith('```')) {
+            // End list if we're in one
+            if (inList) {
+                const listElement = processListItems();
+                if (listElement) {
+                    elements.push(listElement);
+                }
+                inList = false;
+            }
+            
             // End blockquote if we're in one
             if (inBlockquote) {
                 elements.push(
@@ -283,6 +333,15 @@ export function renderContent(text) {
         
         // Handle blockquotes
         if (line.startsWith('>')) {
+            // End list if we're in one
+            if (inList) {
+                const listElement = processListItems();
+                if (listElement) {
+                    elements.push(listElement);
+                }
+                inList = false;
+            }
+            
             if (!inBlockquote) {
                 inBlockquote = true;
                 blockquoteLines = [];
@@ -306,12 +365,29 @@ export function renderContent(text) {
         }
         
         if (!line || line.trim() === '') {
+            // End list if we're in one
+            if (inList) {
+                const listElement = processListItems();
+                if (listElement) {
+                    elements.push(listElement);
+                }
+                inList = false;
+            }
             elements.push(<br key={`br-${index}`} />);
             return;
         }
         
         // Check if line contains HTML
         if (line.includes('<') && line.includes('>') && !line.includes('`')) {
+            // End list if we're in one
+            if (inList) {
+                const listElement = processListItems();
+                if (listElement) {
+                    elements.push(listElement);
+                }
+                inList = false;
+            }
+            
             try {
                 const htmlContent = parseHTML(line);
                 elements.push(<div key={`html-${index}`} className="mb-2">{htmlContent}</div>);
@@ -323,6 +399,15 @@ export function renderContent(text) {
         }
         
         if (line.startsWith('#')) {
+            // End list if we're in one
+            if (inList) {
+                const listElement = processListItems();
+                if (listElement) {
+                    elements.push(listElement);
+                }
+                inList = false;
+            }
+            
             const level = line.match(/^#+/)[0].length;
             const text = line.replace(/^#+\s*/, '');
             const HeaderTag = `h${Math.min(level + 2, 6)}`;
@@ -353,6 +438,15 @@ export function renderContent(text) {
         }
         
         if (line.includes('**')) {
+            // End list if we're in one
+            if (inList) {
+                const listElement = processListItems();
+                if (listElement) {
+                    elements.push(listElement);
+                }
+                inList = false;
+            }
+            
             const parts = line.split('**');
             const formattedParts = parts.map((part, partIndex) => {
                 if (partIndex % 2 === 1) {
@@ -366,15 +460,56 @@ export function renderContent(text) {
         
         // List item
         if (line.match(/^[\s]*[-*]\s/)) {
+            // Calculate indentation level
+            const match = line.match(/^(\s*)[-*]\s/);
+            let indentLevel = 0;
+            
+            if (match) {
+                const indent = match[1];
+                // Count tabs as 1 level each, spaces as 2 spaces = 1 level
+                let spaces = 0;
+                let tabs = 0;
+                for (let i = 0; i < indent.length; i++) {
+                    if (indent[i] === '\t') {
+                        tabs++;
+                    } else if (indent[i] === ' ') {
+                        spaces++;
+                    }
+                }
+                indentLevel = tabs + Math.floor(spaces / 2);
+            }
+            
             const text = line.replace(/^[\s]*[-*]\s/, '');
-            elements.push(
-                <li key={`li-${index}`} className="mb-1">{parseLinks(text)}</li>
-            );
+            
+            // Add to list items
+            listItems.push({
+                level: indentLevel,
+                content: parseLinks(text),
+                originalIndex: index
+            });
+            inList = true;
             return;
+        }
+        
+        // End list if we're in one and this is not a list item
+        if (inList) {
+            const listElement = processListItems();
+            if (listElement) {
+                elements.push(listElement);
+            }
+            inList = false;
         }
         
         elements.push(<p key={`p-${index}`} className="mb-2">{parseLinks(line)}</p>);
     });
+    
+    // Handle any remaining list
+    if (inList) {
+        const listElement = processListItems();
+        if (listElement) {
+            elements.push(listElement);
+        }
+    }
     
     // Handle any remaining blockquote
     if (inBlockquote) {
