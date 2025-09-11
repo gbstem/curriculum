@@ -190,38 +190,61 @@ export function renderContent(text) {
     function processListItems() {
         if (listItems.length === 0) return null;
         
-        // Group items by level
-        const groupedItems = {};
-        listItems.forEach(item => {
-            if (!groupedItems[item.level]) {
-                groupedItems[item.level] = [];
-            }
-            groupedItems[item.level].push(item);
-        });
-        
-        // Create nested structure
-        function createNestedList(items, level = 0) {
-            const currentLevelItems = items.filter(item => item.level === level);
-            if (currentLevelItems.length === 0) return null;
+        // Create a proper nested structure
+        function buildNestedStructure(items) {
+            const result = [];
+            const stack = []; // Stack to track parent items
             
-            const listElements = currentLevelItems.map((item, index) => {
-                const children = createNestedList(items, level + 1);
+            items.forEach((item, index) => {
+                // Pop items from stack that are at same or deeper level
+                while (stack.length > 0 && stack[stack.length - 1].level >= item.level) {
+                    stack.pop();
+                }
+                
+                // Create the list item
+                const listItem = {
+                    ...item,
+                    children: []
+                };
+                
+                // Add to parent if there is one
+                if (stack.length > 0) {
+                    stack[stack.length - 1].children.push(listItem);
+                } else {
+                    result.push(listItem);
+                }
+                
+                // Push to stack
+                stack.push(listItem);
+            });
+            
+            return result;
+        }
+        
+        // Convert to React elements
+        function createReactElements(items) {
+            return items.map((item, index) => {
+                const children = item.children.length > 0 ? createReactElements(item.children) : null;
                 return (
                     <li key={`li-${item.originalIndex}-${index}`} className="mb-1">
                         {item.content}
-                        {children}
+                        {children && (
+                            <ul key={`ul-${item.originalIndex}`} className="mb-1">
+                                {children}
+                            </ul>
+                        )}
                     </li>
                 );
             });
-            
-            return (
-                <ul key={`ul-${level}-${currentLevelItems[0].originalIndex}`} className="mb-2">
-                    {listElements}
-                </ul>
-            );
         }
         
-        const listElement = createNestedList(listItems);
+        const nestedStructure = buildNestedStructure(listItems);
+        const listElement = (
+            <ul key={`ul-main-${listItems[0].originalIndex}`} className="mb-2">
+                {createReactElements(nestedStructure)}
+            </ul>
+        );
+        
         listItems = [];
         return listElement;
     }
