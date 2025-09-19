@@ -244,7 +244,6 @@ export function renderContent(text) {
                 {createReactElements(nestedStructure)}
             </ul>
         );
-        
         listItems = [];
         return listElement;
     }
