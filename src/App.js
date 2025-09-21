@@ -982,10 +982,8 @@ function App() {
               <NavDropdown.Item as={Link} to="/cs/scratch1B" className="text-center text-lg-start">Scratch 1B</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/cs/scratch2A" className="text-center text-lg-start">Scratch 2A</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/cs/scratch2B" className="text-center text-lg-start">Scratch 2B</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/cs/python1" className="text-center text-lg-start">Python I</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/cs/python2" className="text-center text-lg-start">Python II</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/cs/scratch" className="text-center text-lg-start">Scratch</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/cs/webdev" className="text-center text-lg-start">Web Development</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/cs/webdevA" className="text-center text-lg-start">Web Development A</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/cs/webdevB" className="text-center text-lg-start">Web Development B</NavDropdown.Item>
             </NavDropdown>
             {/* Math Dropdown */}
             <NavDropdown title="Math" id="math-dropdown" className="text-center">
@@ -999,11 +997,6 @@ function App() {
               <NavDropdown.Item as={Link} to="/math/math4B" className="text-center text-lg-start">Math 4B</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/math/math5A" className="text-center text-lg-start">Math 5A</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/math/math5B" className="text-center text-lg-start">Math 5B</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/math/math1" className="text-center text-lg-start">Math I</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/math/math2" className="text-center text-lg-start">Math II</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/math/math3" className="text-center text-lg-start">Math III</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/math/math4" className="text-center text-lg-start">Math IV</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/math/math5" className="text-center text-lg-start">Math V</NavDropdown.Item>
             </NavDropdown>
             {/* Engineering Dropdown */}
             <NavDropdown title="Engineering" id="engineering-dropdown" className="text-center">
@@ -1013,14 +1006,9 @@ function App() {
               <NavDropdown.Item as={Link} to="/engineering/engineering2B" className="text-center text-lg-start">Engineering 2B</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/engineering/engineering3A" className="text-center text-lg-start">Engineering 3A</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/engineering/engineering3B" className="text-center text-lg-start">Engineering 3B</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/engineering/engineering1" className="text-center text-lg-start">Engineering I</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/engineering/engineering2" className="text-center text-lg-start">Engineering II</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/engineering/engineering3" className="text-center text-lg-start">Engineering III</NavDropdown.Item>
             </NavDropdown>
             {/* Science Dropdown */}
             <NavDropdown title="Science" id="science-dropdown" className="text-center">
-              <NavDropdown.Item as={Link} to="/science/environmental" className="text-center text-lg-start">Environmental Science</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/science/physics" className="text-center text-lg-start">Physics</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/science/environmentalA" className = "text-center text-lg-start">Environmental Science A</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/science/physicsA" className = "text-center text-lg-start">Physics A</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/science/environmentalB" className = "text-center text-lg-start">Environmental Science B</NavDropdown.Item>
