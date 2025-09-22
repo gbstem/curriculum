@@ -99,7 +99,7 @@ const LessonPage = ({
             await saveCurriculum(curriculumData);
             await loadLessonData(); // Reload the data
         } catch (err) {
-            throw err;
+            throw err
         } finally {
             setSaving(false);
         }
