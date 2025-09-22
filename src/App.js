@@ -1044,7 +1044,10 @@ function App() {
         <Route path="/cs/python2B" element={<FirebaseCurriculum course="python2B" courseTitle="Python 2B" />} />
         <Route path="/cs/scratch1A" element={<FirebaseCurriculum course="scratch1A" courseTitle="Scratch 1A" />} />
         <Route path="/cs/scratch1B" element={<FirebaseCurriculum course="scratch1B" courseTitle="Scratch 1B" />} />
-        <Route path="/cs/webdev" element={<FirebaseCurriculum course="webdev" courseTitle="Web Development" />} />
+        <Route path="/cs/scratch2A" element={<FirebaseCurriculum course="scratch2A" courseTitle="Scratch 2A" />} />
+        <Route path="/cs/scratch2B" element={<FirebaseCurriculum course="scratch2B" courseTitle="Scratch 2B" />} />
+        <Route path="/cs/webdevA" element={<FirebaseCurriculum course="webdev" courseTitle="Web Development" />} />
+        <Route path="/cs/webdevB" element={<FirebaseCurriculum course="webdev" courseTitle="Web Development" />} />
         <Route path="/cs/python1" element={<FirebaseCurriculum course="python1" courseTitle="Python I" />} />
         <Route path="/cs/python2" element={<FirebaseCurriculum course="python2" courseTitle="Python II" />} />
         <Route path="/cs/scratch" element={<FirebaseCurriculum course="scratch" courseTitle="Scratch" />} />
