@@ -1,15 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Card, Button, Spinner, Alert, Badge } from 'react-bootstrap';
 import { getCurriculumByCourse } from '../services/curriculumService';
 import EditorModal from './EditorModal';
 
 const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
+    const location = useLocation();
     const [curriculum, setCurriculum] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showEditor, setShowEditor] = useState(false);
     const [saving, setSaving] = useState(false);
+
+    // Extract the track from the current URL path
+    const pathParts = location.pathname.split('/');
+    const currentTrack = pathParts[1] || 'cs'; // fallback to 'cs' if not found
+    
+    // Determine the track name for display
+    const getTrackDisplayName = (track) => {
+        switch(track) {
+            case 'cs': return 'CS';
+            case 'math': return 'Math';
+            case 'science': return 'Science';
+            case 'engineering': return 'Engineering';
+            default: return 'CS';
+        }
+    };
 
     useEffect(() => {
         loadCurriculum();
@@ -121,7 +137,7 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
                                     {sortedLessons.map((lesson) => (
                                         <div key={lesson.id} className="col-md-6 mb-2">
                                             <Link 
-                                                to={`/cs/${course}/lesson/${lesson.lessonNumber}`}
+                                                to={`/${currentTrack}/${course}/lesson/${lesson.lessonNumber}`}
                                                 className="btn text-white btn-primary btn-sm w-100 lesson-link"
                                             >
                                                 Lesson {lesson.lessonNumber}: {lesson.title}
@@ -133,7 +149,7 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
 
                             <div className="text-center mt-5 mb-4">
                                 <Link to={backToCourses} className="btn btn-secondary me-3">
-                                    ← Back to CS Courses
+                                    ← Back to {getTrackDisplayName(currentTrack)} Courses
                                 </Link>
                             </div>
                         </div>
