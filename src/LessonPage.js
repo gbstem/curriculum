@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { Button, Alert, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,8 +11,6 @@ import { marked } from 'marked';
 import { getCurriculumByCourseAndLesson } from './services/curriculumService';
 import EditorModal from './components/EditorModal';
 import VersionHistoryModal from './components/VersionHistoryModal';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { renderContent } from './components/renderContent';
 
 // Configure marked for scratchblocks and highlight.js support
@@ -70,13 +68,7 @@ const LessonPage = ({
     const currentCourse = propCourse || course;
     const currentLessonNumber = propLessonNumber || parseInt(lessonNumber);
 
-    useEffect(() => {
-        if (shouldUseFirebase && currentCourse && currentLessonNumber) {
-            loadLessonData();
-        }
-    }, [shouldUseFirebase, currentCourse, currentLessonNumber]);
-
-    const loadLessonData = async () => {
+    const loadLessonData = useCallback(async () => {
         setLoading(true);
         setError('');
         try {
@@ -92,7 +84,13 @@ const LessonPage = ({
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentCourse, currentLessonNumber]);
+
+    useEffect(() => {
+        if (shouldUseFirebase && currentCourse && currentLessonNumber !== null && currentLessonNumber !== undefined && !isNaN(currentLessonNumber)) {
+            loadLessonData();
+        }
+    }, [shouldUseFirebase, currentCourse, currentLessonNumber, loadLessonData]);
 
     const handleSave = async (curriculumData) => {
         setSaving(true);
