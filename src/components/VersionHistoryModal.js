@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Modal, Button, Table, Badge, Alert, Form } from 'react-bootstrap';
 import { getVersionHistory, restoreVersion } from '../services/curriculumService';
 import DiffModal from './DiffModal';
@@ -15,13 +15,7 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId,
   const [showDiffModal, setShowDiffModal] = useState(false);
   const [diffVersion, setDiffVersion] = useState(null);
 
-  useEffect(() => {
-    if (show && course && lessonNumber) {
-      loadVersionHistory();
-    }
-  }, [show, course, lessonNumber]);
-
-  const loadVersionHistory = async () => {
+  const loadVersionHistory = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
@@ -32,7 +26,13 @@ const VersionHistoryModal = ({ show, onHide, course, lessonNumber, curriculumId,
     } finally {
       setLoading(false);
     }
-  };
+  }, [course, lessonNumber]);
+
+  useEffect(() => {
+    if (show && course && lessonNumber) {
+      loadVersionHistory();
+    }
+  }, [show, course, lessonNumber, loadVersionHistory]);
 
   const handleRestore = async (versionId) => {
     setPendingRestoreVersionId(versionId);

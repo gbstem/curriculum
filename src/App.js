@@ -1,6 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import { HashRouter } from "react-router-dom";
+import { Route, Link, Routes, HashRouter } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown, Modal, Button, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -1102,4 +1101,3 @@ function App() {
 }
 
 export default App;
-

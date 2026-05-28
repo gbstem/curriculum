@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Card, Button, Spinner, Alert, Badge } from 'react-bootstrap';
+import { Button, Spinner, Alert } from 'react-bootstrap';
 import { getCurriculumByCourse } from '../services/curriculumService';
 import EditorModal from './EditorModal';
 
@@ -27,11 +27,7 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
         }
     };
 
-    useEffect(() => {
-        loadCurriculum();
-    }, [course]);
-
-    const loadCurriculum = async () => {
+    const loadCurriculum = useCallback(async () => {
         setLoading(true);
         setError('');
         try {
@@ -42,7 +38,11 @@ const FirebaseCurriculum = ({ course, courseTitle, backToCourses = "/cs" }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [course]);
+
+    useEffect(() => {
+        loadCurriculum();
+    }, [loadCurriculum]);
 
     const handleSave = async (curriculumData) => {
         setSaving(true);
