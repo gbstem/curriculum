@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+echo "🎨 Running yarn format..."
+yarn format
+
+echo "📝 Checking for unstaged changes..."
+if ! git diff --quiet; then
+  echo "❌ yarn format corrected some files, or you have unstaged changes!"
+  echo "Please run 'git add' on the corrected files and try committing again."
+  exit 1
+fi
+
+echo "🔍 Running yarn lint..."
+yarn lint || { echo "❌ Linting failed. Please fix errors before committing."; exit 1; }
+
+echo "🧪 Running yarn test..."
+yarn test || { echo "❌ Tests failed. Please fix them before committing."; exit 1; }
+
+echo "✅ Pre-commit checks passed!"

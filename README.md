@@ -1,70 +1,140 @@
-# Getting Started with Create React App
+# gbSTEM Curriculum Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<https://curriculum.gbstem.org/>
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+> Inspiring the Next Generation of STEM Innovators
 
-### `npm start`
+The Greater Boston STEM Program delivers free introductory computer science, math, engineering, and science enrichment to elementary and middle school students.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+This website is Greater Boston STEM Program's website for instructors to review their curriculums, password protected to limit access to just gbSTEM instructors. **It is primarily maintained by a rotating group of High School and college students.** Because of this, maintaining clear, readable code and robust documentation is highly prioritized.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Frameworks and Libraries
 
-### `npm test`
+This project relies on several key modern web technologies:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **[Next.js](https://nextjs.org)**: The core React framework used for building the site. We use the modern "App Router" (`app/` directory) for routing, server-side rendering, and static site generation.
+  - _Learn more_: [Next.js Documentation](https://nextjs.org/docs) or the [Learn Next.js](https://nextjs.org/learn) tutorial.
+- **[React](https://react.dev/)**: The underlying JavaScript library for building user interfaces and component-based architecture.
+- **[TypeScript](https://www.typescriptlang.org/)**: A strongly typed programming language that builds on JavaScript, giving you better tooling and strict type-checking at any scale.
+- **[Tailwind CSS](https://tailwindcss.com/)**: A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
+- **[Bootstrap](https://getbootstrap.com/) & [React-Bootstrap](https://react-bootstrap.netlify.app/)**: Used for rapid, responsive UI development. React-Bootstrap replaces the standard Bootstrap JavaScript with native React components (like `Accordion`, `Carousel`, and `Modal`).
+- **[Jest](https://jestjs.io/) & [React Testing Library](https://testing-library.com/)**: Our primary testing suite. We use Jest to write unit tests for components to ensure they render properly and maintain high code coverage, preventing regressions as the codebase is passed between different high school maintainers.
+- **[Cypress](https://www.cypress.io/)**: Used for end-to-end integration tests, ensuring the live site functions correctly in a real browser.
 
-### `npm run build`
+## Getting Started with Development
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. Environment Configuration
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Before running the development server, you must configure your local environment variables:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Copy the `.env.example` file to create a `.env.local` file:
 
-### `npm run eject`
+   ```bash
+   cp .env.example .env.local
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Open `.env.local` and adjust the placeholder values with your actual service credentials, preferably development credentials if available.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+> [!WARNING]
+> **Never commit your `.env.local` file or actual secrets to GitHub.** This file is configured to be ignored by Git to prevent exposing sensitive API keys and credentials. For details on how `.env` files work and how to avoid exposing credentials, read the [dotenv environment secrets guide](https://github.com/motdotla/dotenv#should-i-commit-my-env-file) and [GitHub's guide on ignoring files](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 2. Run the Development Server
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+# install dependencies
+yarn install
 
-## Learn More
+# run the development server
+yarn dev
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# automatically format code
+yarn format
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# check for style issues
+yarn lint
 
-### Code Splitting
+# run unit tests
+yarn test
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# run real browser end-to-end integration tests
+yarn cypress
 
-### Analyzing the Bundle Size
+# build for production
+yarn build
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# start a production-like server
+yarn start
+```
 
-### Making a Progressive Web App
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result for `yarn dev` or `yarn start`. You can start editing any page or component, and when running in `yarn dev` mode, your changes will be reflected in the browser automatically.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Updating Dependencies
 
-### Advanced Configuration
+It is important to periodically update the project's dependencies to address security vulnerabilities, receive bug fixes, improve performance, and keep up with the latest Next.js and React features. Since this project is maintained by a rotating group of students, regular updates prevent the codebase from falling behind or becoming incompatible with modern deployment platforms like Vercel.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+We use the [npm-check-updates (ncu)](https://github.com/raineorshine/npm-check-updates) tool to check for and apply updates. Refer to the [installation instructions](https://github.com/raineorshine/npm-check-updates#installation) to install it.
 
-### Deployment
+Once `ncu` is installed, follow this sequence of commands to update dependencies:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+# Update the dependencies in package.json to the latest versions
+ncu -u
 
-### `npm run build` fails to minify
+# Install the updated packages and update yarn.lock
+yarn install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Run unit tests to verify no breaking changes were introduced
+yarn test
+
+# Start a development server and run the Cypress test suite
+yarn dev &
+yarn cypress
+
+# Run lint checks to ensure code style consistency
+yarn lint
+
+# Go to http://localhost:3000 and do manual visual checks and tests
+
+# Build the project for production to verify compatibility and compile-time checks
+yarn build
+```
+
+After verifying that the tests, linting, and build pass successfully, commit and submit both `package.json` and `yarn.lock` to the repository.
+
+## Deploy on Vercel
+
+We use [Vercel](https://vercel.com/) for deployment. They are the creators and main sponsors of Next.js. You can preview changes by pushing branches to this repository, and preview and production URLs will automatically be provided by the Vercel bot.
+
+## Directory and File Index
+
+Below is an alphabetical list of the top-level directories and significant configuration files to help you navigate the codebase:
+
+### Directories
+
+- **`.husky/`**: Configuration for Husky, managing Git hooks like pre-commit formatting and linting.
+- **`__tests__/`**: Contains all of our Jest unit tests. Tests are organized generally by route or component domain (e.g. `programs.test.tsx`, `components.test.tsx`).
+- **`app/`**: The core Next.js App Router directory. This handles the application's URL routing. Each subdirectory (like `cs/`, `math/`) with a `page.tsx` file inside represents a distinct page on the site.
+- **`components/`**: Reusable React UI components that are imported across multiple pages (e.g., `Navigation.tsx`, `Footer.tsx`, `ClassPage.tsx`). Keeping logic componentized keeps our page files clean.
+- **`cypress/`**: Contains our Cypress end-to-end integration tests and configurations, verifying the live site functions correctly in a real browser.
+- **`lib/`**: Contains library utilities and centralized static data constants (like the lists of FAQ questions in `faqData.ts` and the team member information in `teamMembers.ts`).
+- **`public/`**: Static assets such as images, logos, and icons that can be accessed publicly by the browser.
+
+### Files
+
+- **`.gitignore`**: Specifies which files and directories Git should ignore (like `node_modules/` and `.next/`).
+- **`.prettierignore`**: Specifies which files and directories Prettier should ignore when formatting.
+- **`.prettierrc`**: Configuration rules for Prettier, ensuring consistent code formatting across the project.
+- **`AGENTS.md`**: Custom rules and guidelines for AI coding agents interacting with the repository.
+- **`cypress.config.ts`**: The configuration file for our Cypress end-to-end testing environment.
+- **`eslint.config.mjs`**: Configuration rules for ESLint, ensuring consistent code style and checking for common errors across the project.
+- **`jest.config.ts`**: The configuration file for our Jest testing environment, specifically tailored to work alongside Next.js.
+- **`jest.setup.ts`**: Initial setup code that runs before our Jest tests, importing tools like `@testing-library/jest-dom` for custom DOM matchers.
+- **`next-env.d.ts`**: Automatically generated TypeScript declaration file that ensures the Next.js types are picked up by the compiler. Do not edit manually.
+- **`next.config.ts`**: General Next.js build and server configuration file.
+- **`package.json`**: Defines the project's details, scripts (like `yarn dev`), and dependencies (the npm packages we rely on).
+- **`postcss.config.mjs`**: Configuration for PostCSS, typically used for transforming CSS with plugins.
+- **`README.md`**: You are reading this file! It contains the project's onboarding documentation.
+- **`tsconfig.json`**: Configuration settings for the TypeScript compiler, including our path aliases (like `@/` mapping to the root).
+- **`yarn.lock`**: An automatically generated file that locks down the exact versions of dependencies used, ensuring that all developers have identical, reproducible environments.
