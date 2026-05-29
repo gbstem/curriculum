@@ -8,7 +8,7 @@ import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 // Helper to parse italics in a string (handles *text* and _text_)
 function parseItalics(text: string): React.ReactNode[] | string {
   const elements: React.ReactNode[] = [];
-  let remaining = text;
+  const remaining = text;
   let match;
   // Regex for *text* or _text_ (not bold)
   const italicsRegex = /(?<!\*)\*(?!\*)([^*]+)(?<!\*)\*(?!\*)|_(?!_)([^_]+)_(?!_)/g;
@@ -94,7 +94,7 @@ function parseLinksNoCode(text: string): React.ReactNode[] {
 // Helper to parse links and italics, but NOT code (used by parseLinks)
 function parseLinks(line: string): React.ReactNode[] {
   const elements: React.ReactNode[] = [];
-  let remaining = line;
+  const remaining = line;
   let match;
   // Regex for inline code (single backticks, not part of code block)
   const codeRegex = /(?<!`)`([^`]+)`(?!`)/g;

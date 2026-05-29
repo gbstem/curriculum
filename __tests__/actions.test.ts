@@ -35,7 +35,7 @@ describe('actions.ts server actions', () => {
 
     // Restore mock implementations after resetAllMocks wipes them
     mockCookieStore.get.mockImplementation((key: string) => mockCookieStoreMap.get(key));
-    mockCookieStore.set.mockImplementation((key: string, value: string, options?: any) => {
+    mockCookieStore.set.mockImplementation((key: string, value: string, _options?: any) => {
       mockCookieStoreMap.set(key, { value });
       return mockCookieStore;
     });

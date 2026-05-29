@@ -1,5 +1,3 @@
-console.log('--- __mocks__/next-headers.ts EVALUATED ---');
-
 const mockCookieStoreMap = new Map<string, { value: string }>();
 
 const mockCookieStore: any = {
@@ -24,9 +22,5 @@ const mockCookieStore: any = {
 (global as any).mockCookieStore = (global as any).mockCookieStore || mockCookieStore;
 
 export const cookies = jest.fn(() => {
-  console.log(
-    '--- __mocks__/next-headers.ts cookies() called, returning:',
-    (global as any).mockCookieStore
-  );
   return Promise.resolve((global as any).mockCookieStore);
 });

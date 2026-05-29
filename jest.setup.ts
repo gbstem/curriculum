@@ -5,7 +5,7 @@ const mockCookieStoreMap = new Map<string, { value: string }>();
 
 const mockCookieStore: any = {
   get: jest.fn((key: string) => mockCookieStoreMap.get(key)),
-  set: jest.fn((key: string, value: string, options?: any) => {
+  set: jest.fn((key: string, value: string, _options?: any) => {
     mockCookieStoreMap.set(key, { value });
     return mockCookieStore;
   }),
@@ -81,4 +81,11 @@ jest.mock('firebase/firestore', () => {
     where: jest.fn(),
     Timestamp: MockTimestamp,
   };
+});
+
+// Silence console methods during test runs to ensure clean test output
+beforeEach(() => {
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
 });
