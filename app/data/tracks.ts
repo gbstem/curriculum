@@ -95,6 +95,7 @@ export const tracks: Track[] = [
           '24 comprehensive lessons',
           'Visual programming concepts',
           'Game development projects',
+          'Interactive storytelling',
         ],
         links: [
           { label: 'Start Teaching', href: '/cs/scratch1A', variant: 'warning', textWhite: true },
@@ -108,11 +109,12 @@ export const tracks: Track[] = [
         bgOpacity: 'rgba(255, 193, 7, 0.1)',
         icon: 'fas fa-puzzle-piece',
         description:
-          'Learn programming fundamentals through visual block-based coding. Create games, animations, and interactive stories.',
+          'Learn programming fundamentals through visual block-based coding. Create games, animations, and interactive stories while developing computational thinking skills.',
         syllabus: [
           '24 comprehensive lessons',
           'Visual programming concepts',
           'Game development projects',
+          'Interactive storytelling',
         ],
         links: [
           { label: 'Start Teaching', href: '/cs/scratch1B', variant: 'warning', textWhite: true },
@@ -126,11 +128,12 @@ export const tracks: Track[] = [
         bgOpacity: 'rgba(253, 126, 20, 0.1)',
         icon: 'fas fa-puzzle-piece',
         description:
-          'Build intermediate coding structures, custom blocks, and complex algorithms using Scratch block-based environment.',
+          'Learn programming fundamentals through visual block-based coding. Create games, animations, and interactive stories while developing computational thinking skills.',
         syllabus: [
           '24 comprehensive lessons',
-          'Custom blocks and functions',
-          'Advanced scratch animations',
+          'Visual programming concepts',
+          'Game development projects',
+          'Interactive storytelling',
         ],
         links: [
           {
@@ -149,11 +152,12 @@ export const tracks: Track[] = [
         bgOpacity: 'rgba(253, 126, 20, 0.1)',
         icon: 'fas fa-puzzle-piece',
         description:
-          'Further build intermediate coding structures, custom blocks, and complex algorithms using Scratch.',
+          'Learn programming fundamentals through visual block-based coding. Create games, animations, and interactive stories while developing computational thinking skills.',
         syllabus: [
           '24 comprehensive lessons',
-          'Complex programming logic',
-          'Interactive storyboarding',
+          'Visual programming concepts',
+          'Game development projects',
+          'Interactive storytelling',
         ],
         links: [
           {
@@ -175,8 +179,9 @@ export const tracks: Track[] = [
           'Dive into text-based programming with Python. Learn syntax, data structures, and problem-solving techniques through engaging projects.',
         syllabus: [
           '24 structured lessons',
-          'Python fundamentals & syntax',
+          'Python fundamentals',
           'Data structures & algorithms',
+          'Real-world applications',
         ],
         links: [{ label: 'Start Teaching', href: '/cs/python1A', variant: 'primary' }],
       },
@@ -188,11 +193,12 @@ export const tracks: Track[] = [
         bgOpacity: 'rgba(13, 110, 253, 0.1)',
         icon: 'fab fa-python',
         description:
-          'Further explore text-based programming with Python. Learn syntax, loops, lists, and functions.',
+          'Dive into text-based programming with Python. Learn syntax, data structures, and problem-solving techniques through engaging projects.',
         syllabus: [
           '24 structured lessons',
-          'Logical conditions and loops',
-          'Building CLI applications',
+          'Python fundamentals',
+          'Data structures & algorithms',
+          'Real-world applications',
         ],
         links: [{ label: 'Start Teaching', href: '/cs/python1B', variant: 'primary' }],
       },
@@ -207,8 +213,9 @@ export const tracks: Track[] = [
           'Advanced Python programming concepts including object-oriented programming, file handling, and complex data manipulation.',
         syllabus: [
           '17 advanced lessons',
-          'Object-oriented programming (OOP)',
+          'Object-oriented programming',
           'File I/O & data processing',
+          'Advanced algorithms',
         ],
         links: [
           { label: 'Start Teaching', href: '/cs/python2A', variant: 'success', textWhite: true },
@@ -222,11 +229,12 @@ export const tracks: Track[] = [
         bgOpacity: 'rgba(25, 135, 84, 0.1)',
         icon: 'fab fa-python',
         description:
-          'Further study advanced Python concepts. Work on capstone projects, networking, or algorithms.',
+          'Advanced Python programming concepts including object-oriented programming, file handling, and complex data manipulation.',
         syllabus: [
           '17 advanced lessons',
-          'Advanced algorithms & efficiency',
-          'Project-based learning',
+          'Object-oriented programming',
+          'File I/O & data processing',
+          'Advanced algorithms',
         ],
         links: [
           { label: 'Start Teaching', href: '/cs/python2B', variant: 'success', textWhite: true },
@@ -244,7 +252,8 @@ export const tracks: Track[] = [
         syllabus: [
           'HTML & CSS fundamentals',
           'JavaScript programming',
-          'Responsive design & UI/UX',
+          'Responsive design',
+          'Web applications',
         ],
         links: [
           { label: 'WebDev A', href: '/cs/webdevA', variant: 'primary', textWhite: true },
@@ -323,7 +332,7 @@ export const tracks: Track[] = [
         bgOpacity: 'rgba(25, 135, 84, 0.1)',
         icon: 'fas fa-calculator',
         description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Foundation level.',
+          'Build a strong foundation in mathematical concepts and problem-solving skills.',
         links: [
           {
             label: 'Start Teaching',
@@ -341,7 +350,7 @@ export const tracks: Track[] = [
         bgOpacity: 'rgba(25, 135, 84, 0.1)',
         icon: 'fas fa-calculator',
         description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Foundation level.',
+          'Build a strong foundation in mathematical concepts and problem-solving skills.',
         links: [
           {
             label: 'Start Teaching',
@@ -357,9 +366,8 @@ export const tracks: Track[] = [
         badge: 'Intermediate',
         color: '#0d6efd',
         bgOpacity: 'rgba(13, 110, 253, 0.1)',
-        icon: 'fas fa-calculator',
-        description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Intermediate level.',
+        icon: 'fas fa-chart-line',
+        description: 'Explore advanced mathematical concepts and analytical thinking.',
         links: [
           {
             label: 'Start Teaching',
@@ -375,9 +383,8 @@ export const tracks: Track[] = [
         badge: 'Intermediate',
         color: '#0d6efd',
         bgOpacity: 'rgba(13, 110, 253, 0.1)',
-        icon: 'fas fa-calculator',
-        description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Intermediate level.',
+        icon: 'fas fa-chart-line',
+        description: 'Explore advanced mathematical concepts and analytical thinking.',
         links: [
           {
             label: 'Start Teaching',
@@ -393,9 +400,8 @@ export const tracks: Track[] = [
         badge: 'Advanced',
         color: '#6f42c1',
         bgOpacity: 'rgba(111, 66, 193, 0.1)',
-        icon: 'fas fa-calculator',
-        description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Advanced level.',
+        icon: 'fas fa-square-root-alt',
+        description: 'Master complex mathematical theories and applications.',
         links: [
           {
             label: 'Start Teaching',
@@ -411,9 +417,8 @@ export const tracks: Track[] = [
         badge: 'Advanced',
         color: '#6f42c1',
         bgOpacity: 'rgba(111, 66, 193, 0.1)',
-        icon: 'fas fa-calculator',
-        description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Advanced level.',
+        icon: 'fas fa-square-root-alt',
+        description: 'Master complex mathematical theories and applications.',
         links: [
           {
             label: 'Start Teaching',
@@ -429,9 +434,8 @@ export const tracks: Track[] = [
         badge: 'Expert',
         color: '#20c997',
         bgOpacity: 'rgba(32, 201, 151, 0.1)',
-        icon: 'fas fa-calculator',
-        description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Expert level.',
+        icon: 'fas fa-infinity',
+        description: 'Delve into advanced mathematical analysis and proofs.',
         links: [
           {
             label: 'Start Teaching',
@@ -447,9 +451,8 @@ export const tracks: Track[] = [
         badge: 'Expert',
         color: '#20c997',
         bgOpacity: 'rgba(32, 201, 151, 0.1)',
-        icon: 'fas fa-calculator',
-        description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Expert level.',
+        icon: 'fas fa-infinity',
+        description: 'Delve into advanced mathematical analysis and proofs.',
         links: [
           {
             label: 'Start Teaching',
@@ -465,9 +468,8 @@ export const tracks: Track[] = [
         badge: 'Master',
         color: '#fd7e14',
         bgOpacity: 'rgba(253, 126, 20, 0.1)',
-        icon: 'fas fa-calculator',
-        description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Master level.',
+        icon: 'fas fa-brain',
+        description: 'Explore the frontiers of mathematical knowledge and research.',
         links: [
           {
             label: 'Start Teaching',
@@ -483,9 +485,8 @@ export const tracks: Track[] = [
         badge: 'Master',
         color: '#fd7e14',
         bgOpacity: 'rgba(253, 126, 20, 0.1)',
-        icon: 'fas fa-calculator',
-        description:
-          'Build a strong understanding of mathematical concepts and problem-solving skills customized for the Master level.',
+        icon: 'fas fa-brain',
+        description: 'Explore the frontiers of mathematical knowledge and research.',
         links: [
           {
             label: 'Start Teaching',
@@ -621,8 +622,7 @@ export const tracks: Track[] = [
         isDarkText: true,
         bgOpacity: 'rgba(255, 193, 7, 0.1)',
         icon: 'fas fa-cogs',
-        description:
-          'Build a strong foundation in mechanical, electrical, and systems design principles tailored for Engineering 1A.',
+        description: 'Introduction to engineering principles and hands-on projects.',
         links: [
           {
             label: 'Start Teaching',
@@ -640,8 +640,7 @@ export const tracks: Track[] = [
         isDarkText: true,
         bgOpacity: 'rgba(255, 193, 7, 0.1)',
         icon: 'fas fa-cogs',
-        description:
-          'Build a strong foundation in mechanical, electrical, and systems design principles tailored for Engineering 1B.',
+        description: 'Introduction to engineering principles and hands-on projects.',
         links: [
           {
             label: 'Start Teaching',
@@ -659,8 +658,7 @@ export const tracks: Track[] = [
         isDarkText: false,
         bgOpacity: 'rgba(253, 126, 20, 0.1)',
         icon: 'fas fa-tools',
-        description:
-          'Build a strong foundation in mechanical, electrical, and systems design principles tailored for Engineering 2A.',
+        description: 'Dive deeper into engineering design, prototyping, and teamwork.',
         links: [
           {
             label: 'Start Teaching',
@@ -678,8 +676,7 @@ export const tracks: Track[] = [
         isDarkText: false,
         bgOpacity: 'rgba(253, 126, 20, 0.1)',
         icon: 'fas fa-tools',
-        description:
-          'Build a strong foundation in mechanical, electrical, and systems design principles tailored for Engineering 2B.',
+        description: 'Dive deeper into engineering design, prototyping, and teamwork.',
         links: [
           {
             label: 'Start Teaching',
@@ -697,8 +694,7 @@ export const tracks: Track[] = [
         isDarkText: false,
         bgOpacity: 'rgba(111, 66, 193, 0.1)',
         icon: 'fas fa-drafting-compass',
-        description:
-          'Build a strong foundation in mechanical, electrical, and systems design principles tailored for Engineering 3A.',
+        description: 'Advanced engineering concepts, innovation, and real-world problem solving.',
         links: [
           {
             label: 'Start Teaching',
@@ -716,8 +712,7 @@ export const tracks: Track[] = [
         isDarkText: false,
         bgOpacity: 'rgba(111, 66, 193, 0.1)',
         icon: 'fas fa-drafting-compass',
-        description:
-          'Build a strong foundation in mechanical, electrical, and systems design principles tailored for Engineering 3B.',
+        description: 'Advanced engineering concepts, innovation, and real-world problem solving.',
         links: [
           {
             label: 'Start Teaching',

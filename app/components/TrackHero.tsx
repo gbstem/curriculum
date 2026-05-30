@@ -30,7 +30,7 @@ export default function TrackHero({
             <h1 className={`display-4 fw-bold mb-3 ${textColorClass}`}>{title}</h1>
             <p className={`lead mb-0 ${textColorClass}`}>{description}</p>
           </div>
-          <div className={`col-lg-4 d-none d-lg-block text-center ${textColorClass}`}>
+          <div className={`col-lg-4 mt-lg-0 mt-4 text-center ${textColorClass}`}>
             <i className={`${icon} fa-5x`}></i>
           </div>
         </div>
