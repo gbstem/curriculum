@@ -17,14 +17,14 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn(),
 }));
 
+import { cookies } from 'next/headers';
 import {
+  deleteCurriculumAction,
+  restoreVersionAction,
+  saveCurriculumAction,
   verifyAccessPassword,
   verifyEditorPassword,
-  saveCurriculumAction,
-  restoreVersionAction,
-  deleteCurriculumAction,
 } from '../app/actions';
-import { cookies } from 'next/headers';
 import { mockCollection } from '../jest.setup';
 
 describe('actions.ts server actions', () => {
@@ -50,7 +50,7 @@ describe('actions.ts server actions', () => {
 
     mockCookieStoreMap.clear();
     process.env = { ...originalEnv };
-    process.env.NEXT_CURRICULUM_ACCESS_PASSWORD = 'access-pass';
+    process.env.NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD = 'access-pass';
     process.env.NEXT_CURRICULUM_EDITOR_ACCESS_PASSWORD = 'editor-pass';
   });
 
@@ -77,7 +77,7 @@ describe('actions.ts server actions', () => {
     });
 
     it('returns false and warns when env password is not set', async () => {
-      delete process.env.NEXT_CURRICULUM_ACCESS_PASSWORD;
+      delete process.env.NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD;
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       const result = await verifyAccessPassword('access-pass');
       expect(result).toBe(false);

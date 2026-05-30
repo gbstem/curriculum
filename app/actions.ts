@@ -1,8 +1,8 @@
 'use server';
 
+import * as admin from 'firebase-admin';
 import { cookies } from 'next/headers';
 import { adminDb } from './firebase-admin';
-import * as admin from 'firebase-admin';
 import { CurriculumItem, CurriculumVersion } from './services/curriculumService';
 
 // Collection names
@@ -18,9 +18,9 @@ async function checkEditorAuth(): Promise<boolean> {
 }
 
 export async function verifyAccessPassword(password: string): Promise<boolean> {
-  const correctPassword = process.env.NEXT_CURRICULUM_ACCESS_PASSWORD;
+  const correctPassword = process.env.NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD;
   if (!correctPassword) {
-    console.warn('NEXT_CURRICULUM_ACCESS_PASSWORD is not set in the environment variables!');
+    console.warn('NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD is not set in the environment variables!');
     return false;
   }
   const isValid = password === correctPassword;
