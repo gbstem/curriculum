@@ -29,6 +29,9 @@ const nextConfig: NextConfig = {
     ],
   },
   staticPageGenerationTimeout: 120,
+  logging: {
+    serverFunctions: false,
+  },
 };
 
 export default nextConfig;

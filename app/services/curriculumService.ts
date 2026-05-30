@@ -88,7 +88,11 @@ export const getCurriculumByCourse = async (course: string): Promise<CurriculumI
 
 // Save curriculum (creates new version)
 export const saveCurriculum = async (curriculumData: CurriculumItem): Promise<string> => {
-  return await saveCurriculumAction(curriculumData);
+  // Strip non-serializable fields (like Firestore Timestamps) before passing to the Server Action
+  const cleanData = { ...curriculumData };
+  delete cleanData.createdAt;
+  delete cleanData.lastModified;
+  return await saveCurriculumAction(cleanData);
 };
 
 // Get version history for a curriculum item
