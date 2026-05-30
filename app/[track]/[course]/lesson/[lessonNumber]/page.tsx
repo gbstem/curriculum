@@ -29,20 +29,20 @@ export default function LessonDetailsPage({ params }: PageProps) {
   const [lessonData, setLessonData] = useState<CurriculumItem | null>(null);
   const [allLessons, setAllLessons] = useState<CurriculumItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<Error | null>(null);
   const [showEditor, setShowEditor] = useState<boolean>(false);
   const [showVersionHistory, setShowVersionHistory] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
 
   const loadLessonData = useCallback(async () => {
     setLoading(true);
-    setError('');
+    setError(null);
     try {
       const data = await getCurriculumByCourseAndLesson(course, currentLessonNum);
       if (data) {
         setLessonData(data);
       } else {
-        setError('Lesson not found');
+        setError(new Error('Lesson not found'));
       }
 
       // Also load all lessons in the course to build navigation
@@ -50,7 +50,7 @@ export default function LessonDetailsPage({ params }: PageProps) {
       setAllLessons(courseLessons);
     } catch (err: any) {
       console.error('Error loading lesson:', err);
-      setError('Error loading lesson: ' + err.message);
+      setError(err instanceof Error ? err : new Error(err.message || String(err)));
     } finally {
       setLoading(false);
     }
@@ -61,6 +61,10 @@ export default function LessonDetailsPage({ params }: PageProps) {
       loadLessonData();
     }
   }, [course, currentLessonNum, loadLessonData]);
+
+  if (error) {
+    throw error;
+  }
 
   const handleSave = async (curriculumData: CurriculumItem) => {
     setSaving(true);

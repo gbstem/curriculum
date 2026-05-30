@@ -20,7 +20,7 @@ export default function CourseLessonsPage({ params }: PageProps) {
 
   const [curriculum, setCurriculum] = useState<CurriculumItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<Error | null>(null);
   const [showEditor, setShowEditor] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
 
@@ -81,12 +81,12 @@ export default function CourseLessonsPage({ params }: PageProps) {
 
   const loadCurriculum = useCallback(async () => {
     setLoading(true);
-    setError('');
+    setError(null);
     try {
       const data = await getCurriculumByCourse(course);
       setCurriculum(data);
     } catch (err: any) {
-      setError('Error loading curriculum: ' + err.message);
+      setError(err instanceof Error ? err : new Error(err.message || String(err)));
     } finally {
       setLoading(false);
     }
@@ -95,6 +95,10 @@ export default function CourseLessonsPage({ params }: PageProps) {
   useEffect(() => {
     loadCurriculum();
   }, [loadCurriculum]);
+
+  if (error) {
+    throw error;
+  }
 
   const handleSave = async (curriculumData: CurriculumItem) => {
     setSaving(true);

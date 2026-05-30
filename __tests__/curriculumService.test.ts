@@ -7,14 +7,25 @@ import {
   restoreVersion,
   deleteCurriculum,
 } from '../app/services/curriculumService';
-import { saveCurriculumAction, restoreVersionAction, deleteCurriculumAction } from '../app/actions';
-import { getDocs } from 'firebase/firestore';
+import {
+  saveCurriculumAction,
+  restoreVersionAction,
+  deleteCurriculumAction,
+  getAllCurriculumAction,
+  getCurriculumByCourseAction,
+  getCurriculumByCourseAndLessonAction,
+  getVersionHistoryAction,
+} from '../app/actions';
 
 // Mock the server actions
 jest.mock('../app/actions', () => ({
   saveCurriculumAction: jest.fn(),
   restoreVersionAction: jest.fn(),
   deleteCurriculumAction: jest.fn(),
+  getAllCurriculumAction: jest.fn(),
+  getCurriculumByCourseAction: jest.fn(),
+  getCurriculumByCourseAndLessonAction: jest.fn(),
+  getVersionHistoryAction: jest.fn(),
 }));
 
 describe('curriculumService tests', () => {
@@ -22,118 +33,101 @@ describe('curriculumService tests', () => {
     jest.resetAllMocks();
   });
 
-  describe('read operations (client Firestore SDK)', () => {
+  describe('read operations (delegated to server actions)', () => {
     const dummyDocs = [
-      {
-        id: 'doc1',
-        data: () => ({ course: 'python1A', lessonNumber: 2, title: 'Lesson 2' }),
-      },
-      {
-        id: 'doc2',
-        data: () => ({ course: 'python1A', lessonNumber: 1, title: 'Lesson 1' }),
-      },
+      { id: 'doc1', course: 'python1A', lessonNumber: 2, title: 'Lesson 2' },
+      { id: 'doc2', course: 'python1A', lessonNumber: 1, title: 'Lesson 1' },
     ];
 
-    it('getAllCurriculum gets all documents from firestore', async () => {
-      const mockSnapshot = {
-        forEach: (callback: any) => dummyDocs.forEach(callback),
-      };
-      (getDocs as jest.Mock).mockResolvedValueOnce(mockSnapshot);
+    it('getAllCurriculum gets all documents from server action', async () => {
+      (getAllCurriculumAction as jest.Mock).mockResolvedValueOnce(dummyDocs);
 
       const result = await getAllCurriculum();
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('doc1');
       expect(result[1].id).toBe('doc2');
-      expect(getDocs).toHaveBeenCalled();
+      expect(getAllCurriculumAction).toHaveBeenCalled();
     });
 
     it('getCurriculumByCourseAndLesson gets a single matched document', async () => {
-      const mockSnapshot = {
-        empty: false,
-        docs: [dummyDocs[1]],
-      };
-      (getDocs as jest.Mock).mockResolvedValueOnce(mockSnapshot);
+      (getCurriculumByCourseAndLessonAction as jest.Mock).mockResolvedValueOnce(dummyDocs[1]);
 
       const result = await getCurriculumByCourseAndLesson('python1A', 1);
       expect(result).not.toBeNull();
       expect(result?.id).toBe('doc2');
       expect(result?.lessonNumber).toBe(1);
+      expect(getCurriculumByCourseAndLessonAction).toHaveBeenCalledWith('python1A', 1);
     });
 
     it('getCurriculumByCourseAndLesson returns null if not found', async () => {
-      const mockSnapshot = {
-        empty: true,
-      };
-      (getDocs as jest.Mock).mockResolvedValueOnce(mockSnapshot);
+      (getCurriculumByCourseAndLessonAction as jest.Mock).mockResolvedValueOnce(null);
 
       const result = await getCurriculumByCourseAndLesson('python1A', 99);
       expect(result).toBeNull();
+      expect(getCurriculumByCourseAndLessonAction).toHaveBeenCalledWith('python1A', 99);
     });
 
     it('getCurriculumByCourse returns sorted lessons', async () => {
-      const mockSnapshot = {
-        forEach: (callback: any) => dummyDocs.forEach(callback),
-      };
-      (getDocs as jest.Mock).mockResolvedValueOnce(mockSnapshot);
+      (getCurriculumByCourseAction as jest.Mock).mockResolvedValueOnce(dummyDocs);
 
       const result = await getCurriculumByCourse('python1A');
       expect(result).toHaveLength(2);
       // Result should be sorted by lessonNumber: Lesson 1 first, then Lesson 2
       expect(result[0].lessonNumber).toBe(1);
       expect(result[1].lessonNumber).toBe(2);
+      expect(getCurriculumByCourseAction).toHaveBeenCalledWith('python1A');
     });
 
     it('getVersionHistory returns sorted history by timestamp descending', async () => {
-      const dummyVersionDocs = [
+      const dummyVersions = [
         {
           id: 'v1',
-          data: () => ({
-            course: 'python1A',
-            lessonNumber: 1,
-            title: 'Lesson 1 v1',
-            versionTimestamp: { toDate: () => new Date('2026-05-29T12:00:00Z') },
-          }),
+          course: 'python1A',
+          lessonNumber: 1,
+          title: 'Lesson 1 v1',
+          versionTimestamp: { seconds: 1778900000, nanoseconds: 0 },
         },
         {
           id: 'v2',
-          data: () => ({
-            course: 'python1A',
-            lessonNumber: 1,
-            title: 'Lesson 1 v2',
-            versionTimestamp: { toDate: () => new Date('2026-05-29T13:00:00Z') },
-          }),
+          course: 'python1A',
+          lessonNumber: 1,
+          title: 'Lesson 1 v2',
+          versionTimestamp: { seconds: 1778903600, nanoseconds: 0 },
         },
       ];
-      const mockSnapshot = {
-        forEach: (callback: any) => dummyVersionDocs.forEach(callback),
-      };
-      (getDocs as jest.Mock).mockResolvedValueOnce(mockSnapshot);
+      (getVersionHistoryAction as jest.Mock).mockResolvedValueOnce(dummyVersions);
 
       const result = await getVersionHistory('python1A', 1);
       expect(result).toHaveLength(2);
       // Sorted by timestamp descending: newer (v2) first
       expect(result[0].id).toBe('v2');
       expect(result[1].id).toBe('v1');
+      expect(getVersionHistoryAction).toHaveBeenCalledWith('python1A', 1);
     });
+
     it('getAllCurriculum handles errors', async () => {
-      (getDocs as jest.Mock).mockRejectedValueOnce(new Error('Firestore error'));
+      (getAllCurriculumAction as jest.Mock).mockRejectedValueOnce(new Error('Firestore error'));
       await expect(getAllCurriculum()).rejects.toThrow('Firestore error');
     });
 
     it('getCurriculumByCourseAndLesson handles errors', async () => {
-      (getDocs as jest.Mock).mockRejectedValueOnce(new Error('Firestore error'));
+      (getCurriculumByCourseAndLessonAction as jest.Mock).mockRejectedValueOnce(
+        new Error('Firestore error')
+      );
       await expect(getCurriculumByCourseAndLesson('python1A', 1)).rejects.toThrow(
         'Firestore error'
       );
     });
 
     it('getCurriculumByCourse handles errors', async () => {
-      (getDocs as jest.Mock).mockRejectedValueOnce(new Error('Firestore error'));
+      (getCurriculumByCourseAction as jest.Mock).mockRejectedValueOnce(
+        new Error('Firestore error')
+      );
       await expect(getCurriculumByCourse('python1A')).rejects.toThrow('Firestore error');
     });
 
     it('getVersionHistory handles errors', async () => {
-      (getDocs as jest.Mock).mockRejectedValueOnce(new Error('Firestore error'));
+      (getVersionHistoryAction as jest.Mock).mockRejectedValueOnce(new Error('Firestore error'));
       await expect(getVersionHistory('python1A', 1)).rejects.toThrow('Firestore error');
     });
   });

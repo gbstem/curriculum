@@ -1,3 +1,12 @@
+/*
+ * Defines server-side code for secure data access and other operations
+ * where we want to avoid exposing environment variables to the client
+ * browser which contain secrets like api keys and passwords. This
+ * includes accessing Firebase Firestore and Storage, because we need to
+ * make sure only this website can access Firebase, and that means having
+ * a secure server-side private key for accessing the database.
+ */
+
 'use server';
 
 import * as admin from 'firebase-admin';
@@ -57,6 +66,167 @@ export async function verifyEditorPassword(password: string): Promise<boolean> {
   return isValid;
 }
 
+async function withTimeout<T>(promise: Promise<T>, context: string, timeoutMs = 10000): Promise<T> {
+  let timer: NodeJS.Timeout;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      reject(new Error(`Database operation timed out (${context})`));
+    }, timeoutMs);
+  });
+  try {
+    const result = await Promise.race([promise, timeoutPromise]);
+    clearTimeout(timer!);
+    return result;
+  } catch (err: any) {
+    clearTimeout(timer!);
+    console.error(`[Firestore Error] ${context}:`, err);
+    throw new Error(
+      `Failed to perform database operation (${context}): ${err.message || err.toString()}`
+    );
+  }
+}
+
+function serializeTimestamp(ts: any) {
+  if (!ts) return null;
+  if (typeof ts === 'string') return ts;
+  if (typeof ts.toDate === 'function') {
+    const d = ts.toDate();
+    return { seconds: Math.floor(d.getTime() / 1000), nanoseconds: (d.getTime() % 1000) * 1000000 };
+  }
+  if (typeof ts.seconds === 'number') {
+    return { seconds: ts.seconds, nanoseconds: ts.nanoseconds || 0 };
+  }
+  return null;
+}
+
+export async function getAllCurriculumAction(): Promise<CurriculumItem[]> {
+  try {
+    const querySnapshot = await withTimeout(
+      adminDb.collection(CURRICULUM_COLLECTION).get(),
+      'getting all curriculum items'
+    );
+    const curriculum: CurriculumItem[] = [];
+    querySnapshot.forEach((doc: any) => {
+      const data = doc.data();
+      curriculum.push({
+        id: doc.id,
+        course: data.course,
+        lessonNumber: data.lessonNumber,
+        title: data.title,
+        moduleTitle: data.moduleTitle,
+        content: data.content,
+        createdAt: serializeTimestamp(data.createdAt),
+        lastModified: serializeTimestamp(data.lastModified),
+      } as any);
+    });
+    return curriculum;
+  } catch (error: any) {
+    console.error('Error in getAllCurriculumAction:', error);
+    throw new Error('Failed to get all curriculum: ' + error.message);
+  }
+}
+
+export async function getCurriculumByCourseAction(course: string): Promise<CurriculumItem[]> {
+  try {
+    const querySnapshot = await withTimeout(
+      adminDb.collection(CURRICULUM_COLLECTION).where('course', '==', course).get(),
+      `getting curriculum items for course ${course}`
+    );
+    const curriculum: CurriculumItem[] = [];
+    querySnapshot.forEach((doc: any) => {
+      const data = doc.data();
+      curriculum.push({
+        id: doc.id,
+        course: data.course,
+        lessonNumber: data.lessonNumber,
+        title: data.title,
+        moduleTitle: data.moduleTitle,
+        content: data.content,
+        createdAt: serializeTimestamp(data.createdAt),
+        lastModified: serializeTimestamp(data.lastModified),
+      } as any);
+    });
+    return curriculum;
+  } catch (error: any) {
+    console.error(`Error in getCurriculumByCourseAction (course: ${course}):`, error);
+    throw new Error('Failed to get curriculum for course: ' + error.message);
+  }
+}
+
+export async function getCurriculumByCourseAndLessonAction(
+  course: string,
+  lessonNumber: number
+): Promise<CurriculumItem | null> {
+  try {
+    const querySnapshot = await withTimeout(
+      adminDb
+        .collection(CURRICULUM_COLLECTION)
+        .where('course', '==', course)
+        .where('lessonNumber', '==', lessonNumber)
+        .get(),
+      `getting curriculum item for course ${course} lesson ${lessonNumber}`
+    );
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      const data = doc.data();
+      return {
+        id: doc.id,
+        course: data.course,
+        lessonNumber: data.lessonNumber,
+        title: data.title,
+        moduleTitle: data.moduleTitle,
+        content: data.content,
+        createdAt: serializeTimestamp(data.createdAt),
+        lastModified: serializeTimestamp(data.lastModified),
+      } as any;
+    }
+    return null;
+  } catch (error: any) {
+    console.error(
+      `Error in getCurriculumByCourseAndLessonAction (course: ${course}, lesson: ${lessonNumber}):`,
+      error
+    );
+    throw new Error('Failed to get lesson details: ' + error.message);
+  }
+}
+
+export async function getVersionHistoryAction(
+  course: string,
+  lessonNumber: number
+): Promise<CurriculumVersion[]> {
+  try {
+    const querySnapshot = await withTimeout(
+      adminDb
+        .collection(VERSIONS_COLLECTION)
+        .where('course', '==', course)
+        .where('lessonNumber', '==', lessonNumber)
+        .get(),
+      `getting version history for course ${course} lesson ${lessonNumber}`
+    );
+    const versions: CurriculumVersion[] = [];
+    querySnapshot.forEach((doc: any) => {
+      const data = doc.data();
+      versions.push({
+        id: doc.id,
+        course: data.course,
+        lessonNumber: data.lessonNumber,
+        title: data.title,
+        moduleTitle: data.moduleTitle,
+        content: data.content,
+        versionTimestamp: serializeTimestamp(data.versionTimestamp),
+        versionNumber: data.versionNumber,
+      } as any);
+    });
+    return versions;
+  } catch (error: any) {
+    console.error(
+      `Error in getVersionHistoryAction (course: ${course}, lesson: ${lessonNumber}):`,
+      error
+    );
+    throw new Error('Failed to get version history: ' + error.message);
+  }
+}
+
 export async function saveCurriculumAction(curriculumData: CurriculumItem): Promise<string> {
   const isAuthorized = await checkEditorAuth();
   if (!isAuthorized) {
@@ -80,25 +250,34 @@ export async function saveCurriculumAction(curriculumData: CurriculumItem): Prom
     };
 
     // Save history to versions collection
-    await adminDb.collection(VERSIONS_COLLECTION).add(versionData);
+    await withTimeout(
+      adminDb.collection(VERSIONS_COLLECTION).add(versionData),
+      'adding version history record'
+    );
 
     if (id) {
       // Update existing
-      await adminDb
-        .collection(CURRICULUM_COLLECTION)
-        .doc(id)
-        .update({
-          ...cleanData,
-          lastModified: admin.firestore.FieldValue.serverTimestamp(),
-        });
+      await withTimeout(
+        adminDb
+          .collection(CURRICULUM_COLLECTION)
+          .doc(id)
+          .update({
+            ...cleanData,
+            lastModified: admin.firestore.FieldValue.serverTimestamp(),
+          }),
+        `updating existing curriculum item ${id}`
+      );
       return id;
     } else {
       // Create new
-      const docRef = await adminDb.collection(CURRICULUM_COLLECTION).add({
-        ...cleanData,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        lastModified: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      const docRef = await withTimeout(
+        adminDb.collection(CURRICULUM_COLLECTION).add({
+          ...cleanData,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          lastModified: admin.firestore.FieldValue.serverTimestamp(),
+        }),
+        'creating new curriculum item'
+      );
       return docRef.id;
     }
   } catch (error: any) {
@@ -117,7 +296,10 @@ export async function restoreVersionAction(
   }
 
   try {
-    const versionDoc = await adminDb.collection(VERSIONS_COLLECTION).doc(versionId).get();
+    const versionDoc = await withTimeout(
+      adminDb.collection(VERSIONS_COLLECTION).doc(versionId).get(),
+      `getting version history document ${versionId}`
+    );
     if (versionDoc.exists) {
       const versionData = versionDoc.data() as CurriculumVersion;
       const curriculumData = { ...versionData };
@@ -145,7 +327,10 @@ export async function deleteCurriculumAction(curriculumId: string): Promise<void
   }
 
   try {
-    await adminDb.collection(CURRICULUM_COLLECTION).doc(curriculumId).delete();
+    await withTimeout(
+      adminDb.collection(CURRICULUM_COLLECTION).doc(curriculumId).delete(),
+      `deleting curriculum item ${curriculumId}`
+    );
   } catch (error: any) {
     console.error('Error in deleteCurriculumAction:', error);
     throw new Error('Failed to delete curriculum: ' + error.message);

@@ -36,6 +36,33 @@ jest.mock('../app/components/EditorModal', () => {
   };
 });
 
+// Simple Error Boundary for testing throwing components
+class TestErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div data-testid="error-boundary">
+          <h1>Error Caught</h1>
+          <p>{this.state.error?.message}</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 describe('CourseLessonsPage component', () => {
   const dummyLessons = [
     {
@@ -118,11 +145,14 @@ describe('CourseLessonsPage component', () => {
       new Error('Firestore network error')
     );
     const params = Promise.resolve({ track: 'cs', course: 'scratch1A' });
-    render(<CourseLessonsPage params={params} />);
 
-    expect(await screen.findByText('Error Loading Curriculum')).toBeInTheDocument();
-    expect(
-      screen.getByText('Error loading curriculum: Firestore network error')
-    ).toBeInTheDocument();
+    render(
+      <TestErrorBoundary>
+        <CourseLessonsPage params={params} />
+      </TestErrorBoundary>
+    );
+
+    expect(await screen.findByTestId('error-boundary')).toBeInTheDocument();
+    expect(screen.getByText('Firestore network error')).toBeInTheDocument();
   });
 });
