@@ -52,7 +52,7 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
   }, [course, lessonNumber]);
 
   useEffect(() => {
-    if (show && course && lessonNumber) {
+    if (show && course && lessonNumber !== undefined && lessonNumber !== null) {
       loadVersionHistory();
     }
   }, [show, course, lessonNumber, loadVersionHistory]);

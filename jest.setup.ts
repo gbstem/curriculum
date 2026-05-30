@@ -97,6 +97,12 @@ jest.mock('firebase/firestore', () => {
   };
 });
 
+// Mock react-syntax-highlighter prism styles to avoid ESM parsing issues in Jest
+jest.mock('react-syntax-highlighter/dist/esm/styles/prism', () => ({
+  oneLight: {},
+  tomorrow: {},
+}));
+
 // Silence console methods during test runs to ensure clean test output
 beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation(() => {});
