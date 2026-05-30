@@ -8,21 +8,34 @@ if (!admin.apps.length) {
     ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
     : undefined;
 
-  if (privateKey && clientEmail && projectId) {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId,
-        clientEmail,
-        privateKey,
-      }),
-    });
-  } else {
-    // Falls back to FIRESTORE_EMULATOR_HOST or Application Default Credentials (ADC)
-    admin.initializeApp({
-      projectId: projectId || 'demo-gbstem',
-    });
+  try {
+    if (
+      privateKey &&
+      privateKey.includes('-----BEGIN PRIVATE KEY-----') &&
+      !privateKey.includes('...') &&
+      clientEmail &&
+      projectId
+    ) {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId,
+          clientEmail,
+          privateKey,
+        }),
+      });
+    } else {
+      // Falls back to FIRESTORE_EMULATOR_HOST or Application Default Credentials (ADC)
+      admin.initializeApp({
+        projectId: projectId || 'demo-gbstem-curriculum',
+      });
+    }
+  } catch (err: any) {
+    if (!/already exists/u.test(err.message)) {
+      console.log('Firebase Admin Error:', err.stack);
+    }
   }
 }
 
 export const adminDb = admin.firestore();
+export const adminAuth = admin.auth();
 export default admin;

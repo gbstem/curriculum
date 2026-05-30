@@ -40,7 +40,56 @@ Before running the development server, you must configure your local environment
 > [!WARNING]
 > **Never commit your `.env.local` file or actual secrets to GitHub.** This file is configured to be ignored by Git to prevent exposing sensitive API keys and credentials. For details on how `.env` files work and how to avoid exposing credentials, read the [dotenv environment secrets guide](https://github.com/motdotla/dotenv#should-i-commit-my-env-file) and [GitHub's guide on ignoring files](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files).
 
-### 2. Run the Development Server
+### 2. Firebase Emulator Suite (Local Development)
+
+For local development and testing, it is **very important** to use the **Firebase Emulator Suite** to run local instances of Firebase products (Firestore, Authentication, and Storage).
+
+Testing against a local emulator rather than the production database:
+
+- **Protects Production Data**: Prevents accidental database corruption or unintended changes from local development bugs or testing.
+- **Enables Risk-Free Testing**: Allows you to safely test writes, deletes, and complex updates without any fear of damaging real client or course records.
+- **Offline Capability**: Allows you to run the application fully offline.
+
+#### Seeding the Emulator with Production Data
+
+To test with representative data, you can copy data from the live production Firestore into your local emulator:
+
+1. **Configure Production Credentials**: Open `.env.local` and ensure your production credentials (`NEXT_PUBLIC_FIREBASE_PROJECT_ID` or `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY`) are temporarily set. Make sure they are NOT commented out.
+2. **Pull Live Data**: Download the data from the production collections by running:
+
+   ```bash
+   yarn db:pull
+   ```
+
+   This will download the `curriculum` and `curriculum_versions` collections and save them in a local, Git-ignored file named `firebase-backup.json`.
+
+3. **Point to Local Emulators**: To route client and server operations to the emulator, uncomment the emulator environment variables at the bottom of your `.env.local` file:
+
+   ```env
+   FIRESTORE_EMULATOR_HOST="127.0.0.1:8080"
+   FIREBASE_AUTH_EMULATOR_HOST="127.0.0.1:9099"
+   STORAGE_EMULATOR_HOST="127.0.0.1:9199"
+   ```
+
+   Ensure these ports match your emulator configurations in `firebase.json`.
+
+4. **Start the Emulator**: Set up and start the emulator suite locally:
+   - Follow the official [Firebase Emulator Suite: Connect and Prototype](https://firebase.google.com/docs/emulator-suite/connect_and_prototype?database=Firestore) guide to run the emulators on your local machine.
+   - Start the emulators using the Firebase CLI:
+
+     ```bash
+     firebase emulators:start
+     ```
+
+5. **Seed the Emulator**: While the emulator is running, import the downloaded production data backup by running:
+
+   ```bash
+   yarn db:seed
+   ```
+
+   The emulator is now seeded with live-representative records and ready for local development!
+
+### 3. Run the Development Server
 
 ```bash
 # install dependencies

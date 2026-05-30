@@ -11,7 +11,9 @@
     "format": "prettier --write .",
     "cypress:run": "start-server-and-test start http://localhost:3000 cypress",
     "cypress": "cypress run",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:pull": "node scripts/sync-db.js pull",
+    "db:seed": "node scripts/sync-db.js seed"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",

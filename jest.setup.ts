@@ -37,6 +37,7 @@ jest.mock('firebase-admin', () => {
       cert: jest.fn(),
     },
     firestore: jest.fn(() => (global as any).mockAdminDb),
+    auth: jest.fn(() => ({})),
   };
   (adminNamespace.firestore as any).FieldValue = {
     serverTimestamp: jest.fn(() => 'mock-server-timestamp'),
@@ -52,6 +53,18 @@ jest.mock('firebase/app', () => ({
   initializeApp: jest.fn(),
   getApps: jest.fn(() => []),
   getApp: jest.fn(),
+}));
+
+// Global mock for firebase/auth
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn(() => ({ currentUser: null })),
+  connectAuthEmulator: jest.fn(),
+}));
+
+// Global mock for firebase/storage
+jest.mock('firebase/storage', () => ({
+  getStorage: jest.fn(),
+  connectStorageEmulator: jest.fn(),
 }));
 
 // Global mock for firebase/firestore
@@ -70,6 +83,7 @@ jest.mock('firebase/firestore', () => {
   }
   return {
     getFirestore: jest.fn(),
+    connectFirestoreEmulator: jest.fn(),
     collection: jest.fn(),
     doc: jest.fn(),
     getDocs: jest.fn(),
