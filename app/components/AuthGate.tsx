@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { verifyAccessPassword } from '../actions';
 import { tracks } from '../data/tracks';
+import Footer from './Footer';
 
 interface AuthGateProps {
   children: React.ReactNode;
@@ -177,6 +178,7 @@ export default function AuthGate({ children }: AuthGateProps) {
       </Navbar>
 
       <div className="grow">{children}</div>
+      <Footer />
     </div>
   );
 }
