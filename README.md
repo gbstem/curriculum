@@ -89,6 +89,15 @@ To test with representative data, you can copy data from the live production Fir
 
    The emulator is now seeded with live-representative records and ready for local development!
 
+> [!WARNING]
+> By default, the Firestore emulator runs in-memory. This means all seeded data and modifications are lost whenever you restart the emulator. If you want to persist the database state across restarts, start the emulator with the `--import` and `--export-on-exit` flags:
+>
+> ```bash
+> firebase emulators:start --import=./emulator-data --export-on-exit
+> ```
+>
+> Otherwise, you must re-run the seed script (`yarn db:seed`) every time you restart the emulator.
+
 ### 3. Run the Development Server
 
 ```bash
