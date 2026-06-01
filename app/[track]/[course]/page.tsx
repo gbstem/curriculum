@@ -9,6 +9,7 @@ import {
   getCurriculumByCourse,
   saveCurriculum,
 } from '../../services/curriculumService';
+import { tracks } from '../../data/tracks';
 
 interface PageProps {
   params: Promise<{ track: string; course: string }>;
@@ -17,6 +18,16 @@ interface PageProps {
 export default function CourseLessonsPage({ params }: PageProps) {
   const { track, course } = React.use(params);
   const normalizedTrack = track.toLowerCase();
+
+  // Validate track and course
+  const trackData = tracks.find((t) => t.id === normalizedTrack);
+  if (!trackData) {
+    throw new Error('Track not found');
+  }
+  const courseData = trackData.courses.find((c) => c.id === course);
+  if (!courseData) {
+    throw new Error('Class not found');
+  }
 
   const [curriculum, setCurriculum] = useState<CurriculumItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

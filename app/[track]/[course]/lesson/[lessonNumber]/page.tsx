@@ -12,6 +12,7 @@ import {
   getCurriculumByCourseAndLesson,
   saveCurriculum,
 } from '../../../../services/curriculumService';
+import { tracks } from '../../../../data/tracks';
 
 interface PageProps {
   params: Promise<{
@@ -25,6 +26,19 @@ export default function LessonDetailsPage({ params }: PageProps) {
   const { track, course, lessonNumber } = React.use(params);
   const normalizedTrack = track.toLowerCase();
   const currentLessonNum = parseInt(lessonNumber, 10);
+
+  // Validate track, course, and lessonNumber
+  const trackData = tracks.find((t) => t.id === normalizedTrack);
+  if (!trackData) {
+    throw new Error('Track not found');
+  }
+  const courseData = trackData.courses.find((c) => c.id === course);
+  if (!courseData) {
+    throw new Error('Class not found');
+  }
+  if (isNaN(currentLessonNum)) {
+    throw new Error('Lesson not found');
+  }
 
   const [lessonData, setLessonData] = useState<CurriculumItem | null>(null);
   const [allLessons, setAllLessons] = useState<CurriculumItem[]>([]);

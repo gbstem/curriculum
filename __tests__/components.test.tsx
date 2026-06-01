@@ -1,19 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import { notFound } from 'next/navigation';
 import { tracks } from '../app/data/tracks';
 import TrackHero from '../app/components/TrackHero';
 import TrackCard from '../app/components/TrackCard';
 import LearningPath from '../app/components/LearningPath';
 import TrackPage from '../app/[track]/page';
 import Home from '../app/page';
-
-// Mock next/navigation's notFound
-jest.mock('next/navigation', () => ({
-  notFound: jest.fn(() => {
-    throw new Error('NOT_FOUND');
-  }),
-}));
 
 describe('tracks data configuration', () => {
   it('contains CS, Math, Science, and Engineering tracks', () => {
@@ -209,15 +201,12 @@ describe('TrackPage dynamic page component', () => {
     expect(screen.getByText('Recommended Learning Path')).toBeInTheDocument();
   });
 
-  it('calls notFound when track ID is invalid', async () => {
+  it('throws error when track ID is invalid', async () => {
     mockTrackParam = 'invalid-track-id';
     const params = Promise.resolve({ track: 'invalid-track-id' });
 
-    // We expect it to call notFound(), which throws an error in our mock
     expect(() => {
       render(<TrackPage params={params} />);
-    }).toThrow('NOT_FOUND');
-
-    expect(notFound).toHaveBeenCalled();
+    }).toThrow('Track not found');
   });
 });

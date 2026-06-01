@@ -6,6 +6,7 @@ import { useSession } from '@/lib/useSession';
 import { CurriculumItem, deleteCurriculum } from '../services/curriculumService';
 import CodeBlockModal from './CodeBlockModal';
 import { RenderContent } from './renderContent';
+import { navigateTo } from '@/lib/navigation';
 
 interface EditorModalProps {
   show: boolean;
@@ -63,8 +64,18 @@ const EditorModal: React.FC<EditorModalProps> = ({
     try {
       await deleteCurriculum(curriculumData.id);
       onHide();
-      // Reload the page to reflect changes
-      window.location.reload();
+      // Determine the redirect URL (remove /lesson and everything after it)
+      let redirectUrl = '/';
+      if (typeof window !== 'undefined') {
+        const pathname = window.location.pathname;
+        const lessonIndex = pathname.indexOf('/lesson');
+        if (lessonIndex !== -1) {
+          redirectUrl = pathname.substring(0, lessonIndex);
+        } else {
+          redirectUrl = pathname;
+        }
+      }
+      navigateTo(redirectUrl);
     } catch (err: any) {
       setError('Error deleting curriculum: ' + err.message);
     }
