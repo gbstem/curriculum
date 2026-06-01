@@ -170,8 +170,8 @@ const EditorModal: React.FC<EditorModalProps> = ({
           )}
 
           <Form>
-            <Row className="mb-3">
-              <Col md={4}>
+            <Row className="align-items-md-end mb-3">
+              <Col md={4} className="mb-md-0 mb-3">
                 <Form.Group>
                   <Form.Label>Course</Form.Label>
                   <Form.Select value={course} onChange={(e) => setCourse(e.target.value)}>
@@ -209,7 +209,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
                   </Form.Select>
                 </Form.Group>
               </Col>
-              <Col md={2}>
+              <Col md={2} className="mb-md-0 mb-3">
                 <Form.Group>
                   <Form.Label>Lesson Number</Form.Label>
                   <Form.Control
@@ -220,7 +220,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
                   />
                 </Form.Group>
               </Col>
-              <Col md={6}>
+              <Col md={6} className="mb-md-0 mb-3">
                 <Form.Group>
                   <Form.Label>Title</Form.Label>
                   <Form.Control

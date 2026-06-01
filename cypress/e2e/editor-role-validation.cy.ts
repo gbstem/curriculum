@@ -160,28 +160,57 @@ describe('Editor Role Validation (Section E)', () => {
     cy.get('.editor-col').should('be.visible');
     cy.get('.preview-col').should('be.visible');
 
-    // 2. Code Block insertion helper
+    // 2. Bold helper formatting test
+    cy.get('#content-textarea').type('bold');
+    cy.get('#content-textarea').then(($el) => {
+      const el = $el[0] as HTMLTextAreaElement;
+      el.setSelectionRange(0, 4); // select "bold"
+    });
+    cy.get('button[title="Bold"]').click();
+    cy.get('#content-textarea').should('have.value', '**bold**');
+    cy.get('.preview-col').find('strong').should('contain', 'bold');
+
+    // 3. Italic helper formatting test
+    cy.get('#content-textarea').clear().type('italic');
+    cy.get('#content-textarea').then(($el) => {
+      const el = $el[0] as HTMLTextAreaElement;
+      el.setSelectionRange(0, 6); // select "italic"
+    });
+    cy.get('button[title="Italic"]').click();
+    cy.get('#content-textarea').should('have.value', '*italic*');
+    cy.get('.preview-col').find('em').should('contain', 'italic');
+
+    // 4. List helper formatting tests
+    cy.get('#content-textarea').clear();
+    cy.get('button[title="Bullet List"]').click();
+    cy.get('#content-textarea').type('Item 1');
+    cy.get('#content-textarea').type('\n'); // newline
+    cy.get('button[title="Numbered List"]').click();
+    cy.get('#content-textarea').type('Item 2');
+
+    cy.get('#content-textarea').should('have.value', '- Item 1\n1. Item 2');
+
+    // Verify live preview of list formatting
+    cy.get('.preview-col').find('ul li').should('contain', 'Item 1');
+    cy.get('.preview-col').should('contain', '1. Item 2');
+
+    // 5. Code Block insertion helper
     cy.get('button[title="Insert Code Block"]').click();
     cy.get('.modal-dialog').last().should('be.visible');
     cy.get('.modal-dialog').last().find('select').select('python');
     cy.get('.modal-dialog').last().find('textarea').type('print("Hello from code helper!")');
     cy.get('.modal-dialog').last().contains('button', 'Insert Code Block').click();
 
-    // Verify insertion into textarea
+    // Verify insertion into textarea in addition to the text above
     cy.get('#content-textarea').should(
       'contain',
       '```python\nprint("Hello from code helper!")\n```'
     );
 
-    // 3. Formatting toolbar helpers
-    cy.get('#content-textarea').type('\n# My Live Header\n');
-    cy.get('button[title="Bullet List"]').click();
-
     // Verify live preview updates in real-time
     cy.get('.preview-col').contains('Hello from code helper!').should('be.visible');
-    cy.get('.preview-col').find('ul').should('exist');
 
-    // 4. Cancel to discard changes
+    // 6. Cancel to discard changes
     cy.get('.modal-dialog').first().contains('button', 'Cancel').click();
     cy.get('.modal-dialog').should('not.exist');
   });

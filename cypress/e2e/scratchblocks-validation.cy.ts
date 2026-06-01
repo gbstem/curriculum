@@ -18,18 +18,7 @@ describe('Scratchblocks React Integration Validation (Section H)', () => {
 
     const lessonTitle = generateDateHash('Scratch Blocks Integration Test');
     const scratchHash = generateDateHash('scratch-hash');
-    const scratchBlocksText = `
-This is an integration test for Scratch blocks.
-
-\`\`\`scratch
-// Hash: ${scratchHash}
-when green flag clicked
-forever
-  move (10) steps
-  if on edge, bounce
-end
-\`\`\`
-`;
+    const scratchCode = `// Hash: ${scratchHash}\nwhen green flag clicked\nforever\n  move (10) steps\n  if on edge, bounce\nend`;
 
     // 1. Add New Lesson
     cy.contains('button', 'Add New Lesson').click();
@@ -37,7 +26,15 @@ end
 
     cy.get('.modal-dialog').first().find('input[type="number"]').type('2001');
     cy.get('.modal-dialog').first().find('input[placeholder="Lesson title"]').type(lessonTitle);
-    cy.get('#content-textarea').type(scratchBlocksText);
+    cy.get('#content-textarea').type('This is an integration test for Scratch blocks.\n\n');
+
+    // Use formatting helper to insert scratch code block
+    cy.get('button[title="Insert Code Block"]').click();
+    cy.get('.modal-dialog').last().should('be.visible');
+    cy.get('.modal-dialog').last().find('select').select('scratchblocks');
+    cy.get('.modal-dialog').last().find('textarea').clear().type(scratchCode);
+    cy.get('.modal-dialog').last().contains('button', 'Insert Code Block').click();
+
     cy.get('.modal-dialog').first().contains('button', 'Save').click();
 
     // 2. Click the Lesson 2001 link from the list

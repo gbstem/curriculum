@@ -332,25 +332,30 @@ _Execute these steps for **Lesson 1** of any selected course (e.g., `/cs/scratch
 
 #### Test Case 13: Verify Real-Time Editor Preview and Formatting Helpers
 
-- **Description**: Ensure that when creating or editing a lesson as an Editor, the formatting toolbar helper buttons work correctly, code blocks can be inserted via the toolbar helper tool (complete with highlighting preview), and the editor's live preview pane updates in real time.
+- **Description**: Ensure that when creating or editing a lesson as an Editor, the formatting toolbar helper buttons (Bold, Italic, Bullet List, Numbered List, and Insert Code Block) work correctly, code blocks can be inserted via the toolbar helper tool (complete with highlighting preview), and the editor's live preview pane updates in real time.
 - **Steps**:
   1. Navigate to the Scratch 1A class page: `http://localhost:3000/cs/scratch1A` (while logged in as Editor).
   2. Click the **"Add New Lesson"** button at the top of the page.
   3. Verify the modal opens in a split pane view showing the editor on the left and a **Preview** column on the right.
-  4. In the toolbar above the editor textarea, click the **"Insert Code Block"** button (code icon `fas fa-code`).
-  5. In the **"Insert Code Block"** helper modal:
-     - Select **"Python"** from the Language dropdown.
-     - Type `print("Hello from code helper!")` into the Code textarea.
-     - Verify the syntax highlighted code is shown in the preview pane.
-     - Click **"Insert Code Block"**.
-  6. Verify that the helper modal closes and the main editor textarea (`#content-textarea`) is populated with the fenced code block template.
-  7. In the main editor textarea, type `# My Live Header` on a new line.
-  8. Highlight the text `My Live Header` and click the **"Bold"** formatting button (`fas fa-bold`) in the toolbar.
-  9. Click the **"Bullet List"** button (`fas fa-list-ul`) to insert a list template.
-  10. Click the **"Close"** or **"Cancel"** button to discard changes without saving.
+  4. Type some text (e.g. `raw text`) in the content textarea.
+  5. Select a portion of the text (e.g. `bold`) and click the **"Bold"** formatting button (`fas fa-bold`) in the toolbar. Verify that the text is wrapped in bold formatting (`**`).
+  6. Select another portion of the text (e.g. `text`) and click the **"Italic"** formatting button (`fas fa-italic`) in the toolbar. Verify that the text is wrapped in italic formatting (`*`).
+  7. Clear the textarea, click the **"Bullet List"** button (`fas fa-list-ul`) to insert a bullet list template, and type some item text.
+  8. Insert a newline, click the **"Numbered List"** button (`fas fa-list-ol`) to insert a numbered list template, and type some item text.
+  9. Click the **"Insert Code Block"** button (code icon `fas fa-code`).
+  10. In the **"Insert Code Block"** helper modal:
+      - Select **"Python"** from the Language dropdown.
+      - Type `print("Hello from code helper!")` into the Code textarea.
+      - Verify the syntax highlighted code is shown in the preview pane.
+      - Click **"Insert Code Block"**.
+  11. Verify that the helper modal closes and the main editor textarea (`#content-textarea`) is populated with the fenced code block template in addition to the list and formatted text.
+  12. Click the **"Close"** or **"Cancel"** button to discard changes without saving.
 - **Expected Results (Assertions)**:
-  - The live preview column (Right side of the modal) immediately renders the headers, lists, and python code blocks in real time as the editor types or inserts template tags.
-  - The bold template (`**{text}**`) and bullet list template (`- {text}`) are correctly inserted at the textarea cursor focus.
+  - The live preview column (Right side of the modal) immediately renders bold text (`<strong>`), italicized text (`<em>`), bulleted lists (`<ul>`), numbered lists, and code blocks in real time.
+  - Clicking Bold wraps selected text with `**{text}**`.
+  - Clicking Italic wraps selected text with `*{text}*`.
+  - Clicking Bullet List inserts `- {text}`.
+  - Clicking Numbered List inserts `1. {text}`.
 
 ---
 
@@ -394,11 +399,13 @@ _Execute these steps for **Lesson 1** of any selected course (e.g., `/cs/scratch
 - **Steps**:
   1. Login as an Editor and navigate to `/cs/scratch1A`.
   2. Click **"Add New Lesson"**.
-  3. In the modal:
+  3. In the Editor modal:
      - Enter `2000` in the **Lesson Number** input field.
      - Enter `Syntax and Blocks Integration Test` in the **Title** input field.
-     - Enter `Integration Test Module` in the **Module Title** input field.
-     - Enter the following text in the **Content** textarea:
+     - Type `This is an integration test for syntax highlighting.\n\n` in the **Content** textarea.
+     - Click the **"Insert Code Block"** button in the toolbar.
+     - Select **"Python"** in the Language dropdown.
+     - Type the Python code in the Code textarea:
 
        ```python
        import random
@@ -408,6 +415,7 @@ _Execute these steps for **Lesson 1** of any selected course (e.g., `/cs/scratch
            print(pokemon + " is ready with " + str(hp) + " HP!")
        ```
 
+     - Click **"Insert Code Block"**.
      - Click **"Save"**.
 
   4. Once saved, locate and click the **"Lesson 2000: Syntax and Blocks Integration Test"** button from the lessons list.
@@ -424,12 +432,14 @@ _Execute these steps for **Lesson 1** of any selected course (e.g., `/cs/scratch
 
 **Note**: For Cypress automation, all these tests use `generateDateHash()` to append a random string to the title and content fields to ensure uniqueness.
 
-- **Description**: Verify that fenced code blocks marked as `scratch` are rendered as graphical Scratch programming blocks using `scratchblocks-react`.
+- **Description**: Verify that fenced code blocks marked as `scratchblocks` are rendered as graphical Scratch programming blocks using `scratchblocks-react`.
 - **Steps**:
   1. On the detail page for Lesson 2000 (`/cs/scratch1A/lesson/2000`), click the **"Edit Lesson"** button.
-  2. Append the following text to the **Content** textarea:
+  2. Click the **"Insert Code Block"** button in the toolbar.
+  3. Select **"Scratch Blocks"** in the Language dropdown.
+  4. Enter the Scratch code in the Code textarea:
 
-     ```scratch
+     ```scratchblocks
      when green flag clicked
      forever
        move (10) steps
@@ -437,7 +447,8 @@ _Execute these steps for **Lesson 1** of any selected course (e.g., `/cs/scratch
      end
      ```
 
-  3. Click **"Save"**.
+  5. Click **"Insert Code Block"**.
+  6. Click **"Save"**.
 
 - **Expected Results (Assertions)**:
   - The Scratch code section is rendered as actual graphical blocks (SVG/canvas elements representing Scratch programming blocks) rather than raw text.

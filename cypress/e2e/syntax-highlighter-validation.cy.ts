@@ -18,15 +18,21 @@ def battle_ready(pokemon):
     print(pokemon + " is ready with " + str(hp) + " HP!")
 `;
 
-    const fullContent = `This is an integration test for syntax highlighting.\n\n\`\`\`python${pythonCode}\`\`\``;
-
     // 1. Add New Lesson
     cy.contains('button', 'Add New Lesson').click();
     cy.get('.modal-dialog').first().should('be.visible');
 
     cy.get('.modal-dialog').first().find('input[type="number"]').type('2000');
     cy.get('.modal-dialog').first().find('input[placeholder="Lesson title"]').type(lessonTitle);
-    cy.get('#content-textarea').type(fullContent);
+    cy.get('#content-textarea').type('This is an integration test for syntax highlighting.\n\n');
+
+    // Use formatting helper to insert python code block
+    cy.get('button[title="Insert Code Block"]').click();
+    cy.get('.modal-dialog').last().should('be.visible');
+    cy.get('.modal-dialog').last().find('select').select('python');
+    cy.get('.modal-dialog').last().find('textarea').clear().type(pythonCode);
+    cy.get('.modal-dialog').last().contains('button', 'Insert Code Block').click();
+
     cy.get('.modal-dialog').first().contains('button', 'Save').click();
 
     // 2. Click the Lesson 2000 link from the list
