@@ -5,6 +5,7 @@ import './styles.css';
 import './curriculum.css';
 import './globals.css';
 import AuthGate from './components/AuthGate';
+import { SessionProvider } from '@/lib/useSession';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -37,7 +38,9 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-light text-dark flex min-h-full flex-col">
-        <AuthGate>{children}</AuthGate>
+        <SessionProvider>
+          <AuthGate>{children}</AuthGate>
+        </SessionProvider>
       </body>
     </html>
   );

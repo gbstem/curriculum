@@ -9,7 +9,9 @@
 
 'use server';
 
+import { SessionData, sessionOptions } from '@/lib/session';
 import * as admin from 'firebase-admin';
+import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { adminDb } from './firebase-admin';
 import { CurriculumItem, CurriculumVersion } from './services/curriculumService';
@@ -21,49 +23,15 @@ const VERSIONS_COLLECTION = 'curriculum_versions';
 // Helper to check if authorized as editor
 async function checkEditorAuth(): Promise<boolean> {
   const cookieStore = await cookies();
-  const editorPassword = cookieStore.get('editor_password')?.value;
-  const correctPassword = process.env.NEXT_CURRICULUM_EDITOR_ACCESS_PASSWORD;
-  return !!correctPassword && editorPassword === correctPassword;
+  const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
+  return session.isLoggedIn && session.role === 'editor';
 }
 
-export async function verifyAccessPassword(password: string): Promise<boolean> {
-  const correctPassword = process.env.NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD;
-  if (!correctPassword) {
-    console.warn('NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD is not set in the environment variables!');
-    return false;
-  }
-  const isValid = password === correctPassword;
-  if (isValid) {
-    const cookieStore = await cookies();
-    cookieStore.set('access_password', password, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-  }
-  return isValid;
-}
-
-export async function verifyEditorPassword(password: string): Promise<boolean> {
-  const correctPassword = process.env.NEXT_CURRICULUM_EDITOR_ACCESS_PASSWORD;
-  if (!correctPassword) {
-    console.warn('NEXT_CURRICULUM_EDITOR_ACCESS_PASSWORD is not set in the environment variables!');
-    return false;
-  }
-  const isValid = password === correctPassword;
-  if (isValid) {
-    const cookieStore = await cookies();
-    cookieStore.set('editor_password', password, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 60 * 60 * 24, // 1 day
-    });
-  }
-  return isValid;
+// Helper to check if authorized as viewer or editor
+async function checkViewerAuth(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
+  return session.isLoggedIn && (session.role === 'viewer' || session.role === 'editor');
 }
 
 async function withTimeout<T>(promise: Promise<T>, context: string, timeoutMs = 10000): Promise<T> {
@@ -100,6 +68,11 @@ function serializeTimestamp(ts: any) {
 }
 
 export async function getAllCurriculumAction(): Promise<CurriculumItem[]> {
+  const isAuthorized = await checkViewerAuth();
+  if (!isAuthorized) {
+    throw new Error('Unauthorized: Incorrect or missing access permission.');
+  }
+
   try {
     const querySnapshot = await withTimeout(
       adminDb.collection(CURRICULUM_COLLECTION).get(),
@@ -127,6 +100,11 @@ export async function getAllCurriculumAction(): Promise<CurriculumItem[]> {
 }
 
 export async function getCurriculumByCourseAction(course: string): Promise<CurriculumItem[]> {
+  const isAuthorized = await checkViewerAuth();
+  if (!isAuthorized) {
+    throw new Error('Unauthorized: Incorrect or missing access permission.');
+  }
+
   try {
     const querySnapshot = await withTimeout(
       adminDb.collection(CURRICULUM_COLLECTION).where('course', '==', course).get(),
@@ -157,6 +135,11 @@ export async function getCurriculumByCourseAndLessonAction(
   course: string,
   lessonNumber: number
 ): Promise<CurriculumItem | null> {
+  const isAuthorized = await checkViewerAuth();
+  if (!isAuthorized) {
+    throw new Error('Unauthorized: Incorrect or missing access permission.');
+  }
+
   try {
     const querySnapshot = await withTimeout(
       adminDb
@@ -194,6 +177,11 @@ export async function getVersionHistoryAction(
   course: string,
   lessonNumber: number
 ): Promise<CurriculumVersion[]> {
+  const isAuthorized = await checkViewerAuth();
+  if (!isAuthorized) {
+    throw new Error('Unauthorized: Incorrect or missing access permission.');
+  }
+
   try {
     const querySnapshot = await withTimeout(
       adminDb

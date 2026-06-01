@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Form, Modal, Row } from 'react-bootstrap';
-import { verifyEditorPassword } from '../actions';
+import { useSession } from '@/lib/useSession';
 import { CurriculumItem, deleteCurriculum } from '../services/curriculumService';
 import CodeBlockModal from './CodeBlockModal';
 import { RenderContent } from './renderContent';
@@ -22,8 +22,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
   onSave,
   isLoading = false,
 }) => {
-  const [password, setPassword] = useState<string>('');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { session } = useSession();
   const [error, setError] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [title, setTitle] = useState<string>('');
@@ -39,22 +38,6 @@ const EditorModal: React.FC<EditorModalProps> = ({
       setLessonNumber(curriculumData.lessonNumber?.toString() || '');
     }
   }, [curriculumData]);
-
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const isValid = await verifyEditorPassword(password);
-      if (isValid) {
-        setIsAuthenticated(true);
-        setError('');
-      } else {
-        setError('Incorrect password. Please try again.');
-      }
-    } catch (err: any) {
-      setError('An error occurred during verification.');
-      console.error(err);
-    }
-  };
 
   const handleSave = async () => {
     try {
@@ -132,7 +115,9 @@ const EditorModal: React.FC<EditorModalProps> = ({
     }
   };
 
-  if (!isAuthenticated) {
+  const isEditor = session.role === 'editor';
+
+  if (!isEditor) {
     return (
       <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} centered>
         <Modal.Header className="bg-primary text-white" closeButton>
@@ -142,38 +127,16 @@ const EditorModal: React.FC<EditorModalProps> = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="mb-4 text-center">
-            <h4>Password Required</h4>
-            <p className="text-muted">Please enter the password to access the curriculum editor.</p>
+          <Alert variant="danger" className="mb-0 py-4 text-center">
+            <i className="fas fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+            <h4>Access Denied</h4>
+            <p className="mb-0">You need to login as an editor to make edits.</p>
+          </Alert>
+          <div className="d-flex justify-content-end mt-3">
+            <Button variant="secondary" onClick={onHide}>
+              Close
+            </Button>
           </div>
-
-          <Form onSubmit={handlePasswordSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                autoFocus
-              />
-              {error && (
-                <Alert variant="danger" className="mt-2">
-                  {error}
-                </Alert>
-              )}
-            </Form.Group>
-
-            <div className="d-flex gap-2">
-              <Button variant="secondary" onClick={onHide} className="flex-fill">
-                Cancel
-              </Button>
-              <Button type="submit" variant="primary" className="flex-fill">
-                <i className="fas fa-sign-in-alt me-2"></i>
-                Access Editor
-              </Button>
-            </div>
-          </Form>
         </Modal.Body>
       </Modal>
     );

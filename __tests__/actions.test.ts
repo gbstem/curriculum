@@ -17,7 +17,21 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn(),
 }));
 
+// Mock iron-session to bypass ESM issues and mock session retrieval
+jest.mock('iron-session', () => ({
+  getIronSession: jest.fn(async () => {
+    const hasEditorPassword = mockCookieStoreMap.get('editor_password')?.value === 'editor-pass';
+    return {
+      isLoggedIn: hasEditorPassword,
+      role: hasEditorPassword ? 'editor' : 'viewer',
+      save: jest.fn(),
+      destroy: jest.fn(),
+    };
+  }),
+}));
+
 import { cookies } from 'next/headers';
+import { getIronSession } from 'iron-session';
 import {
   deleteCurriculumAction,
   getAllCurriculumAction,
@@ -26,8 +40,6 @@ import {
   getVersionHistoryAction,
   restoreVersionAction,
   saveCurriculumAction,
-  verifyAccessPassword,
-  verifyEditorPassword,
 } from '../app/actions';
 import { mockCollection } from '../jest.setup';
 
@@ -52,6 +64,21 @@ describe('actions.ts server actions', () => {
       return Promise.resolve((global as any).mockCookieStore);
     });
 
+    (getIronSession as jest.Mock).mockImplementation(async () => {
+      const hasEditorPassword = mockCookieStoreMap.get('editor_password')?.value === 'editor-pass';
+      const hasAccessPassword = mockCookieStoreMap.get('access_password')?.value === 'access-pass';
+      const isLoggedIn =
+        hasEditorPassword ||
+        hasAccessPassword ||
+        (!mockCookieStoreMap.has('editor_password') && !mockCookieStoreMap.has('access_password'));
+      return {
+        isLoggedIn: isLoggedIn,
+        role: hasEditorPassword ? 'editor' : 'viewer',
+        save: jest.fn(),
+        destroy: jest.fn(),
+      };
+    });
+
     mockCookieStoreMap.clear();
     process.env = { ...originalEnv };
     process.env.NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD = 'access-pass';
@@ -60,62 +87,6 @@ describe('actions.ts server actions', () => {
 
   afterAll(() => {
     process.env = originalEnv;
-  });
-
-  describe('verifyAccessPassword', () => {
-    it('returns true and sets cookie when password is correct', async () => {
-      const result = await verifyAccessPassword('access-pass');
-      expect(result).toBe(true);
-      expect(mockCookieStore.set).toHaveBeenCalledWith(
-        'access_password',
-        'access-pass',
-        expect.any(Object)
-      );
-      expect(mockCookieStoreMap.get('access_password')?.value).toBe('access-pass');
-    });
-
-    it('returns false when password is incorrect', async () => {
-      const result = await verifyAccessPassword('wrong-pass');
-      expect(result).toBe(false);
-      expect(mockCookieStoreMap.get('access_password')).toBeUndefined();
-    });
-
-    it('returns false and warns when env password is not set', async () => {
-      delete process.env.NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD;
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-      const result = await verifyAccessPassword('access-pass');
-      expect(result).toBe(false);
-      expect(warnSpy).toHaveBeenCalled();
-      warnSpy.mockRestore();
-    });
-  });
-
-  describe('verifyEditorPassword', () => {
-    it('returns true and sets cookie when password is correct', async () => {
-      const result = await verifyEditorPassword('editor-pass');
-      expect(result).toBe(true);
-      expect(mockCookieStore.set).toHaveBeenCalledWith(
-        'editor_password',
-        'editor-pass',
-        expect.any(Object)
-      );
-      expect(mockCookieStoreMap.get('editor_password')?.value).toBe('editor-pass');
-    });
-
-    it('returns false when password is incorrect', async () => {
-      const result = await verifyEditorPassword('wrong-pass');
-      expect(result).toBe(false);
-      expect(mockCookieStoreMap.get('editor_password')).toBeUndefined();
-    });
-
-    it('returns false and warns when env password is not set', async () => {
-      delete process.env.NEXT_CURRICULUM_EDITOR_ACCESS_PASSWORD;
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-      const result = await verifyEditorPassword('editor-pass');
-      expect(result).toBe(false);
-      expect(warnSpy).toHaveBeenCalled();
-      warnSpy.mockRestore();
-    });
   });
 
   describe('authenticated database actions', () => {
@@ -145,6 +116,24 @@ describe('actions.ts server actions', () => {
 
       it('deleteCurriculumAction throws Unauthorized error', async () => {
         await expect(deleteCurriculumAction('doc-id')).rejects.toThrow('Unauthorized');
+      });
+
+      it('getAllCurriculumAction throws Unauthorized error', async () => {
+        await expect(getAllCurriculumAction()).rejects.toThrow('Unauthorized');
+      });
+
+      it('getCurriculumByCourseAction throws Unauthorized error', async () => {
+        await expect(getCurriculumByCourseAction('python1A')).rejects.toThrow('Unauthorized');
+      });
+
+      it('getCurriculumByCourseAndLessonAction throws Unauthorized error', async () => {
+        await expect(getCurriculumByCourseAndLessonAction('python1A', 1)).rejects.toThrow(
+          'Unauthorized'
+        );
+      });
+
+      it('getVersionHistoryAction throws Unauthorized error', async () => {
+        await expect(getVersionHistoryAction('python1A', 1)).rejects.toThrow('Unauthorized');
       });
     });
 
@@ -503,6 +492,11 @@ describe('actions.ts server actions', () => {
       });
 
       const actionPromise = getAllCurriculumAction();
+
+      // Flush microtasks to allow checkViewerAuth async call to resolve and schedule withTimeout timer
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
 
       // Fast forward time by 11 seconds (timeout is 10s)
       jest.advanceTimersByTime(11000);
