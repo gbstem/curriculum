@@ -184,25 +184,30 @@ export default function LessonDetailsPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="d-flex justify-content-between lesson-navigation align-items-center mt-4 mb-5 shadow-sm">
-                <div>
+              <div className="d-flex lesson-navigation align-items-center mt-4 mb-5 w-100 shadow-sm">
+                <div className="text-start" style={{ flex: 1 }}>
                   {prevLesson && (
                     <Link
                       href={`/${normalizedTrack}/${course}/lesson/${prevLesson.lessonNumber}`}
-                      className="btn btn-secondary d-flex align-items-center gap-1 text-white"
+                      className="btn btn-primary d-inline-flex align-items-center gap-1 text-white"
                     >
                       ← Prev
                     </Link>
                   )}
                 </div>
-                <div>
-                  <Link href={curriculumPath} className="btn btn-primary me-2 text-white">
+                <div className="text-center" style={{ flex: 1 }}>
+                  <Link
+                    href={curriculumPath}
+                    className="btn btn-outline-primary d-inline-flex align-items-center gap-1"
+                  >
                     📚 Curriculum
                   </Link>
+                </div>
+                <div className="text-end" style={{ flex: 1 }}>
                   {nextLesson && (
                     <Link
                       href={`/${normalizedTrack}/${course}/lesson/${nextLesson.lessonNumber}`}
-                      className="btn btn-primary d-flex align-items-center gap-1 text-white"
+                      className="btn btn-primary d-inline-flex align-items-center gap-1 text-white"
                     >
                       Next →
                     </Link>
