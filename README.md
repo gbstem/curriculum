@@ -23,6 +23,8 @@ This project relies on several key modern web technologies:
 - **[Jest](https://jestjs.io/) & [React Testing Library](https://testing-library.com/)**: Our primary testing suite. We use Jest to write unit tests for components to ensure they render properly and maintain high code coverage, preventing regressions as the codebase is passed between different high school maintainers.
 - **[Cypress](https://www.cypress.io/)**: Used for end-to-end integration tests, ensuring the live site functions correctly in a real browser.
 - **[iron-session](https://github.com/vvo/iron-session)**: Used for secure, stateless, and encrypted session management. Cookies are encrypted on the server side and decrypted automatically.
+- **[react-syntax-highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter)**: Used to render formatted code snippets with robust syntax highlighting in curriculum views and code block creation modal previews.
+- **[scratchblocks-react](https://github.com/scratchblocks/scratchblocks-react)**: Used to parse Scratch block text representation and render it as graphical Scratch programming blocks directly inside our lesson contents.
 
 ## Getting Started with Development
 
