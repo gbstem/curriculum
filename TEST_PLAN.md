@@ -6,6 +6,8 @@ If you want to watch Cypress execute this in your browser, you can start it with
 
 `yarn run cypress --browser=chromium --headed`
 
+However, remember that you can actually see what is happening on the screen in a way that Cypress isn't: it just keys off of HTML elements and CSS classes, so can miss major visual bugs. It is also important to use meaningful IDs and class names when we create our components and tests.
+
 ---
 
 ## 1. Setup and Pre-requisites
