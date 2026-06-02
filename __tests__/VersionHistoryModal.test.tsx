@@ -8,9 +8,7 @@ jest.mock('../app/services/curriculumService', () => ({
   restoreVersion: jest.fn(),
 }));
 
-jest.mock('../app/actions', () => ({
-  verifyEditorPassword: jest.fn(),
-}));
+jest.mock('../app/actions', () => ({}));
 
 describe('VersionHistoryModal component', () => {
   beforeEach(() => {

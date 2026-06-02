@@ -7,7 +7,7 @@ interface LearningPathProps {
 
 export default function LearningPath({ steps }: LearningPathProps) {
   return (
-    <div className="bg-light py-5">
+    <div className="bg-light learning-path py-5">
       <div className="container">
         <div className="row mb-5 text-center">
           <div className="col-12">
@@ -22,7 +22,7 @@ export default function LearningPath({ steps }: LearningPathProps) {
             const isLast = idx === steps.length - 1;
             return (
               <React.Fragment key={step.stepNumber}>
-                <div className="col-md-2">
+                <div className="col-md-2 learning-path-step">
                   <div
                     className="rounded-circle d-inline-block mb-3 p-4"
                     style={{

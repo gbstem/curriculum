@@ -3,14 +3,14 @@ import React from 'react';
 import CourseLessonsPage from '../app/[track]/[course]/page';
 import { getCurriculumByCourse, saveCurriculum } from '../app/services/curriculumService';
 
-// Mock the router params
+// Mock the router params dynamically
+let mockParams = { track: 'cs', course: 'scratch1A' };
 jest.mock('react', () => {
   const originalReact = jest.requireActual('react');
   return {
     ...originalReact,
     use: (_promise: any) => {
-      // In tests, we resolve our promise mock sync/async
-      return { track: 'cs', course: 'scratch1A' };
+      return mockParams;
     },
   };
 });
@@ -84,7 +84,8 @@ describe('CourseLessonsPage component', () => {
   ];
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
+    mockParams = { track: 'cs', course: 'scratch1A' };
   });
 
   it('renders loading spinner initially', async () => {
@@ -154,5 +155,31 @@ describe('CourseLessonsPage component', () => {
 
     expect(await screen.findByTestId('error-boundary')).toBeInTheDocument();
     expect(screen.getByText('Firestore network error')).toBeInTheDocument();
+  });
+
+  it('throws error when track is invalid', async () => {
+    mockParams = { track: 'invalid', course: 'scratch1A' };
+    const params = Promise.resolve({ track: 'invalid', course: 'scratch1A' });
+    render(
+      <TestErrorBoundary>
+        <CourseLessonsPage params={params} />
+      </TestErrorBoundary>
+    );
+
+    expect(await screen.findByTestId('error-boundary')).toBeInTheDocument();
+    expect(screen.getByText('Track not found')).toBeInTheDocument();
+  });
+
+  it('throws error when course is invalid', async () => {
+    mockParams = { track: 'cs', course: 'invalid-course' };
+    const params = Promise.resolve({ track: 'cs', course: 'invalid-course' });
+    render(
+      <TestErrorBoundary>
+        <CourseLessonsPage params={params} />
+      </TestErrorBoundary>
+    );
+
+    expect(await screen.findByTestId('error-boundary')).toBeInTheDocument();
+    expect(screen.getByText('Class not found')).toBeInTheDocument();
   });
 });

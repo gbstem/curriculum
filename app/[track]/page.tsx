@@ -1,6 +1,5 @@
 'use client';
 
-import { notFound } from 'next/navigation';
 import React from 'react';
 import TrackCard from '../components/TrackCard';
 import TrackHero from '../components/TrackHero';
@@ -17,7 +16,7 @@ export default function TrackPage({ params }: PageProps) {
 
   const trackData = tracks.find((t) => t.id === normalizedTrack);
   if (!trackData) {
-    notFound();
+    throw new Error('Track not found');
   }
 
   return (

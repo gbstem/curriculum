@@ -14,6 +14,9 @@ export default function RootError({ error, reset }: ErrorProps) {
     console.error('Next.js UI Error Boundary caught error:', error);
   }, [error]);
 
+  const message = error.message ? error.message.toLowerCase() : '';
+  const isNotFound = message.includes('not found');
+
   return (
     <Container
       className="d-flex align-items-center justify-content-center py-5"
@@ -24,26 +27,33 @@ export default function RootError({ error, reset }: ErrorProps) {
         style={{ maxWidth: '600px', backgroundColor: '#fff' }}
       >
         <Card.Body>
-          <div className="text-danger mb-4">
-            <i className="fas fa-exclamation-triangle fa-4x"></i>
+          <div className={isNotFound ? 'text-warning mb-4' : 'text-danger mb-4'}>
+            <i
+              className={
+                isNotFound ? 'fas fa-search-minus fa-4x' : 'fas fa-exclamation-triangle fa-4x'
+              }
+            ></i>
           </div>
           <Card.Title className="display-6 fw-bold mb-3 text-indigo-950">
-            Database or Server Error
+            {isNotFound ? 'Resource Not Found' : 'Database or Server Error'}
           </Card.Title>
           <Card.Text className="text-muted fs-5 mb-4">
-            Something went wrong while communicating with the gbSTEM database. Please share the
-            details below with the gbSTEM website maintainers.
+            {isNotFound
+              ? 'The requested track, course, or lesson could not be found. Please double-check the URL or return to the curriculum homepage.'
+              : 'Something went wrong while communicating with the gbSTEM database. Please share the details below with the gbSTEM website maintainers.'}
           </Card.Text>
 
           <div
             className="bg-light font-monospace small mb-4 rounded border p-3 text-start"
             style={{ maxHeight: '200px', overflowY: 'auto' }}
           >
-            <div className="fw-bold text-danger mb-1">Error Message:</div>
+            <div className={isNotFound ? 'fw-bold text-warning mb-1' : 'fw-bold text-danger mb-1'}>
+              {isNotFound ? 'Details:' : 'Error Message:'}
+            </div>
             <div className="mb-2 text-wrap" style={{ wordBreak: 'break-all' }}>
               {error.message || 'Unknown error'}
             </div>
-            {error.stack && (
+            {!isNotFound && error.stack && (
               <>
                 <hr className="my-2" />
                 <div className="fw-bold text-secondary mb-1">Stack Trace:</div>
@@ -55,7 +65,7 @@ export default function RootError({ error, reset }: ErrorProps) {
                 </pre>
               </>
             )}
-            {error.digest && (
+            {!isNotFound && error.digest && (
               <>
                 <hr className="my-2" />
                 <div className="fw-bold text-secondary mb-1">Digest:</div>

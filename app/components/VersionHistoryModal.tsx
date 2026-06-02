@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Modal, Button, Table, Badge, Alert, Form } from 'react-bootstrap';
+import { Modal, Button, Table, Badge, Alert } from 'react-bootstrap';
 import {
   getVersionHistory,
   restoreVersion,
   CurriculumVersion,
 } from '../services/curriculumService';
 import DiffModal from './DiffModal';
-import { verifyEditorPassword } from '../actions';
+import { useSession } from '@/lib/useSession';
 
 interface VersionHistoryModalProps {
   show: boolean;
@@ -27,14 +27,13 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
   curriculumId,
   currentContent = '',
 }) => {
+  const { session } = useSession();
+  const isEditor = session.role === 'editor';
   const [versions, setVersions] = useState<CurriculumVersion[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [restoring, setRestoring] = useState<string | null>(null);
-  const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<string>('');
-  const [pendingRestoreVersionId, setPendingRestoreVersionId] = useState<string | null>(null);
+  const [showAccessDeniedModal, setShowAccessDeniedModal] = useState<boolean>(false);
   const [showDiffModal, setShowDiffModal] = useState<boolean>(false);
   const [diffVersion, setDiffVersion] = useState<CurriculumVersion | null>(null);
 
@@ -58,33 +57,21 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
   }, [show, course, lessonNumber, loadVersionHistory]);
 
   const handleRestore = async (versionId: string) => {
-    setPendingRestoreVersionId(versionId);
-    setShowPasswordModal(true);
+    if (!isEditor) {
+      setShowAccessDeniedModal(true);
+      return;
+    }
+    const isConfirmed = window.confirm(
+      'Are you sure you want to revert to an older version? This will overwrite the current content.'
+    );
+    if (isConfirmed) {
+      performRestore(versionId);
+    }
   };
 
   const handleShowDiff = (version: CurriculumVersion) => {
     setDiffVersion(version);
     setShowDiffModal(true);
-  };
-
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const isValid = await verifyEditorPassword(password);
-      if (isValid) {
-        setPasswordError('');
-        setShowPasswordModal(false);
-        setPassword('');
-        if (pendingRestoreVersionId) {
-          performRestore(pendingRestoreVersionId);
-        }
-      } else {
-        setPasswordError('Incorrect password. Please try again.');
-      }
-    } catch (err: any) {
-      setPasswordError('An error occurred during verification.');
-      console.error(err);
-    }
   };
 
   const performRestore = async (versionId: string) => {
@@ -99,7 +86,6 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
       setError('Error restoring version: ' + err.message);
     } finally {
       setRestoring(null);
-      setPendingRestoreVersionId(null);
     }
   };
 
@@ -222,57 +208,30 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
         version={diffVersion}
       />
 
-      {/* Password Modal */}
+      {/* Access Denied Modal */}
       <Modal
-        show={showPasswordModal}
-        onHide={() => setShowPasswordModal(false)}
+        show={showAccessDeniedModal}
+        onHide={() => setShowAccessDeniedModal(false)}
         backdrop="static"
         keyboard={false}
         centered
       >
-        <Modal.Header className="bg-primary text-white" closeButton>
+        <Modal.Header className="bg-danger text-white" closeButton>
           <Modal.Title>
-            <i className="fas fa-lock me-2"></i>
-            Version Restore Access
+            <i className="fas fa-exclamation-triangle me-2"></i>
+            Restore Blocked
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="mb-4 text-center">
-            <h4>Password Required</h4>
-            <p className="text-muted">Please enter the password to restore this version.</p>
+          <div className="py-3 text-center">
+            <h4 className="text-danger">Access Denied</h4>
+            <p className="text-muted mt-2">You need to login as an editor to make edits.</p>
           </div>
-
-          <Form onSubmit={handlePasswordSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                autoFocus
-              />
-              {passwordError && (
-                <Alert variant="danger" className="mt-2">
-                  {passwordError}
-                </Alert>
-              )}
-            </Form.Group>
-
-            <div className="d-flex gap-2">
-              <Button
-                variant="secondary"
-                onClick={() => setShowPasswordModal(false)}
-                className="flex-fill"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="primary" className="flex-fill">
-                <i className="fas fa-sign-in-alt me-2"></i>
-                Restore Version
-              </Button>
-            </div>
-          </Form>
+          <div className="d-flex justify-content-end mt-3">
+            <Button variant="secondary" onClick={() => setShowAccessDeniedModal(false)}>
+              Close
+            </Button>
+          </div>
         </Modal.Body>
       </Modal>
     </>

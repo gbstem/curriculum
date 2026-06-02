@@ -2,9 +2,10 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { Button, Form, Modal, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { verifyAccessPassword } from '../actions';
+import React from 'react';
+import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { usePathname } from 'next/navigation';
+import { useSession } from '@/lib/useSession';
 import { tracks } from '../data/tracks';
 import Footer from './Footer';
 
@@ -13,43 +14,16 @@ interface AuthGateProps {
 }
 
 export default function AuthGate({ children }: AuthGateProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const { loading, logout } = useSession();
+  const pathname = usePathname();
 
-  useEffect(() => {
-    // Check if user is already authenticated
-    const authenticated = localStorage.getItem('gbstem_authenticated') === 'true';
-    setIsAuthenticated(authenticated);
-    setIsLoading(false);
-  }, []);
+  // If on the login page, bypass layout (Navbar/Footer) entirely
+  if (pathname === '/login') {
+    return <>{children}</>;
+  }
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const isValid = await verifyAccessPassword(password);
-      if (isValid) {
-        localStorage.setItem('gbstem_authenticated', 'true');
-        setIsAuthenticated(true);
-        setPassword('');
-        setError('');
-      } else {
-        setError('Incorrect password. Please try again.');
-      }
-    } catch (err: any) {
-      setError('An error occurred during verification.');
-      console.error(err);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('gbstem_authenticated');
-    setIsAuthenticated(false);
-  };
-
-  // Show loading spinner while checking authentication
-  if (isLoading) {
+  // Show loading spinner while session is loading
+  if (loading) {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
@@ -61,59 +35,6 @@ export default function AuthGate({ children }: AuthGateProps) {
           </div>
           <p className="text-muted mt-3">Loading gbSTEM Curriculum...</p>
         </div>
-      </div>
-    );
-  }
-
-  // Show login modal if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: '100vh', background: '#f4f6f9' }}
-      >
-        <Modal show={true} onHide={() => {}} backdrop="static" keyboard={false} centered>
-          <Modal.Header className="bg-primary py-4 text-center text-white">
-            <Modal.Title className="fs-4 fw-bold w-100">
-              <i className="fas fa-lock me-2"></i>
-              gbSTEM Curriculum Access
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="p-4">
-            <div className="mb-4 text-center">
-              <img
-                src="/images/penguin.png"
-                alt="gbSTEM Logo"
-                className="img-fluid mb-3"
-                style={{ maxWidth: '150px' }}
-              />
-              <h4 className="fw-bold">Welcome to gbSTEM Curriculum</h4>
-              <p className="text-muted">Please enter the password to access the curriculum.</p>
-            </div>
-
-            <Form onSubmit={handleLoginSubmit}>
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-semibold">Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                  autoFocus
-                  size="lg"
-                />
-                {error && <div className="text-danger fw-medium mt-2">{error}</div>}
-              </Form.Group>
-
-              <div className="d-grid mt-4">
-                <Button type="submit" variant="primary" size="lg" className="fw-semibold py-2">
-                  <i className="fas fa-sign-in-alt me-2"></i>
-                  Access Curriculum
-                </Button>
-              </div>
-            </Form>
-          </Modal.Body>
-        </Modal>
       </div>
     );
   }
@@ -166,7 +87,7 @@ export default function AuthGate({ children }: AuthGateProps) {
 
           <Nav className="ms-auto me-5">
             <Nav.Link
-              onClick={handleLogout}
+              onClick={logout}
               className="d-flex align-items-center text-white"
               style={{ cursor: 'pointer' }}
             >

@@ -241,8 +241,8 @@ export const tracks: Track[] = [
         ],
       },
       {
-        id: 'webdev',
-        title: 'Web Development',
+        id: 'webdevA',
+        title: 'Web Development A',
         badge: 'Modern Web',
         color: '#0d6efd',
         bgOpacity: 'rgba(13, 110, 253, 0.1)',
@@ -256,8 +256,26 @@ export const tracks: Track[] = [
           'Web applications',
         ],
         links: [
-          { label: 'WebDev A', href: '/cs/webdevA', variant: 'primary', textWhite: true },
-          { label: 'WebDev B', href: '/cs/webdevB', variant: 'outline-primary' },
+          { label: 'Start Teaching', href: '/cs/webdevA', variant: 'primary', textWhite: true },
+        ],
+      },
+      {
+        id: 'webdevB',
+        title: 'Web Development B',
+        badge: 'Modern Web',
+        color: '#0d6efd',
+        bgOpacity: 'rgba(13, 110, 253, 0.1)',
+        icon: 'fas fa-globe',
+        description:
+          'Learn to build modern websites using HTML, CSS, and JavaScript. Create responsive designs and interactive web applications.',
+        syllabus: [
+          'HTML & CSS fundamentals',
+          'JavaScript programming',
+          'Responsive design',
+          'Web applications',
+        ],
+        links: [
+          { label: 'Start Teaching', href: '/cs/webdevB', variant: 'primary', textWhite: true },
         ],
       },
     ],

@@ -18,7 +18,7 @@ export default function TrackHero({
   const textColorClass = isDarkText ? 'text-dark' : 'text-white';
   return (
     <div
-      className="py-5"
+      className="track-hero py-5"
       style={{
         backgroundColor: bgColor,
         color: isDarkText ? '#212529' : '#fff',

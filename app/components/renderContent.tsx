@@ -455,7 +455,7 @@ function renderContentHelper(text: string): React.ReactNode[] | null {
         headerClassName =
           'mt-3 mb-2 text-purple fw-semibold border-start border-3 border-purple ps-3';
       } else if (level === 3) {
-        headerClassName = 'mt-2 mb-2 text-dark fw-medium border-bottom border-1 border-light pb-1';
+        headerClassName = 'mt-2 mb-2 text-dark fw-medium border-bottom border border-light pb-1';
       } else {
         headerClassName = 'mt-2 mb-1 text-info fw-normal';
       }
