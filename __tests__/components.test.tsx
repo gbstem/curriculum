@@ -196,7 +196,8 @@ describe('TrackPage dynamic page component', () => {
     expect(screen.getByRole('heading', { name: 'Computer Science' })).toBeInTheDocument();
     // Check that courses in track are rendered
     expect(screen.getAllByText('Scratch 1A').length).toBeGreaterThan(0);
-    expect(screen.getByText('Web Development')).toBeInTheDocument();
+    expect(screen.getByText('Web Development A')).toBeInTheDocument();
+    expect(screen.getByText('Web Development B')).toBeInTheDocument();
     // Check that CS recommended path is rendered
     expect(screen.getByText('Recommended Learning Path')).toBeInTheDocument();
   });
