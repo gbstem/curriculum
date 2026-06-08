@@ -85,7 +85,7 @@ To test with representative data, you can copy data from the live production Fir
    - Start the emulators using the Firebase CLI:
 
      ```bash
-     firebase emulators:start
+     npm run emulators
      ```
 
 5. **Seed the Emulator**: While the emulator is running, import the downloaded production data backup by running:
@@ -100,7 +100,7 @@ To test with representative data, you can copy data from the live production Fir
 > By default, the Firestore emulator runs in-memory. This means all seeded data and modifications are lost whenever you restart the emulator. If you want to persist the database state across restarts, start the emulator with the `--import` and `--export-on-exit` flags:
 >
 > ```bash
-> firebase emulators:start --import=./emulator-data --export-on-exit
+> firebase emulators:start --log-verbosity=quiet --import=./emulator-data --export-on-exit
 > ```
 >
 > Otherwise, you must re-run the seed script (`yarn db:seed`) every time you restart the emulator.

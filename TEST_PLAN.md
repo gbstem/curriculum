@@ -43,7 +43,7 @@ To ensure test data is realistic and consistent:
 2. Start the Firebase Emulator suite:
 
    ```bash
-   firebase emulators:start
+   npm run emulators
    ```
 
 3. Load the pulled production backup into your emulator:

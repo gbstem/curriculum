@@ -13,7 +13,8 @@
     "cypress": "cypress run",
     "prepare": "husky",
     "db:pull": "node scripts/sync-db.js pull",
-    "db:seed": "node scripts/sync-db.js seed"
+    "db:seed": "node scripts/sync-db.js seed",
+    "emulators": "firebase emulators:start --log-verbosity=quiet"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
