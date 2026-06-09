@@ -1,12 +1,12 @@
 'use client';
 
+import { navigateTo } from '@/lib/navigation';
+import { useSession } from '@/lib/useSession';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Form, Modal, Row } from 'react-bootstrap';
-import { useSession } from '@/lib/useSession';
 import { CurriculumItem, deleteCurriculum } from '../services/curriculumService';
 import CodeBlockModal from './CodeBlockModal';
 import { RenderContent } from './renderContent';
-import { navigateTo } from '@/lib/navigation';
 
 interface EditorModalProps {
   show: boolean;
@@ -235,9 +235,9 @@ const EditorModal: React.FC<EditorModalProps> = ({
 
             <Form.Group className="mb-3">
               <Form.Label>Content</Form.Label>
-              <div className="d-flex flex-column flex-md-row gap-3" style={{ width: '100%' }}>
+              <div className="d-flex flex-column flex-md-row w-full gap-3">
                 {/* Editor Side */}
-                <div className="editor-col" style={{ width: '50%', minWidth: 0 }}>
+                <div className="editor-col w-full md:w-1/2">
                   <div className="d-flex mb-2 gap-2">
                     <Button
                       variant="outline-primary"
@@ -303,12 +303,12 @@ const EditorModal: React.FC<EditorModalProps> = ({
                   />
                 </div>
                 {/* Preview Side */}
-                <div style={{ width: '50%' }}>
+                <div className="w-full md:w-1/2">
                   <Form.Label className="mb-2" style={{ fontWeight: 500 }}>
                     Preview
                   </Form.Label>
                   <div style={{ height: '25rem', overflowY: 'auto' }}>
-                    <div className="preview-col d-flex flex-column" style={{ minWidth: 0 }}>
+                    <div className="preview-col d-flex flex-column min-w-0">
                       <div
                         className="curriculum-content card grow shadow-sm"
                         style={{

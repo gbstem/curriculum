@@ -1,9 +1,9 @@
 'use client';
 
+import { useSession } from '@/lib/useSession';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { useSession } from '@/lib/useSession';
 
 export default function LoginPage() {
   const [role, setRole] = useState<'viewer' | 'editor'>('viewer');
@@ -78,8 +78,7 @@ export default function LoginPage() {
             <img
               src="/images/penguin.png"
               alt="gbSTEM Logo"
-              className="img-fluid mb-3"
-              style={{ maxWidth: '150px' }}
+              className="img-fluid mb-3 max-w-[150px]"
             />
             <h4 className="fw-bold">Welcome to gbSTEM Curriculum</h4>
             <p className="text-muted">
