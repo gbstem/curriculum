@@ -25,10 +25,7 @@ export default function AuthGate({ children }: AuthGateProps) {
   // Show loading spinner while session is loading
   if (loading) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: '100vh', background: '#f8f9fa' }}
-      >
+      <div className="d-flex justify-content-center align-items-center h-screen bg-[#f8f9fa]">
         <div className="text-center">
           <div className="spinner-border text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
@@ -47,12 +44,7 @@ export default function AuthGate({ children }: AuthGateProps) {
 
   return (
     <div className="d-flex min-h-screen flex-col">
-      <Navbar
-        variant="dark"
-        expand="lg"
-        style={{ backgroundColor: '#1D2256' }}
-        className="py-2 shadow-sm"
-      >
+      <Navbar variant="dark" expand="lg" className="bg-[#1D2256] py-2 shadow-sm">
         <Navbar.Brand as={Link} href="/" className="d-flex align-items-center ms-5">
           <img
             alt="gbSTEM Logo"
@@ -69,7 +61,7 @@ export default function AuthGate({ children }: AuthGateProps) {
                 key={track.id}
                 title={track.shortTitle}
                 id={track.dropdownId}
-                className="mx-2 text-center font-mono"
+                className="font-monospace mx-2 text-center"
               >
                 {track.dropdownItems.map((item, idx) => (
                   <NavDropdown.Item
@@ -88,8 +80,7 @@ export default function AuthGate({ children }: AuthGateProps) {
           <Nav className="ms-auto me-5">
             <Nav.Link
               onClick={logout}
-              className="d-flex align-items-center text-white"
-              style={{ cursor: 'pointer' }}
+              className="d-flex align-items-center cursor-pointer text-white"
             >
               <i className="fas fa-sign-out-alt me-1"></i>
               Logout

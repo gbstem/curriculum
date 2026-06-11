@@ -46,7 +46,7 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       setError('An error occurred during verification.');
-      console.error(err);
+      console.error('Login verification error:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -54,18 +54,12 @@ export default function LoginPage() {
 
   if (!mounted) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: '100vh', background: '#f4f6f9' }}
-      />
+      <div className="d-flex justify-content-center align-items-center min-h-screen bg-[#f4f6f9]" />
     );
   }
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: '100vh', background: '#f4f6f9' }}
-    >
+    <div className="d-flex justify-content-center align-items-center min-h-screen bg-[#f4f6f9]">
       <Modal show={true} onHide={() => {}} backdrop="static" keyboard={false} centered>
         <Modal.Header className="bg-primary py-4 text-center text-white">
           <Modal.Title className="fs-4 fw-bold w-100">

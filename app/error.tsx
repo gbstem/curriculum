@@ -18,14 +18,8 @@ export default function RootError({ error, reset }: ErrorProps) {
   const isNotFound = message.includes('not found');
 
   return (
-    <Container
-      className="d-flex align-items-center justify-content-center py-5"
-      style={{ minHeight: '80vh' }}
-    >
-      <Card
-        className="w-100 border-0 p-4 text-center shadow-lg"
-        style={{ maxWidth: '600px', backgroundColor: '#fff' }}
-      >
+    <Container className="d-flex align-items-center justify-content-center min-h-[80vh] py-5">
+      <Card className="w-100 max-w-[600px] border-0 bg-white p-4 text-center shadow-lg">
         <Card.Body>
           <div className={isNotFound ? 'text-warning mb-4' : 'text-danger mb-4'}>
             <i
@@ -43,24 +37,16 @@ export default function RootError({ error, reset }: ErrorProps) {
               : 'Something went wrong while communicating with the gbSTEM database. Please share the details below with the gbSTEM website maintainers.'}
           </Card.Text>
 
-          <div
-            className="bg-light font-monospace small mb-4 rounded border p-3 text-start"
-            style={{ maxHeight: '200px', overflowY: 'auto' }}
-          >
+          <div className="bg-light font-monospace small mb-4 max-h-[200px] overflow-y-auto rounded border p-3 text-start">
             <div className={isNotFound ? 'fw-bold text-warning mb-1' : 'fw-bold text-danger mb-1'}>
               {isNotFound ? 'Details:' : 'Error Message:'}
             </div>
-            <div className="mb-2 text-wrap" style={{ wordBreak: 'break-all' }}>
-              {error.message || 'Unknown error'}
-            </div>
+            <div className="mb-2 text-wrap break-all">{error.message || 'Unknown error'}</div>
             {!isNotFound && error.stack && (
               <>
                 <hr className="my-2" />
                 <div className="fw-bold text-secondary mb-1">Stack Trace:</div>
-                <pre
-                  className="mt-1 mb-0"
-                  style={{ whiteSpace: 'pre-wrap', fontSize: '0.75rem', wordBreak: 'break-all' }}
-                >
+                <pre className="mt-1 mb-0 text-[0.75rem] break-all whitespace-pre-wrap">
                   {error.stack}
                 </pre>
               </>

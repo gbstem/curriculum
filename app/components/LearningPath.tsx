@@ -24,15 +24,10 @@ export default function LearningPath({ steps }: LearningPathProps) {
               <React.Fragment key={step.stepNumber}>
                 <div className="col-md-2 learning-path-step">
                   <div
-                    className="rounded-circle d-inline-block mb-3 p-4"
+                    className="rounded-circle mb-3 inline-flex h-[90px] w-[90px] items-center justify-center p-4"
                     style={{
                       backgroundColor: step.bgOpacity,
                       color: step.color,
-                      width: '90px',
-                      height: '90px',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
                     }}
                   >
                     <i className={`${step.icon} fa-2x`}></i>

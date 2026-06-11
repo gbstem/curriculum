@@ -104,7 +104,7 @@ const CodeBlockModal: React.FC<CodeBlockModalProps> = ({ show, onHide, onInsert 
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder={`Enter your ${getLanguageDisplayName(language)} code here...`}
-            style={{ fontFamily: 'monospace' }}
+            className="font-monospace"
           />
         </Form.Group>
 

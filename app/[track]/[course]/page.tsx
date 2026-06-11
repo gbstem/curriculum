@@ -169,11 +169,9 @@ export default function CourseLessonsPage({ params }: PageProps) {
   return (
     <div>
       <main>
-        <div style={{ backgroundColor: '#67aeda' }} className="p-5 text-center text-white">
+        <div className="bg-[#67aeda] p-5 text-center text-white">
           <h1 className="display-4 fw-bold">{courseTitle} Curriculum</h1>
-          <h3 className="fw-light mb-0" style={{ fontWeight: 200 }}>
-            Complete Course Guide
-          </h3>
+          <h3 className="fw-light mb-0 font-extralight">Complete Course Guide</h3>
           <div className="mt-3">
             <Button
               variant="outline-light"
@@ -210,8 +208,7 @@ export default function CourseLessonsPage({ params }: PageProps) {
                     <div key={lesson.id} className="col-md-6">
                       <Link
                         href={`/${normalizedTrack}/${course}/lesson/${lesson.lessonNumber}`}
-                        className="btn btn-primary btn-lg lesson-link d-flex align-items-center justify-content-center w-100 text-white shadow-sm"
-                        style={{ minHeight: '64px' }}
+                        className="btn btn-primary btn-lg lesson-link d-flex align-items-center justify-content-center min-h-[64px] w-100 text-white shadow-sm"
                       >
                         Lesson {lesson.lessonNumber}: {lesson.title}
                       </Link>

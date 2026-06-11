@@ -327,7 +327,7 @@ function renderContentHelper(text: string): React.ReactNode[] | null {
         inCodeBlock = false;
         if (codeBlockLang === 'scratch' || codeBlockLang === 'scratchblocks') {
           elements.push(
-            <div key={`scratchblock-${index}`} style={{ margin: '1rem 0' }}>
+            <div key={`scratchblock-${index}`} className="my-4">
               <ScratchBlocks blockStyle="scratch3">{codeBlockLines.join('\n')}</ScratchBlocks>
             </div>
           );

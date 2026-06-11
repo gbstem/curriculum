@@ -3,7 +3,7 @@ import { tracks } from './data/tracks';
 
 export default function Home() {
   return (
-    <div className="d-flex align-items-center container py-5" style={{ minHeight: '80vh' }}>
+    <div className="d-flex align-items-center container min-h-[80vh] py-5">
       <div className="row justify-content-center g-4 w-100">
         <div className="col-12 mb-4 text-center">
           <h1 className="fw-bold display-5 mb-2 text-indigo-950">Choose a Curriculum Track</h1>

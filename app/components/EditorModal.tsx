@@ -285,6 +285,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
                       <i className="fas fa-code"></i>
                     </Button>
                   </div>
+                  {/* Keep this as h[25rem] despite IDE suggestCanonicalClasses to avoid it stretching to the content size */}
                   <Form.Control
                     id="content-textarea"
                     as="textarea"
@@ -292,31 +293,16 @@ const EditorModal: React.FC<EditorModalProps> = ({
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Enter lesson content in Markdown format..."
-                    style={{
-                      fontFamily: 'monospace',
-                      height: '25rem',
-                      width: '100%',
-                      resize: 'vertical',
-                      whiteSpace: 'pre-wrap',
-                      wordBreak: 'break-word',
-                    }}
+                    className="font-monospace h-[25rem] w-full resize-y wrap-break-word whitespace-pre-wrap"
                   />
                 </div>
                 {/* Preview Side */}
                 <div className="w-full md:w-1/2">
-                  <Form.Label className="mb-2" style={{ fontWeight: 500 }}>
-                    Preview
-                  </Form.Label>
-                  <div style={{ height: '25rem', overflowY: 'auto' }}>
+                  <Form.Label className="mb-2 font-medium">Preview</Form.Label>
+                  {/* Keep this as h[25rem] despite IDE suggestCanonicalClasses to avoid it stretching to the content size */}
+                  <div className="h-[25rem] overflow-y-auto">
                     <div className="preview-col d-flex flex-column min-w-0">
-                      <div
-                        className="curriculum-content card grow shadow-sm"
-                        style={{
-                          background: '#f8f9fa',
-                          border: '1px solid #e0e0e0',
-                          padding: '1.5rem',
-                        }}
-                      >
+                      <div className="curriculum-content card grow border border-[#e0e0e0] bg-[#f8f9fa]! p-6 shadow-sm">
                         <RenderContent content={content} />
                       </div>
                     </div>

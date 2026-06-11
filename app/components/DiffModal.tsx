@@ -31,7 +31,7 @@ const DiffModal: React.FC<DiffModalProps> = ({ show, onHide, currentContent, ver
           Diff: Current vs. {version.title || 'Untitled'}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+      <Modal.Body className="max-h-[70vh] overflow-y-auto">
         {mounted && (
           <ReactDiffViewer
             oldValue={version.content || ''}

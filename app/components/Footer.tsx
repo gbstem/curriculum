@@ -11,10 +11,7 @@ const Footer = () => {
             <u>contact@gbstem.org</u>
           </a>
           <div className="row justify-content-center">
-            <ul
-              className="clear socials d-flex justify-content-center mt-4"
-              style={{ color: 'blue', listStyleType: 'none', padding: 0 }}
-            >
+            <ul className="clear socials d-flex justify-content-center mt-4 list-none p-0 text-blue-600">
               <li className="mx-3">
                 <a
                   href="https://facebook.com/The-Greater-Boston-STEM-Program-104063908337961"

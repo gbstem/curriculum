@@ -146,11 +146,9 @@ export default function LessonDetailsPage({ params }: PageProps) {
   return (
     <div>
       <main>
-        <div style={{ backgroundColor: '#67aeda' }} className="p-5 text-center text-white">
+        <div className="bg-[#67aeda] p-5 text-center text-white">
           <h1 className="fw-bold display-5 mb-2">{displayTitle}</h1>
-          <h3 className="fw-light mb-3" style={{ fontWeight: '200' }}>
-            Module: {displayModuleTitle}
-          </h3>
+          <h3 className="fw-light mb-3 font-extralight">Module: {displayModuleTitle}</h3>
           <p className="fs-5 mb-0">Lesson {displayLessonNumber}</p>
 
           <div className="d-flex justify-content-center mt-3 gap-2">
@@ -185,7 +183,7 @@ export default function LessonDetailsPage({ params }: PageProps) {
               </div>
 
               <div className="d-flex lesson-navigation align-items-center mt-4 mb-5 w-100 shadow-sm">
-                <div className="text-start" style={{ flex: 1 }}>
+                <div className="flex-1 text-start">
                   {prevLesson && (
                     <Link
                       href={`/${normalizedTrack}/${course}/lesson/${prevLesson.lessonNumber}`}
@@ -195,7 +193,7 @@ export default function LessonDetailsPage({ params }: PageProps) {
                     </Link>
                   )}
                 </div>
-                <div className="text-center" style={{ flex: 1 }}>
+                <div className="flex-1 text-center">
                   <Link
                     href={curriculumPath}
                     className="btn btn-outline-primary d-inline-flex align-items-center gap-1"
@@ -203,7 +201,7 @@ export default function LessonDetailsPage({ params }: PageProps) {
                     📚 Curriculum
                   </Link>
                 </div>
-                <div className="text-end" style={{ flex: 1 }}>
+                <div className="flex-1 text-end">
                   {nextLesson && (
                     <Link
                       href={`/${normalizedTrack}/${course}/lesson/${nextLesson.lessonNumber}`}
