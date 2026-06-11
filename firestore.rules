@@ -1,6 +1,10 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    //
+    // NOTE: THIS MUST BE MERGED WITH THE CURRICULUM REPO firestore.rules BEFORE DEPLOYMENT
+    //
+
 		//
     // curriculum.gbstem.org data
     //
