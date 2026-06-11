@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+		//
+    // curriculum.gbstem.org data
+    //
+    // Only allow curriculum data reads and writes via the Admin SDK/service account (bypasses rules)
+    // as used by curriculum.gbstem.org, via Next.js server actions
+    match /curriculum/{document} {
+      allow read, write: if false;
+    }
+    match /curriculum_versions/{document} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,7 +1,18 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
-import { getStorage, connectStorageEmulator } from 'firebase/storage';
+
+/**
+ * WARNING: SECURITY RULES & DATA ACCESS
+ *
+ * All Firestore and Storage database read/write operations must be performed
+ * on the server-side via Server Actions in `app/actions.ts` (using the Firebase Admin
+ * SDK configured in `app/firebase-admin.ts`). This ensures secure access using server-side
+ * credentials rather than relying on client-side permissions.
+ *
+ * Client-side Firestore and Storage SDKs are disabled here to prevent direct, unauthenticated
+ * client-side access. Client-side Auth is initialized below for future migration to
+ * per-user Firebase accounts.
+ */
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -16,10 +27,8 @@ const firebaseConfig = {
 // Initialize Firebase (SSR safe, avoids reinitializing in dev hot-reload)
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Initialize Firestore, Auth, and Storage
-export const db = getFirestore(app);
+// Initialize Auth (client-side)
 export const auth = getAuth(app);
-export const storage = getStorage(app);
 
 const isBrowser = typeof window !== 'undefined';
 const isDev = process.env.NODE_ENV === 'development';
@@ -31,13 +40,11 @@ if (isBrowser && isDev) {
     projectId &&
     (projectId.startsWith('demo-') || (apiKey && apiKey.includes('AIzaSyA1234567890')))
   ) {
-    console.log('Connecting Firebase client SDKs to local emulators...');
+    console.log('Connecting Firebase Auth client SDK to local emulator...');
     try {
       connectAuthEmulator(auth, 'http://127.0.0.1:9099');
-      connectFirestoreEmulator(db, '127.0.0.1', 8080);
-      connectStorageEmulator(storage, '127.0.0.1', 9199);
     } catch (err) {
-      console.warn('Failed to connect to Firebase emulators:', err);
+      console.warn('Failed to connect to Firebase Auth emulator:', err);
     }
   }
 }
