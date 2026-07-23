@@ -143,9 +143,17 @@ We use the [npm-check-updates (ncu)](https://github.com/raineorshine/npm-check-u
 
 Once `ncu` is installed, follow this sequence of commands to update dependencies:
 
+> [!IMPORTANT]
+> **Pin TypeScript to version 6 (`^6.x.x`) due to Next.js not supporting v7 yet, `@types/node` to version 24 (`^24.x.x`) due to us configuring Vercel to use Node.js 24.x, and firebase/firebase-admin to their current versions**.
+>
+> When executing `ncu -u`, ensure TypeScript and `@types/node` are not upgraded to major versions beyond v6 and v24, which the commands below avoid, or manually revert their versions in `package.json` before installing.
+
 ```bash
-# Update the dependencies in package.json to the latest versions
-ncu -u
+# Update pinned dependencies (typescript to v6 and @types/node to v24) to their latest minor/patch versions
+ncu -t minor -u firebase firebase-admin typescript "@types/node"
+
+# Update all other dependencies in package.json to the latest versions
+ncu --peer --reject firebase,firebase-admin,typescript,"@types/node" -u
 
 # Install the updated packages and update yarn.lock
 yarn install
