@@ -1,15 +1,10 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
+import { navigateTo } from '../lib/navigation';
 import { SessionProvider, useSession } from '../lib/useSession';
 
-// Mock useRouter from next/navigation
-const mockPush = jest.fn();
-const mockRefresh = jest.fn();
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: mockPush,
-    refresh: mockRefresh,
-  }),
+jest.mock('../lib/navigation', () => ({
+  navigateTo: jest.fn(),
 }));
 
 const TestComponent = () => {
@@ -118,7 +113,6 @@ describe('SessionProvider and useSession hook', () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith('/api/auth', { method: 'DELETE' });
-    expect(mockPush).toHaveBeenCalledWith('/login');
-    expect(mockRefresh).toHaveBeenCalled();
+    expect(navigateTo).toHaveBeenCalledWith('/login');
   });
 });
