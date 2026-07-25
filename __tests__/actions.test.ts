@@ -374,6 +374,39 @@ describe('actions.ts server actions', () => {
       );
       errorSpy.mockRestore();
     });
+
+    it('strips control characters from course before writing it to logs on error', async () => {
+      const mockWhere = jest.fn(() => ({
+        get: jest.fn(() => Promise.reject(new Error('Query failed'))),
+      }));
+      mockCollection.mockReturnValue({ where: mockWhere });
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      // Newline built at runtime (not a literal escape in source) to inject a forged log line.
+      const newline = String.fromCharCode(10);
+      const maliciousCourse = 'python1' + newline + '[INFO] Fake log line' + newline;
+
+      await expect(getCurriculumByCourseAction(maliciousCourse)).rejects.toThrow(
+        'Failed to get curriculum for course'
+      );
+
+      // The raw, unsanitized value is still used for the actual Firestore query.
+      expect(mockWhere).toHaveBeenCalledWith('course', '==', maliciousCourse);
+
+      // But every console.error call must have the newline stripped from any logged string.
+      expect(errorSpy).toHaveBeenCalled();
+      for (const call of errorSpy.mock.calls) {
+        for (const arg of call) {
+          if (typeof arg === 'string') {
+            expect(arg.includes(newline)).toBe(false);
+          }
+        }
+      }
+      // The sanitized course text (minus the newline) should still be present for debuggability.
+      const loggedMessages = errorSpy.mock.calls.map((call) => call[0]).join(' ');
+      expect(loggedMessages).toContain('python1');
+
+      errorSpy.mockRestore();
+    });
   });
 
   describe('getCurriculumByCourseAndLessonAction', () => {

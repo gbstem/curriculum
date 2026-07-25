@@ -1,5 +1,14 @@
 import '@testing-library/jest-dom';
 
+// lib/sessionOptions.ts now throws at import time if NEXT_CURRICULUM_SESSION_PASSWORD isn't
+// set (see fix for hardcoded fallback secret). Tests never seal/unseal a real cookie,
+// so provide a clearly-marked, test-only value here rather than requiring a real
+// secret in the test environment.
+if (!process.env.NEXT_CURRICULUM_SESSION_PASSWORD) {
+  process.env.NEXT_CURRICULUM_SESSION_PASSWORD =
+    'test_only_iron_session_password_not_for_production_use_x';
+}
+
 // Store mocks on global to ensure they are always accessible to jest.mock factory closures
 const mockCookieStoreMap = new Map<string, { value: string }>();
 
