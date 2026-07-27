@@ -9,7 +9,8 @@
 
 'use server';
 
-import { SessionData, sessionOptions } from '@/lib/session';
+import { SessionData } from '@/lib/session';
+import { sessionOptions } from '@/lib/sessionOptions';
 import * as admin from 'firebase-admin';
 import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
@@ -32,6 +33,14 @@ async function checkViewerAuth(): Promise<boolean> {
   const cookieStore = await cookies();
   const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
   return session.isLoggedIn && (session.role === 'viewer' || session.role === 'editor');
+}
+
+// Strips newlines and other control characters from a user-supplied value before it is
+// interpolated into a log message, to prevent log injection (CWE-117) via forged/split log
+// lines or terminal escape sequences. This is for the logged string representation only —
+// it must never be used for values that affect query/business logic.
+function sanitizeForLog(value: unknown): string {
+  return String(value).replace(/[\u0000-\u001f\u007f]/g, ' ');
 }
 
 async function withTimeout<T>(promise: Promise<T>, context: string, timeoutMs = 10000): Promise<T> {
@@ -105,10 +114,11 @@ export async function getCurriculumByCourseAction(course: string): Promise<Curri
     throw new Error('Unauthorized: Incorrect or missing access permission.');
   }
 
+  const logCourse = sanitizeForLog(course);
   try {
     const querySnapshot = await withTimeout(
       adminDb.collection(CURRICULUM_COLLECTION).where('course', '==', course).get(),
-      `getting curriculum items for course ${course}`
+      `getting curriculum items for course ${logCourse}`
     );
     const curriculum: CurriculumItem[] = [];
     querySnapshot.forEach((doc: any) => {
@@ -126,7 +136,7 @@ export async function getCurriculumByCourseAction(course: string): Promise<Curri
     });
     return curriculum;
   } catch (error: any) {
-    console.error(`Error in getCurriculumByCourseAction (course: ${course}):`, error);
+    console.error(`Error in getCurriculumByCourseAction (course: ${logCourse}):`, error);
     throw new Error('Failed to get curriculum for course: ' + error.message);
   }
 }
@@ -140,6 +150,8 @@ export async function getCurriculumByCourseAndLessonAction(
     throw new Error('Unauthorized: Incorrect or missing access permission.');
   }
 
+  const logCourse = sanitizeForLog(course);
+  const logLessonNumber = sanitizeForLog(lessonNumber);
   try {
     const querySnapshot = await withTimeout(
       adminDb
@@ -147,7 +159,7 @@ export async function getCurriculumByCourseAndLessonAction(
         .where('course', '==', course)
         .where('lessonNumber', '==', lessonNumber)
         .get(),
-      `getting curriculum item for course ${course} lesson ${lessonNumber}`
+      `getting curriculum item for course ${logCourse} lesson ${logLessonNumber}`
     );
     if (!querySnapshot.empty) {
       const doc = querySnapshot.docs[0];
@@ -166,7 +178,7 @@ export async function getCurriculumByCourseAndLessonAction(
     return null;
   } catch (error: any) {
     console.error(
-      `Error in getCurriculumByCourseAndLessonAction (course: ${course}, lesson: ${lessonNumber}):`,
+      `Error in getCurriculumByCourseAndLessonAction (course: ${logCourse}, lesson: ${logLessonNumber}):`,
       error
     );
     throw new Error('Failed to get lesson details: ' + error.message);
@@ -182,6 +194,8 @@ export async function getVersionHistoryAction(
     throw new Error('Unauthorized: Incorrect or missing access permission.');
   }
 
+  const logCourse = sanitizeForLog(course);
+  const logLessonNumber = sanitizeForLog(lessonNumber);
   try {
     const querySnapshot = await withTimeout(
       adminDb
@@ -189,7 +203,7 @@ export async function getVersionHistoryAction(
         .where('course', '==', course)
         .where('lessonNumber', '==', lessonNumber)
         .get(),
-      `getting version history for course ${course} lesson ${lessonNumber}`
+      `getting version history for course ${logCourse} lesson ${logLessonNumber}`
     );
     const versions: CurriculumVersion[] = [];
     querySnapshot.forEach((doc: any) => {
@@ -208,7 +222,7 @@ export async function getVersionHistoryAction(
     return versions;
   } catch (error: any) {
     console.error(
-      `Error in getVersionHistoryAction (course: ${course}, lesson: ${lessonNumber}):`,
+      `Error in getVersionHistoryAction (course: ${logCourse}, lesson: ${logLessonNumber}):`,
       error
     );
     throw new Error('Failed to get version history: ' + error.message);
@@ -253,7 +267,7 @@ export async function saveCurriculumAction(curriculumData: CurriculumItem): Prom
             ...cleanData,
             lastModified: admin.firestore.FieldValue.serverTimestamp(),
           }),
-        `updating existing curriculum item ${id}`
+        `updating existing curriculum item ${sanitizeForLog(id)}`
       );
       return id;
     } else {
@@ -286,7 +300,7 @@ export async function restoreVersionAction(
   try {
     const versionDoc = await withTimeout(
       adminDb.collection(VERSIONS_COLLECTION).doc(versionId).get(),
-      `getting version history document ${versionId}`
+      `getting version history document ${sanitizeForLog(versionId)}`
     );
     if (versionDoc.exists) {
       const versionData = versionDoc.data() as CurriculumVersion;
@@ -317,7 +331,7 @@ export async function deleteCurriculumAction(curriculumId: string): Promise<void
   try {
     await withTimeout(
       adminDb.collection(CURRICULUM_COLLECTION).doc(curriculumId).delete(),
-      `deleting curriculum item ${curriculumId}`
+      `deleting curriculum item ${sanitizeForLog(curriculumId)}`
     );
   } catch (error: any) {
     console.error('Error in deleteCurriculumAction:', error);

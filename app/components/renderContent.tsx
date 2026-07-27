@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import ScratchBlocks from 'scratchblocks-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import DOMPurify from 'dompurify';
 
 // Helper to parse italics in a string (handles *text* and _text_)
 function parseItalics(text: string): React.ReactNode[] | string {
@@ -25,6 +26,29 @@ function parseItalics(text: string): React.ReactNode[] | string {
     elements.push(remaining.slice(lastIndex));
   }
   return elements.length > 0 ? elements : text;
+}
+
+// Allow-list of URL schemes considered safe to render as a clickable href.
+// Relative paths / in-page anchors (no scheme) resolve against the current
+// page and are covered by this too, since they inherit the page's http(s)
+// protocol.
+const SAFE_URL_SCHEMES = new Set(['http:', 'https:', 'mailto:']);
+
+// Determine whether a markdown-link target is safe to render as an anchor's
+// href. Mirrors the scheme restriction already applied to the bare-URL
+// regex branch below (which only matches `https?://`), but for markdown
+// links (`[text](url)`) where the URL is otherwise unrestricted. Rejects
+// `javascript:`, `data:`, `vbscript:`, and any other non-allow-listed
+// scheme.
+function isSafeHref(url: string): boolean {
+  try {
+    const base = typeof window !== 'undefined' ? window.location.href : 'http://localhost/';
+    const resolved = new URL(url, base);
+    return SAFE_URL_SCHEMES.has(resolved.protocol);
+  } catch {
+    // Not a parseable URL (absolute or relative) - treat as unsafe.
+    return false;
+  }
 }
 
 // Helper to parse links and italics, but NOT code (used by parseLinks)
@@ -61,17 +85,24 @@ function parseLinksNoCode(text: string): React.ReactNode[] {
       );
     }
     if (isMd && nextMatch[2]) {
-      elements.push(
-        <a
-          key={Math.random()}
-          href={nextMatch[2]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary"
-        >
-          {nextMatch[1]}
-        </a>
-      );
+      if (isSafeHref(nextMatch[2])) {
+        elements.push(
+          <a
+            key={Math.random()}
+            href={nextMatch[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary"
+          >
+            {nextMatch[1]}
+          </a>
+        );
+      } else {
+        // Disallowed scheme (e.g. javascript:, data:, vbscript:) - render
+        // the link's display text as plain text instead of a clickable
+        // anchor, so the malicious href never reaches the DOM.
+        elements.push(...([] as React.ReactNode[]).concat(parseItalics(nextMatch[1])));
+      }
       remaining = remaining.slice(nextMatch.index + nextMatch[0].length);
     } else {
       elements.push(
@@ -120,6 +151,17 @@ function parseLinks(line: string): React.ReactNode[] {
 
 // Helper to parse HTML content safely
 function parseHTML(htmlString: string): React.ReactNode[] | string {
+  // Required for more than SSR/document safety: dompurify's package.json
+  // "exports" map has no "browser" condition, so both the server and client
+  // bundles resolve the same universal build. In a real window-less runtime
+  // (e.g. a Vercel serverless function), that build exports the raw
+  // createDOMPurify factory rather than a ready sanitizer, so
+  // DOMPurify.sanitize below would throw "sanitize is not a function" if
+  // reached without a window. This early return keeps this function from
+  // ever calling it outside a real browser; do not remove or reorder it
+  // relative to the sanitize call. The raw string returned here is rendered
+  // as a plain React child (never dangerouslySetInnerHTML), so it is safe
+  // even unsanitized.
   if (typeof window === 'undefined') {
     return htmlString;
   }
@@ -143,9 +185,21 @@ function parseHTML(htmlString: string): React.ReactNode[] | string {
   ];
   const allowedAttributes = ['class', 'style', 'href', 'target', 'rel'];
 
+  // Sanitize the untrusted string with DOMPurify *before* it is ever assigned
+  // to innerHTML. DOMPurify parses/sanitizes in its own inert document (one
+  // with no browsing context), so elements like <img onerror=...> or
+  // <svg onload=...> never load resources or fire their handlers while this
+  // sanitization happens. Only the resulting, already-safe markup -- with
+  // disallowed tags/attributes (including any event handlers) already
+  // stripped -- is subsequently inserted into the live tempDiv below.
+  const sanitizedHtmlString = DOMPurify.sanitize(htmlString, {
+    ALLOWED_TAGS: allowedTags,
+    ALLOWED_ATTR: allowedAttributes,
+  });
+
   // Create a temporary div to parse HTML
   const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = htmlString;
+  tempDiv.innerHTML = sanitizedHtmlString;
 
   // Recursively process nodes
   function processNode(node: Node): React.ReactNode | null {

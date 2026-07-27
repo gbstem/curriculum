@@ -70,6 +70,30 @@ describe('RenderContent component', () => {
     expect(link2).toHaveAttribute('href', 'https://github.com');
   });
 
+  it('renders markdown links with mailto: and relative/anchor hrefs', () => {
+    const markdown =
+      'Email [us](mailto:hello@example.com), see [section](#section), or go [home](/home)';
+    render(<RenderContent content={markdown} />);
+
+    expect(screen.getByRole('link', { name: 'us' })).toHaveAttribute(
+      'href',
+      'mailto:hello@example.com'
+    );
+    expect(screen.getByRole('link', { name: 'section' })).toHaveAttribute('href', '#section');
+    expect(screen.getByRole('link', { name: 'home' })).toHaveAttribute('href', '/home');
+  });
+
+  it('does not render a clickable link for javascript: or data: markdown link targets', () => {
+    const markdown =
+      "Click [here](javascript:window.location='http://evil.example') or [this](data:text/plain;base64,eHNz)";
+    const { container } = render(<RenderContent content={markdown} />);
+
+    expect(container.querySelector('a')).toBeNull();
+    // The display text should still be present, just not as a clickable link
+    expect(container.textContent).toContain('here');
+    expect(container.textContent).toContain('this');
+  });
+
   it('renders inline code blocks', () => {
     const markdown = 'Use `console.log()` to debug code.';
     render(<RenderContent content={markdown} />);
@@ -129,7 +153,21 @@ describe('RenderContent component', () => {
     const markdown = '<script>alert("hack")</script>Hello safe text';
     render(<RenderContent content={markdown} />);
 
-    expect(screen.getByText(/alert\("hack"\)/)).toBeInTheDocument();
+    // The script tag and its contents are sanitized away entirely (not just
+    // unwrapped to plain text), since it is never an allowed tag.
+    expect(screen.queryByText(/alert\("hack"\)/)).not.toBeInTheDocument();
     expect(screen.getByText(/Hello safe text/)).toBeInTheDocument();
+  });
+
+  it('neutralizes event handlers on disallowed elements before parsing (stored XSS)', () => {
+    const markdown = '<img src=x onerror=alert(document.cookie)>Hello';
+    const { container } = render(<RenderContent content={markdown} />);
+
+    // The <img> tag (and its onerror handler) must never reach the DOM --
+    // sanitization happens before the string is ever assigned to innerHTML,
+    // so no handler is present to fire during parsing.
+    expect(container.querySelector('img')).toBeNull();
+    expect(container.innerHTML).not.toContain('onerror');
+    expect(screen.getByText(/Hello/)).toBeInTheDocument();
   });
 });

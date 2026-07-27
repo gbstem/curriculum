@@ -1,4 +1,5 @@
-import { defaultSession, SessionData, sessionOptions } from '@/lib/session';
+import { defaultSession, SessionData } from '@/lib/session';
+import { sessionOptions } from '@/lib/sessionOptions';
 import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';

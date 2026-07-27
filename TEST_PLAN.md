@@ -455,3 +455,31 @@ _Execute these steps for **Lesson 1** of any selected course (e.g., `/cs/scratch
 - **Expected Results (Assertions)**:
   - The Scratch code section is rendered as actual graphical blocks (SVG/canvas elements representing Scratch programming blocks) rather than raw text.
   - The blocks display matching Scratch block shapes and category colors (e.g. yellow Hat blocks, gold Control loops, and blue Motion blocks).
+
+---
+
+### Section I: XSS Sanitization Validation
+
+#### Test Case 14: Verify Malicious Content Is Neutralized and Legitimate Content Still Renders
+
+**Note**: For Cypress automation, all these tests use `generateDateHash()` to append a random string to the title and content fields to ensure uniqueness, and use Lesson numbers 3001-3003 since 1000/2000/2001 are already used by other specs and 1 is a seeded lesson.
+
+- **Description**: Regression coverage for two XSS findings fixed in a Claude Security scan: a `javascript:` URI accepted as a markdown link's `href`, and raw curriculum HTML assigned to `innerHTML` before allow-list filtering ran. Verifies malicious payloads are neutralized (including during the Editor's real-time preview, not just on the saved page) while legitimate allow-listed HTML and links still render normally.
+- **Steps (raw HTML payload, Lesson 3001)**:
+  1. Login as an Editor and navigate to `/cs/scratch1A`.
+  2. Click **"Add New Lesson"**, enter `3001` as the Lesson Number and a unique title, then type the following into the Content textarea, each on its own line separated by a blank line:
+     - `<img src=x onerror="alert('XSS-F4-img')">`
+     - `<script>alert('XSS-F4-script')</script>`
+     - `<svg onload="alert('XSS-F4-svg')"></svg>`
+  3. Click **"Save"**, then open Lesson 3001.
+- **Steps (javascript: link payload, Lesson 3002)**:
+  1. Create a lesson numbered `3002` whose content is a markdown link with a `javascript:` target, e.g. `[Suspicious Link](javascript:alert('XSS-F2'))`.
+  2. Save and open Lesson 3002.
+- **Steps (legitimate content, Lesson 3003)**:
+  1. Create a lesson numbered `3003` whose content includes an `<h1>` heading, a `<strong>` bold phrase, and a normal markdown link to `https://www.google.com`.
+  2. Save and open Lesson 3003.
+- **Expected Results (Assertions)**:
+  - No JavaScript `alert()` ever fires -- neither while the payload is being typed into the Editor's real-time preview, nor when the saved lesson page is loaded.
+  - On Lesson 3001, the `<img>`, `<script>`, and `<svg>` elements are absent from the rendered page entirely (not merely hidden), and none of `onerror`, `onload`, or the script's `alert(` text survive anywhere in the rendered markup.
+  - On Lesson 3002, the link's display text renders as plain text, but no `<a>` element and no `javascript:` scheme ever reach the DOM.
+  - On Lesson 3003, the `<h1>` and `<strong>` tags render as real elements (not stripped to plain text), and the Google link renders as a normal clickable anchor with its `https://` href intact.
