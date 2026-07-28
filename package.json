@@ -19,7 +19,6 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
     "bootstrap": "^5.3.8",
-    "dompurify": "^3.4.12",
     "firebase": "^12.16.0",
     "firebase-admin": "^13.10.0",
     "iron-session": "^8.0.4",
@@ -28,7 +27,12 @@
     "react-bootstrap": "^2.10.10",
     "react-diff-viewer": "^3.1.1",
     "react-dom": "^19.2.6",
+    "react-markdown": "^10",
     "react-syntax-highlighter": "^16.1.1",
+    "rehype-raw": "^7",
+    "rehype-sanitize": "^6",
+    "remark-breaks": "^4",
+    "remark-gfm": "^4",
     "scratchblocks": "^3.7.1",
     "scratchblocks-react": "^1.0.1"
   },

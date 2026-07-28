@@ -192,7 +192,7 @@ describe('Editor Role Validation (Section E)', () => {
 
     // Verify live preview of list formatting
     cy.get('.preview-col').find('ul li').should('contain', 'Item 1');
-    cy.get('.preview-col').should('contain', '1. Item 2');
+    cy.get('.preview-col').find('ol li').should('contain', 'Item 2');
 
     // 5. Code Block insertion helper
     cy.get('button[title="Insert Code Block"]').click();

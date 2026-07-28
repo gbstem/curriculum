@@ -40,6 +40,12 @@
 
 .curriculum-content ul {
   padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
+.curriculum-content ol {
+  padding-left: 1.5rem;
+  list-style-type: decimal;
 }
 
 .curriculum-content li {

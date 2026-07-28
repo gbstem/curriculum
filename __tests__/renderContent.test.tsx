@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import React from 'react';
 import { RenderContent } from '../app/components/renderContent';
 
 // Mock react-syntax-highlighter to simplify rendering in JSDOM
@@ -88,7 +87,7 @@ describe('RenderContent component', () => {
       "Click [here](javascript:window.location='http://evil.example') or [this](data:text/plain;base64,eHNz)";
     const { container } = render(<RenderContent content={markdown} />);
 
-    expect(container.querySelector('a')).toBeNull();
+    expect(container.querySelector('a[href]')).toBeNull();
     // The display text should still be present, just not as a clickable link
     expect(container.textContent).toContain('here');
     expect(container.textContent).toContain('this');
@@ -163,11 +162,97 @@ describe('RenderContent component', () => {
     const markdown = '<img src=x onerror=alert(document.cookie)>Hello';
     const { container } = render(<RenderContent content={markdown} />);
 
-    // The <img> tag (and its onerror handler) must never reach the DOM --
-    // sanitization happens before the string is ever assigned to innerHTML,
-    // so no handler is present to fire during parsing.
-    expect(container.querySelector('img')).toBeNull();
     expect(container.innerHTML).not.toContain('onerror');
+    expect(container.innerHTML).not.toContain('alert');
     expect(screen.getByText(/Hello/)).toBeInTheDocument();
+  });
+
+  it('renders ordered lists correctly', () => {
+    const markdown = '1. First item\n2. Second item';
+    const { container } = render(<RenderContent content={markdown} />);
+
+    const ol = container.querySelector('ol');
+    expect(ol).toBeInTheDocument();
+    const items = container.querySelectorAll('ol > li');
+    expect(items.length).toBe(2);
+    expect(items[0]).toHaveTextContent('First item');
+    expect(items[1]).toHaveTextContent('Second item');
+  });
+
+  it('renders list item with bold text inside a list item', () => {
+    const markdown = '- **Term**: def';
+    const { container } = render(<RenderContent content={markdown} />);
+
+    const li = container.querySelector('li');
+    expect(li).toBeInTheDocument();
+    const strong = li?.querySelector('strong');
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent('Term');
+    expect(li).toHaveTextContent('Term: def');
+  });
+
+  it('renders bare code fence as code block rather than empty blockquote', () => {
+    const markdown = '```\nprint("hello")\n```';
+    const { container } = render(<RenderContent content={markdown} />);
+
+    expect(container.querySelector('blockquote')).toBeNull();
+    const highlighter = screen.getByTestId('syntax-highlighter');
+    expect(highlighter).toBeInTheDocument();
+    expect(highlighter).toHaveAttribute('data-language', 'text');
+    expect(highlighter.textContent).toContain('print("hello")');
+  });
+
+  it('renders headings with inline code and links', () => {
+    const markdown = '## Using `print()` and [docs](https://example.com)';
+    render(<RenderContent content={markdown} />);
+
+    const heading = screen.getByRole('heading', { level: 4 });
+    expect(heading).toBeInTheDocument();
+    const code = heading.querySelector('code');
+    expect(code).toHaveTextContent('print()');
+    const link = heading.querySelector('a');
+    expect(link).toHaveAttribute('href', 'https://example.com');
+    expect(link).toHaveTextContent('docs');
+  });
+
+  it('renders GFM tables', () => {
+    const markdown = '| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |';
+    const { container } = render(<RenderContent content={markdown} />);
+
+    const table = container.querySelector('table');
+    expect(table).toBeInTheDocument();
+    expect(container.querySelector('th')).toHaveTextContent('Header 1');
+    expect(container.querySelector('td')).toHaveTextContent('Cell 1');
+  });
+
+  it('renders markdown images with alt text', () => {
+    const markdown = '![Diagram](https://example.com/diagram.png)';
+    const { container } = render(<RenderContent content={markdown} />);
+
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('src', 'https://example.com/diagram.png');
+    expect(img).toHaveAttribute('alt', 'Diagram');
+  });
+
+  it('renders bold with nested italic text inside', () => {
+    const markdown = '**bold with *italic* inside**';
+    const { container } = render(<RenderContent content={markdown} />);
+
+    const strong = container.querySelector('strong');
+    expect(strong).toBeInTheDocument();
+    const em = strong?.querySelector('em');
+    expect(em).toBeInTheDocument();
+    expect(em).toHaveTextContent('italic');
+  });
+
+  it('renders two consecutive non-blank lines into a single paragraph with a break (remark-breaks)', () => {
+    const markdown = 'Line 1\nLine 2';
+    const { container } = render(<RenderContent content={markdown} />);
+
+    const paragraphs = container.querySelectorAll('p');
+    expect(paragraphs.length).toBe(1);
+    expect(paragraphs[0].querySelector('br')).toBeInTheDocument();
+    expect(paragraphs[0]).toHaveTextContent(/Line 1\s*Line 2/);
   });
 });
