@@ -14,7 +14,8 @@
     "prepare": "husky",
     "db:pull": "node scripts/sync-db.js pull",
     "db:seed": "node scripts/sync-db.js seed",
-    "emulators": "firebase emulators:start --log-verbosity=quiet"
+    "emulators": "firebase emulators:start --log-verbosity=quiet",
+    "recover-orphaned-lessons": "npx tsx scripts/recover-orphaned-lessons.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
