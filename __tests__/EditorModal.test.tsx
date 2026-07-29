@@ -4,6 +4,35 @@ import EditorModal from '../app/components/EditorModal';
 import { deleteCurriculum } from '../app/services/curriculumService';
 import { navigateTo } from '@/lib/navigation';
 
+// Mock next/dynamic so MDEditor renders synchronously in Jest as a controlled textarea
+jest.mock('next/dynamic', () => () => {
+  return function MockMDEditor(props: any) {
+    return (
+      <textarea
+        data-testid="md-editor"
+        placeholder="Enter lesson content in Markdown format..."
+        value={props.value || ''}
+        onChange={(e) => props.onChange && props.onChange(e.target.value)}
+      />
+    );
+  };
+});
+
+// Mock @uiw/react-md-editor
+jest.mock('@uiw/react-md-editor', () => ({
+  __esModule: true,
+  default: function MockMDEditor(props: any) {
+    return (
+      <textarea
+        data-testid="md-editor"
+        placeholder="Enter lesson content in Markdown format..."
+        value={props.value || ''}
+        onChange={(e) => props.onChange && props.onChange(e.target.value)}
+      />
+    );
+  },
+}));
+
 // Mock curriculumService
 jest.mock('../app/services/curriculumService', () => ({
   deleteCurriculum: jest.fn(),
@@ -170,5 +199,43 @@ describe('EditorModal component', () => {
     expect(deleteCurriculum).not.toHaveBeenCalled();
     expect(mockOnHide).not.toHaveBeenCalled();
     expect(navigateTo).not.toHaveBeenCalled();
+  });
+
+  it('resets form state when modal is reopened after cancelling unsaved edits', () => {
+    const { rerender } = render(
+      <EditorModal
+        show={true}
+        onHide={mockOnHide}
+        curriculumData={dummyCurriculum}
+        onSave={mockOnSave}
+      />
+    );
+
+    const titleInput = screen.getByPlaceholderText('Lesson title');
+    fireEvent.change(titleInput, { target: { value: 'Unsaved Title Edit' } });
+    expect(titleInput).toHaveValue('Unsaved Title Edit');
+
+    // Close modal (show=false)
+    rerender(
+      <EditorModal
+        show={false}
+        onHide={mockOnHide}
+        curriculumData={dummyCurriculum}
+        onSave={mockOnSave}
+      />
+    );
+
+    // Reopen modal (show=true)
+    rerender(
+      <EditorModal
+        show={true}
+        onHide={mockOnHide}
+        curriculumData={dummyCurriculum}
+        onSave={mockOnSave}
+      />
+    );
+
+    // Unsaved edits should be discarded and reset back to original curriculumData.title
+    expect(screen.getByPlaceholderText('Lesson title')).toHaveValue('Lesson 1');
   });
 });

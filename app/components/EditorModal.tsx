@@ -2,11 +2,16 @@
 
 import { navigateTo } from '@/lib/navigation';
 import { useSession } from '@/lib/useSession';
+import '@uiw/react-markdown-preview/markdown.css';
+import '@uiw/react-md-editor/markdown-editor.css';
+import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { CurriculumItem, deleteCurriculum } from '../services/curriculumService';
 import CodeBlockModal from './CodeBlockModal';
 import { RenderContent } from './renderContent';
+
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
 interface EditorModalProps {
   show: boolean;
@@ -32,13 +37,71 @@ const EditorModal: React.FC<EditorModalProps> = ({
   const [showCodeBlockModal, setShowCodeBlockModal] = useState<boolean>(false);
 
   useEffect(() => {
-    if (curriculumData) {
+    if (show && curriculumData) {
       setTitle(curriculumData.title || '');
       setContent(curriculumData.content || '');
       setCourse(curriculumData.course || '');
       setLessonNumber(curriculumData.lessonNumber?.toString() || '');
+      setError('');
     }
-  }, [curriculumData]);
+  }, [show, curriculumData]);
+
+  // Inject interactive draggable divider between editor and preview columns
+  useEffect(() => {
+    if (!show) return;
+
+    const setupDivider = () => {
+      const editorContent = document.querySelector('.w-md-editor-content');
+      if (!editorContent) return false;
+
+      const area = editorContent.querySelector('.w-md-editor-area');
+      const preview = editorContent.querySelector('.w-md-editor-preview');
+
+      if (area && preview && !editorContent.querySelector('.w-md-editor-drag-divider')) {
+        const divider = document.createElement('div');
+        divider.className = 'w-md-editor-drag-divider';
+        divider.title = 'Drag horizontally to resize editor / preview columns';
+        divider.innerHTML = '<span>⋮</span>';
+
+        divider.addEventListener('mousedown', (e: MouseEvent) => {
+          e.preventDefault();
+          document.body.style.cursor = 'col-resize';
+          document.body.style.userSelect = 'none';
+
+          const handleMouseMove = (moveEvent: MouseEvent) => {
+            const rect = editorContent.getBoundingClientRect();
+            const offsetX = moveEvent.clientX - rect.left;
+            const newPercent = Math.max(15, Math.min(85, (offsetX / rect.width) * 100));
+            (editorContent as HTMLElement).style.setProperty('--split-percent', `${newPercent}%`);
+          };
+
+          const handleMouseUp = () => {
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+          };
+
+          window.addEventListener('mousemove', handleMouseMove);
+          window.addEventListener('mouseup', handleMouseUp);
+        });
+
+        area.after(divider);
+        return true;
+      }
+      return false;
+    };
+
+    if (setupDivider()) return;
+
+    const interval = setInterval(() => {
+      if (setupDivider()) {
+        clearInterval(interval);
+      }
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [show]);
 
   const handleSave = async () => {
     try {
@@ -83,47 +146,15 @@ const EditorModal: React.FC<EditorModalProps> = ({
 
   const insertCodeBlock = (language: string, code: string) => {
     const codeBlock = `\`\`\`${language}\n${code}\n\`\`\``;
-    const textarea = document.getElementById('content-textarea') as HTMLTextAreaElement | null;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const newContent = content.substring(0, start) + codeBlock + content.substring(end);
-      setContent(newContent);
-
-      // Set cursor position after the inserted code block
-      setTimeout(() => {
-        textarea.focus();
-        textarea.setSelectionRange(start + codeBlock.length, start + codeBlock.length);
-      }, 0);
-    }
+    setContent((prev) => (prev ? `${prev}\n\n${codeBlock}` : codeBlock));
   };
 
-  const insertMarkdown = (markdown: string) => {
-    const textarea = document.getElementById('content-textarea') as HTMLTextAreaElement | null;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = content.substring(start, end);
-      const newText = markdown.replace('{text}', selectedText);
-      const newContent = content.substring(0, start) + newText + content.substring(end);
-      setContent(newContent);
-      // Set cursor position after the inserted markdown
-      setTimeout(() => {
-        textarea.focus();
-        // If no text is selected, move cursor back inside the formatting
-        if (start === end) {
-          if (markdown === '**{text}**') {
-            textarea.setSelectionRange(start + 2, start + 2);
-          } else if (markdown === '*{text}*') {
-            textarea.setSelectionRange(start + 1, start + 1);
-          } else {
-            textarea.setSelectionRange(start + newText.length, start + newText.length);
-          }
-        } else {
-          textarea.setSelectionRange(start + newText.length, start + newText.length);
-        }
-      }, 0);
-    }
+  const codeBlockCommand = {
+    name: 'gbstemCodeBlock',
+    keyCommand: 'gbstemCodeBlock',
+    buttonProps: { 'aria-label': 'Insert code block', title: 'Insert Code Block' },
+    icon: <i className="fas fa-code" />,
+    execute: () => setShowCodeBlockModal(true),
   };
 
   const isEditor = session.role === 'editor';
@@ -155,7 +186,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
 
   return (
     <>
-      <Modal show={show} onHide={onHide} size="xl" centered>
+      <Modal show={show} onHide={onHide} dialogClassName="modal-almost-fullscreen">
         <Modal.Header className="bg-primary text-white" closeButton>
           <Modal.Title>
             <i className="fas fa-edit me-2"></i>
@@ -169,7 +200,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
             </Alert>
           )}
 
-          <Form>
+          <Form className="editor-form">
             <Row className="align-items-md-end mb-3">
               <Col md={4} className="mb-md-0 mb-3">
                 <Form.Group>
@@ -233,81 +264,27 @@ const EditorModal: React.FC<EditorModalProps> = ({
               </Col>
             </Row>
 
-            <Form.Group className="mb-3">
+            <Form.Group className="editor-content-group">
               <Form.Label>Content</Form.Label>
-              <div className="d-flex flex-column flex-md-row w-full gap-3">
-                {/* Editor Side */}
-                <div className="editor-col w-full md:w-1/2">
-                  <div className="d-flex mb-2 gap-2">
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="d-flex align-items-center btn-primary gap-1 text-white shadow-sm"
-                      onClick={() => insertMarkdown('**{text}**')}
-                      title="Bold"
-                    >
-                      <i className="fas fa-bold"></i>
-                    </Button>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="d-flex align-items-center btn-primary gap-1 text-white shadow-sm"
-                      onClick={() => insertMarkdown('*{text}*')}
-                      title="Italic"
-                    >
-                      <i className="fas fa-italic"></i>
-                    </Button>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="d-flex align-items-center btn-primary gap-1 text-white shadow-sm"
-                      onClick={() => insertMarkdown('- {text}')}
-                      title="Bullet List"
-                    >
-                      <i className="fas fa-list-ul"></i>
-                    </Button>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="d-flex align-items-center btn-primary gap-1 text-white shadow-sm"
-                      onClick={() => insertMarkdown('1. {text}')}
-                      title="Numbered List"
-                    >
-                      <i className="fas fa-list-ol"></i>
-                    </Button>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="d-flex align-items-center btn-primary gap-1 text-white shadow-sm"
-                      onClick={() => setShowCodeBlockModal(true)}
-                      title="Insert Code Block"
-                    >
-                      <i className="fas fa-code"></i>
-                    </Button>
-                  </div>
-                  {/* Keep this as h[25rem] despite IDE suggestCanonicalClasses to avoid it stretching to the content size */}
-                  <Form.Control
-                    id="content-textarea"
-                    as="textarea"
-                    rows={15}
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Enter lesson content in Markdown format..."
-                    className="font-monospace h-[25rem] w-full resize-y wrap-break-word whitespace-pre-wrap"
-                  />
-                </div>
-                {/* Preview Side */}
-                <div className="w-full md:w-1/2">
-                  <Form.Label className="mb-2 font-medium">Preview</Form.Label>
-                  {/* Keep this as h[25rem] despite IDE suggestCanonicalClasses to avoid it stretching to the content size */}
-                  <div className="h-[25rem] overflow-y-auto">
-                    <div className="preview-col d-flex flex-column min-w-0">
-                      <div className="curriculum-content card grow border border-[#e0e0e0] bg-[#f8f9fa]! p-6 shadow-sm">
-                        <RenderContent content={content} />
+              <div className="editor-col" data-color-mode="light">
+                <MDEditor
+                  value={content}
+                  onChange={(val) => setContent(val || '')}
+                  height="100%"
+                  preview="live"
+                  extraCommands={[codeBlockCommand]}
+                  textareaProps={{
+                    id: 'content-textarea',
+                    placeholder: 'Enter lesson content in Markdown format...',
+                  }}
+                  components={{
+                    preview: (source) => (
+                      <div className="curriculum-content preview-col min-w-0 p-4">
+                        <RenderContent content={typeof source === 'string' ? source : ''} />
                       </div>
-                    </div>
-                  </div>
-                </div>
+                    ),
+                  }}
+                />
               </div>
             </Form.Group>
           </Form>

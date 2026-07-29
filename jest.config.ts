@@ -20,7 +20,7 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/$1',
     '^next/headers$': '<rootDir>/__mocks__/next-headers.ts',
   },
-  testPathIgnorePatterns: ['/node_modules/'],
+  testPathIgnorePatterns: ['/node_modules/', '/scripts/'],
   collectCoverage: false,
   collectCoverageFrom: [
     'app/**/*.{js,jsx,ts,tsx}',
@@ -30,5 +30,17 @@ const config: Config = {
   ],
 };
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-export default createJestConfig(config);
+const transformIgnorePatterns = [
+  'node_modules/(?!(react-markdown|remark-.*|rehype-.*|mdast-.*|micromark.*|unist-.*|hast-util-.*|hastscript|unified|bail|trough|vfile.*|is-plain-obj|property-information|space-separated-tokens|comma-separated-tokens|decode-named-character-reference|character-entities.*|html-void-elements|zwitch|longest-streak|ccount|escape-string-regexp|markdown-table|trim-lines|devlop|estree-util-.*|html-url-attributes|web-namespaces)/)',
+];
+
+const asyncJestConfig = async () => {
+  const fn = createJestConfig(config);
+  const res = await fn();
+  return {
+    ...res,
+    transformIgnorePatterns,
+  };
+};
+
+export default asyncJestConfig;

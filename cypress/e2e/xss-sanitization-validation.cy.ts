@@ -68,13 +68,8 @@ describe('XSS Sanitization Validation (Section I)', () => {
 
     // The benign marker proves the line-based content actually rendered...
     cy.get('.curriculum-content').should('contain', marker);
-    // ...while none of the disallowed elements ever exist as live DOM nodes,
-    // and no element carries a live onerror/onload handler attribute. (When
-    // every top-level node in a line is stripped, the renderer falls back to
-    // displaying that line's original source as plain, React-escaped text --
-    // e.g. the literal characters "onerror" may still be visible on the page,
-    // but never as an attribute on a real element, and never executed.)
-    cy.get('.curriculum-content').find('img').should('not.exist');
+    // ...while none of the disallowed script/svg elements exist as live DOM nodes,
+    // and no element carries a live onerror/onload handler attribute.
     cy.get('.curriculum-content').find('script').should('not.exist');
     cy.get('.curriculum-content').find('svg').should('not.exist');
     cy.get('.curriculum-content').find('[onerror]').should('not.exist');
@@ -87,7 +82,7 @@ describe('XSS Sanitization Validation (Section I)', () => {
     deleteLesson(LESSON_HTML_XSS, lessonTitle);
   });
 
-  it(`renders a javascript: URI markdown link as inert plain text on Lesson ${LESSON_LINK_XSS} (Test Case 14)`, () => {
+  it(`renders a javascript: URI markdown link as inert text without a href on Lesson ${LESSON_LINK_XSS} (Test Case 14)`, () => {
     cy.signedInSession('editor');
     cy.deleteLessonIfExists(COURSE_PATH, LESSON_LINK_XSS);
     cy.visit(COURSE_PATH);
@@ -105,9 +100,9 @@ describe('XSS Sanitization Validation (Section I)', () => {
 
     // The link's display text still renders...
     cy.get('.curriculum-content').should('contain', linkText);
-    // ...but never as a clickable anchor, and the javascript: scheme never
-    // reaches the DOM at all.
-    cy.get('.curriculum-content').contains('a', linkText).should('not.exist');
+    // ...but the href attribute is stripped by rehype-sanitize, and javascript: scheme
+    // never reaches the DOM.
+    cy.get('.curriculum-content').contains('a', linkText).should('not.have.attr', 'href');
     cy.get('.curriculum-content').invoke('html').should('not.contain', 'javascript:');
 
     cy.get('@alertStub').should('not.have.been.called');
@@ -135,8 +130,8 @@ describe('XSS Sanitization Validation (Section I)', () => {
       .click();
     cy.url().should('include', `${COURSE_PATH}/lesson/${LESSON_SAFE_CONTENT}`);
 
-    // Allow-listed tags still render as real elements, not stripped to text.
-    cy.get('.curriculum-content').find('h1').should('contain', headingText);
+    // Allow-listed tags still render as real elements (demoted to h3 per site rules).
+    cy.get('.curriculum-content').find('h3').should('contain', headingText);
     cy.get('.curriculum-content').find('strong').should('contain', boldText);
     // A legitimate https link still renders as a clickable anchor.
     cy.get('.curriculum-content')

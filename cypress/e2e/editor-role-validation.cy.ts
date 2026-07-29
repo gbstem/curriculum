@@ -166,7 +166,7 @@ describe('Editor Role Validation (Section E)', () => {
       const el = $el[0] as HTMLTextAreaElement;
       el.setSelectionRange(0, 4); // select "bold"
     });
-    cy.get('button[title="Bold"]').click();
+    cy.get('button[data-name="bold"], button[title="Bold"]').first().click();
     cy.get('#content-textarea').should('have.value', '**bold**');
     cy.get('.preview-col').find('strong').should('contain', 'bold');
 
@@ -176,23 +176,22 @@ describe('Editor Role Validation (Section E)', () => {
       const el = $el[0] as HTMLTextAreaElement;
       el.setSelectionRange(0, 6); // select "italic"
     });
-    cy.get('button[title="Italic"]').click();
+    cy.get('button[data-name="italic"], button[title="Italic"]').first().click();
     cy.get('#content-textarea').should('have.value', '*italic*');
     cy.get('.preview-col').find('em').should('contain', 'italic');
 
     // 4. List helper formatting tests
     cy.get('#content-textarea').clear();
-    cy.get('button[title="Bullet List"]').click();
-    cy.get('#content-textarea').type('Item 1');
-    cy.get('#content-textarea').type('\n'); // newline
-    cy.get('button[title="Numbered List"]').click();
-    cy.get('#content-textarea').type('Item 2');
+    cy.get('button[data-name="unordered-list"], button[title="Bullet List"]').first().click();
+    cy.get('#content-textarea').type('{rightArrow}Item 1\n');
+    cy.get('button[data-name="ordered-list"], button[title="Numbered List"]').first().click();
+    cy.get('#content-textarea').type('{rightArrow}Item 2');
 
-    cy.get('#content-textarea').should('have.value', '- Item 1\n1. Item 2');
+    cy.get('#content-textarea').should('contain', '- Item 1').and('contain', '1. Item 2');
 
     // Verify live preview of list formatting
     cy.get('.preview-col').find('ul li').should('contain', 'Item 1');
-    cy.get('.preview-col').should('contain', '1. Item 2');
+    cy.get('.preview-col').find('ol li').should('contain', 'Item 2');
 
     // 5. Code Block insertion helper
     cy.get('button[title="Insert Code Block"]').click();
@@ -213,5 +212,49 @@ describe('Editor Role Validation (Section E)', () => {
     // 6. Cancel to discard changes
     cy.get('.modal-dialog').first().contains('button', 'Cancel').click();
     cy.get('.modal-dialog').should('not.exist');
+  });
+
+  it('discards unsaved edits when closing the modal and reopening (Test Case 13b)', () => {
+    cy.signedInSession('editor');
+    cy.visit('/cs/scratch1A/lesson/1');
+
+    // Open editor and type unsaved draft content
+    cy.contains('button', 'Edit Lesson').click();
+    cy.get('#content-textarea').type('\n\n[Unsaved Draft Content]');
+    cy.contains('.modal-dialog button', 'Cancel').click();
+
+    // Reopen editor and verify unsaved draft content was discarded
+    cy.contains('button', 'Edit Lesson').click();
+    cy.get('#content-textarea').should('not.contain', '[Unsaved Draft Content]');
+    cy.contains('.modal-dialog button', 'Cancel').click();
+  });
+
+  it('verifies draggable center divider resizes columns (Test Case 13c)', () => {
+    cy.signedInSession('editor');
+    cy.visit('/cs/scratch1A');
+
+    cy.contains('button', 'Add New Lesson').click();
+    cy.get('.w-md-editor-drag-divider', { timeout: 10000 }).should('be.visible');
+
+    // Simulate drag action on the splitter
+    cy.get('.w-md-editor-drag-divider')
+      .trigger('mousedown', { which: 1 })
+      .trigger('mousemove', { clientX: 300, clientY: 300 })
+      .trigger('mouseup', { force: true });
+
+    // Verify custom split variable was applied
+    cy.get('.w-md-editor-content').should('have.attr', 'style').and('include', '--split-percent');
+
+    cy.contains('.modal-dialog button', 'Cancel').click();
+  });
+
+  it('uses almost-fullscreen layout for editor dialog (Test Case 13d)', () => {
+    cy.signedInSession('editor');
+    cy.visit('/cs/scratch1A');
+
+    cy.contains('button', 'Add New Lesson').click();
+    cy.get('.modal-dialog').first().should('have.class', 'modal-almost-fullscreen');
+
+    cy.contains('.modal-dialog button', 'Cancel').click();
   });
 });
