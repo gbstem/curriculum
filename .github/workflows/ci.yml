@@ -49,6 +49,14 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
+      # firebase-tools' bundled Firestore emulator requires a JDK 21+ runtime;
+      # ubuntu-latest's default `java` on PATH isn't guaranteed to be that new.
+      - name: Set up JDK 21 (required by the Firestore emulator)
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
       # Cache the Firestore emulator JAR that firebase-tools downloads on first
       # use, keyed on its own version so a firebase-tools bump invalidates it.
       - name: Cache Firebase emulator binaries

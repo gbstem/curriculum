@@ -59,7 +59,7 @@ Testing against a local emulator rather than the production database:
 
 #### Seeding the Emulator
 
-1. **Point to Local Emulators**: To route client and server operations to the emulator, uncomment the emulator environment variables at the bottom of your `.env.local` file:
+1. **Point to Local Emulators**: `.env.example` ships with the emulator environment variables already active, so a fresh `.env.local` routes client and server operations to the emulator by default:
 
    ```env
    FIRESTORE_EMULATOR_HOST="127.0.0.1:8080"
@@ -67,7 +67,7 @@ Testing against a local emulator rather than the production database:
    STORAGE_EMULATOR_HOST="127.0.0.1:9199"
    ```
 
-   Ensure these ports match your emulator configurations in `firebase.json`.
+   Ensure these ports match your emulator configurations in `firebase.json`. Comment these out only if you intentionally want the app itself to talk to production Firestore instead of the emulator.
 
 2. **Start the Emulator**: Set up and start the emulator suite locally:
    - Follow the official [Firebase Emulator Suite: Connect and Prototype](https://firebase.google.com/docs/emulator-suite/connect_and_prototype?database=Firestore) guide to run the emulators on your local machine.
