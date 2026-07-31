@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "jest",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "cypress:run": "start-server-and-test start http://localhost:3000 cypress",
     "cypress": "cypress run",
     "prepare": "husky",

@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Lint, format, unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Format check
+        run: yarn format:check
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Unit tests
+        run: yarn test
+
+  # Cypress e2e is intentionally not run in CI yet: these specs assert against
+  # real lesson content that today only comes from `yarn db:pull` (pulls from
+  # production Firestore) + `yarn db:seed`, and there's no synthetic seed
+  # script like admin/portal have. Wiring that up would mean either putting a
+  # production-reading Firebase service-account key in CI secrets, or building
+  # a fixture-based seed script — both real follow-up work, not CI wiring.
+  # Revisit once one of those exists.
