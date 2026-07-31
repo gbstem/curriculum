@@ -14,23 +14,7 @@ However, remember that you can actually see what is happening on the screen in a
 
 Follow these steps to establish a clean, predictable, local testing environment.
 
-### A. Seed Local Database from Production
-
-To ensure test data is realistic and consistent:
-
-1. Ensure your `.env.local` contains valid production Firebase credentials:
-   - `FIREBASE_PROJECT_ID`
-   - `FIREBASE_CLIENT_EMAIL`
-   - `FIREBASE_PRIVATE_KEY`
-2. Download production collections by running:
-
-   ```bash
-   yarn db:pull
-   ```
-
-   _Verify that `firebase-backup.json` is created in the project root._
-
-### B. Launch Firebase Emulator Suite
+### A. Launch Firebase Emulator Suite
 
 1. Ensure the emulator hosts are configured in `.env.local`:
 
@@ -46,13 +30,21 @@ To ensure test data is realistic and consistent:
    yarn emulators
    ```
 
-3. Load the pulled production backup into your emulator:
+3. Seed the emulator:
 
    ```bash
    yarn db:seed
    ```
 
-### C. Run the Development Server
+   This imports the committed synthetic fixture (`scripts/synthetic-seed-data.json`), which covers every real track and course with synthetic lesson titles/content — no production credentials needed. This is also what Continuous Integration (CI) uses to run this same Cypress suite (see `.github/workflows/ci.yml`).
+
+   To instead test against real production content before a release (e.g. to catch a rendering issue specific to real lesson data), seed from a production pull instead:
+
+   1. Ensure your `.env.local` contains valid production Firebase credentials (`FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`).
+   2. Download production collections: `yarn db:pull` (verify `firebase-backup.json` is created in the project root).
+   3. Seed the emulator from that backup instead: `yarn db:seed:prod`.
+
+### B. Run the Development Server
 
 1. Start the Next.js local server:
 

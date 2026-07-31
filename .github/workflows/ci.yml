@@ -36,10 +36,55 @@ jobs:
       - name: Unit tests
         run: yarn test
 
-  # Cypress e2e is intentionally not run in CI yet: these specs assert against
-  # real lesson content that today only comes from `yarn db:pull` (pulls from
-  # production Firestore) + `yarn db:seed`, and there's no synthetic seed
-  # script like admin/portal have. Wiring that up would mean either putting a
-  # production-reading Firebase service-account key in CI secrets, or building
-  # a fixture-based seed script — both real follow-up work, not CI wiring.
-  # Revisit once one of those exists.
+  e2e:
+    name: Cypress e2e tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      # Cache the Firestore emulator JAR that firebase-tools downloads on first
+      # use, keyed on its own version so a firebase-tools bump invalidates it.
+      - name: Cache Firebase emulator binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ runner.os }}-${{ hashFiles('package.json') }}
+
+      - name: Set up env file
+        run: cp .env.example .env.local
+
+      - name: Start Firestore emulator
+        run: yarn emulators --only firestore &
+
+      - name: Wait for Firestore emulator
+        run: npx wait-on tcp:127.0.0.1:8080 --timeout 60000
+
+      # Synthetic fixture (scripts/synthetic-seed-data.json) by default — see
+      # "Seeding the Emulator" in README.md. No production credentials needed.
+      - name: Seed emulator with synthetic curriculum data
+        run: yarn db:seed
+
+      - name: Build
+        run: yarn build
+
+      - name: Run Cypress e2e tests
+        run: yarn cypress:run
+
+      - name: Upload Cypress artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots
+            cypress/videos
+            cypress/logs
+          if-no-files-found: ignore
+          retention-days: 7

@@ -1,14 +1,18 @@
 /*
- * Script to pull Firestore collections from production and seed the
- * local Firestore emulator with that for development and testing.
- * This can also be used to make a local backup of the production
- * Firestore collections.
+ * Script to seed the local Firestore emulator for development and testing,
+ * and to pull Firestore collections from production (for making a local
+ * backup, or for seeding the emulator with representative production data
+ * instead of the synthetic fixture).
  *
- * To pull from production:
- *   yarn db:pull
- *
- * Then, to restore the local emulator with that data:
+ * By default, seeding uses the committed synthetic fixture
+ * (scripts/synthetic-seed-data.json) — synthetic lesson titles/content
+ * covering every real track and course, safe to run without any production
+ * credentials and safe for Continuous Integration (CI):
  *   yarn db:seed
+ *
+ * To seed with real (production) data instead:
+ *   yarn db:pull       # downloads curriculum + curriculum_versions into firebase-backup.json
+ *   yarn db:seed:prod  # imports firebase-backup.json into the emulator
  */
 
 /* eslint-disable @typescript-eslint/no-require-imports */
@@ -38,6 +42,7 @@ if (fs.existsSync(envPath)) {
 }
 
 const BACKUP_FILE = path.resolve(process.cwd(), 'firebase-backup.json');
+const SYNTHETIC_SEED_FILE = path.resolve(process.cwd(), 'scripts/synthetic-seed-data.json');
 const COLLECTIONS = ['curriculum', 'curriculum_versions'];
 
 function getAdminApp(isProduction) {
@@ -191,16 +196,26 @@ async function pull() {
   console.log(`Backup saved successfully to ${BACKUP_FILE}`);
 }
 
-async function seed() {
-  if (!fs.existsSync(BACKUP_FILE)) {
-    throw new Error(`Backup file not found at ${BACKUP_FILE}. Run the pull command first.`);
+async function seed(useProd) {
+  const seedFile = useProd ? BACKUP_FILE : SYNTHETIC_SEED_FILE;
+
+  if (!fs.existsSync(seedFile)) {
+    throw new Error(
+      useProd
+        ? `Backup file not found at ${seedFile}. Run "yarn db:pull" first.`
+        : `Synthetic seed file not found at ${seedFile}.`
+    );
   }
 
-  console.log('Connecting to Firestore emulator...');
+  console.log(
+    useProd
+      ? `Connecting to Firestore emulator (seeding from production backup ${seedFile})...`
+      : `Connecting to Firestore emulator (seeding from synthetic fixture ${seedFile})...`
+  );
   const app = getAdminApp(false);
   const db = app.firestore();
 
-  const backupData = JSON.parse(fs.readFileSync(BACKUP_FILE, 'utf8'));
+  const backupData = JSON.parse(fs.readFileSync(seedFile, 'utf8'));
 
   for (const colName of COLLECTIONS) {
     const docs = backupData[colName] || [];
@@ -221,9 +236,10 @@ async function main() {
   if (command === 'pull') {
     await pull();
   } else if (command === 'seed') {
-    await seed();
+    const useProd = args.includes('--prod');
+    await seed(useProd);
   } else {
-    console.error('Invalid command. Usage: node scripts/sync-db.js [pull|seed]');
+    console.error('Invalid command. Usage: node scripts/sync-db.js [pull|seed [--prod]]');
     process.exit(1);
   }
   // Force exit to avoid hanging due to Firebase Client SDK connections.
