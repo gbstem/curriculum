@@ -85,7 +85,7 @@ To test with representative data, you can copy data from the live production Fir
    - Start the emulators using the Firebase CLI:
 
      ```bash
-     npm run emulators
+     yarn emulators
      ```
 
 5. **Seed the Emulator**: While the emulator is running, import the downloaded production data backup by running:

@@ -1,9 +1,9 @@
 // Tool to process the firebase-backup.json file downloaded from production
-// via "npm run db:pull", and identify orphaned lessons that are not visible
+// via "yarn db:pull", and identify orphaned lessons that are not visible
 // in the curriculum website due to using outdated or incorrect class names.
 //
 // Usage:
-//   npm run recover-orphaned-lessons
+//   yarn recover-orphaned-lessons
 //
 // This will create a file named "orphaned-lessons.md" in the
 // "curriculum" directory with a list of all orphaned lessons.

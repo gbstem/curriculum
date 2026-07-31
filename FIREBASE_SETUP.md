@@ -5,7 +5,7 @@ This guide will help you set up Firebase Firestore for the gbSTEM curriculum edi
 ## Prerequisites
 
 - A Firebase account
-- Node.js and npm installed
+- Node.js and yarn installed
 - Basic knowledge of Firebase Console
 
 ## Step 1: Create a Firebase Project
@@ -60,7 +60,7 @@ This guide will help you set up Firebase Firestore for the gbSTEM curriculum edi
 Run the following command to install the new dependencies:
 
 ```bash
-npm install
+yarn install
 ```
 
 ## Step 6: Set up Firestore Security Rules (Optional)
@@ -91,7 +91,7 @@ service cloud.firestore {
 
 ## Step 7: Test the Setup
 
-1. Start your development server: `npm start`
+1. Start your development server: `yarn start`
 2. Navigate to the CS courses page
 3. Click "Edit Online" for any course
 4. Enter the editor access password when prompted (contact one of the gbSTEM leads for the password)
@@ -188,7 +188,7 @@ Documents contain:
 
 ### Editor Not Loading
 
-- Check that all dependencies are installed: `npm install`
+- Check that all dependencies are installed: `yarn install`
 - Ensure you're using the correct editor password (refer to your `.env.local` file or contact a lead)
 - Check browser console for JavaScript errors
 
