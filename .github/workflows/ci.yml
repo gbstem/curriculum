@@ -25,7 +25,10 @@ jobs:
           node-version: '24'
           cache: yarn
 
-      - run: yarn install --frozen-lockfile
+      - name: Enable Corepack
+        run: corepack enable
+
+      - run: yarn install --immutable
 
       - name: Format check
         run: yarn format:check
@@ -47,7 +50,10 @@ jobs:
           node-version: '24'
           cache: yarn
 
-      - run: yarn install --frozen-lockfile
+      - name: Enable Corepack
+        run: corepack enable
+
+      - run: yarn install --immutable
 
       # firebase-tools' bundled Firestore emulator requires a JDK 21+ runtime;
       # ubuntu-latest's default `java` on PATH isn't guaranteed to be that new.

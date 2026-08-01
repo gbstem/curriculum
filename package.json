@@ -66,5 +66,29 @@
     "tailwindcss": "^4.3.3",
     "ts-jest": "^29.4.12",
     "typescript": "^6"
-  }
+  },
+  "dependenciesMeta": {
+    "@firebase/util": {
+      "built": true
+    },
+    "cypress": {
+      "built": true
+    },
+    "esbuild": {
+      "built": true
+    },
+    "protobufjs": {
+      "built": true
+    },
+    "re2": {
+      "built": true
+    },
+    "sharp": {
+      "built": true
+    },
+    "unrs-resolver": {
+      "built": true
+    }
+  },
+  "packageManager": "yarn@4.17.1"
 }
