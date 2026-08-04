@@ -42,7 +42,7 @@ Before running the development server, you must configure your local environment
    cp .env.example .env.local
    ```
 
-2. Open `.env.local` and adjust the placeholder values with your actual service credentials, preferably development credentials if available.
+2. For general development, step 1 gives you everything you need. For special cases where you need access to production resources, you may edit `.env.local` to adjust the placeholder values with the actual service credentials.
 
 > [!WARNING]
 > **Never commit your `.env.local` file or actual secrets to GitHub.** This file is configured to be ignored by Git to prevent exposing sensitive API keys and credentials. For details on how `.env` files work and how to avoid exposing credentials, read the [dotenv environment secrets guide](https://github.com/motdotla/dotenv#should-i-commit-my-env-file) and [GitHub's guide on ignoring files](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files).
@@ -67,10 +67,10 @@ Testing against a local emulator rather than the production database:
    STORAGE_EMULATOR_HOST="127.0.0.1:9199"
    ```
 
-   Ensure these ports match your emulator configurations in `firebase.json`. Comment these out only if you intentionally want the app itself to talk to production Firestore instead of the emulator.
+   The host and port values match the emulator configurations in `firebase.json`. Comment these out only if you intentionally want the app itself to talk to production Firestore instead of the emulator.
 
 2. **Start the Emulator**: Set up and start the emulator suite locally:
-   - Follow the official [Firebase Emulator Suite: Connect and Prototype](https://firebase.google.com/docs/emulator-suite/connect_and_prototype?database=Firestore) guide to run the emulators on your local machine.
+   - Follow the official [Firebase Emulator Suite: Connect and Prototype](https://firebase.google.com/docs/emulator-suite/connect_and_prototype?database=Firestore) guide to set up the emulators on your local machine.
    - Start the emulators using the Firebase CLI:
 
      ```bash
@@ -200,6 +200,7 @@ Below is an alphabetical list of the top-level directories and significant confi
 
 ### Directories
 
+- **`.github/`**: Contains GitHub configuration for GitHub, including our Dependabot configuration for automating minor and patch package updates, and our Continuous Integration (CI) test workflows.
 - **`.husky/`**: Configuration for Husky, managing Git hooks like pre-commit formatting and linting.
 - **`__mocks__/`**: Contains mock implementations for unit testing (e.g., mock Next.js headers).
 - **`__tests__/`**: Contains all of our Jest unit tests. Tests are organized generally by route or component domain (e.g. `actions.test.ts`, `EditorModal.test.tsx`).
