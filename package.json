@@ -17,7 +17,8 @@
     "db:seed": "node scripts/sync-db.js seed",
     "db:seed:prod": "node scripts/sync-db.js seed --prod",
     "emulators": "firebase emulators:start --log-verbosity=quiet",
-    "recover-orphaned-lessons": "npx tsx scripts/recover-orphaned-lessons.ts"
+    "recover-orphaned-lessons": "npx tsx scripts/recover-orphaned-lessons.ts",
+    "bulk-edit": "npx tsx scripts/bulk-edit.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
