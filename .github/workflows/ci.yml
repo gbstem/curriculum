@@ -86,7 +86,7 @@ jobs:
       # Cache the Firestore emulator JAR that firebase-tools downloads on first
       # use, keyed on its own version so a firebase-tools bump invalidates it.
       - name: Cache Firebase emulator binaries
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/firebase/emulators
           key: firebase-emulators-${{ runner.os }}-${{ hashFiles('package.json') }}
