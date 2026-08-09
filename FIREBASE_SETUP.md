@@ -134,7 +134,7 @@ Documents contain:
 - `lessonNumber`: Lesson number (integer)
 - `title`: Lesson title
 - `content`: Markdown content
-- `moduleTitle`: Module title (optional)
+- `moduleTitle`: Module title (for legacy data, optional and not used in lesson pages)
 - `createdAt`: Timestamp when created
 - `lastModified`: Timestamp when last modified
 

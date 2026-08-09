@@ -6,13 +6,13 @@ import { Alert, Button, Spinner } from 'react-bootstrap';
 import EditorModal from '../../../../components/EditorModal';
 import VersionHistoryModal from '../../../../components/VersionHistoryModal';
 import { RenderContent } from '../../../../components/renderContent';
+import { tracks } from '../../../../data/tracks';
 import {
   CurriculumItem,
   getCurriculumByCourse,
   getCurriculumByCourseAndLesson,
   saveCurriculum,
 } from '../../../../services/curriculumService';
-import { tracks } from '../../../../data/tracks';
 
 interface PageProps {
   params: Promise<{
@@ -139,7 +139,6 @@ export default function LessonDetailsPage({ params }: PageProps) {
       : null;
 
   const displayTitle = lessonData.title;
-  const displayModuleTitle = lessonData.moduleTitle;
   const displayLessonNumber = lessonData.lessonNumber;
   const displayContent = lessonData.content;
 
@@ -148,7 +147,6 @@ export default function LessonDetailsPage({ params }: PageProps) {
       <main>
         <div className="bg-[#67aeda] p-5 text-center text-white">
           <h1 className="fw-bold display-5 mb-2">{displayTitle}</h1>
-          <h3 className="fw-light mb-3 font-extralight">Module: {displayModuleTitle}</h3>
           <p className="fs-5 mb-0">Lesson {displayLessonNumber}</p>
 
           <div className="d-flex justify-content-center mt-3 gap-2">

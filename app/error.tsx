@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button, Card, Container } from 'react-bootstrap';
 
 interface ErrorProps {
@@ -9,6 +10,8 @@ interface ErrorProps {
 }
 
 export default function RootError({ error, reset }: ErrorProps) {
+  const router = useRouter();
+
   useEffect(() => {
     // Log the error to console
     console.error('Next.js UI Error Boundary caught error:', error);
@@ -67,7 +70,7 @@ export default function RootError({ error, reset }: ErrorProps) {
             <Button
               variant="outline-secondary"
               className="fw-semibold px-4 py-2"
-              onClick={() => (window.location.href = '/')}
+              onClick={() => router.push('/')}
             >
               <i className="fas fa-home me-2"></i> Go to Home
             </Button>
