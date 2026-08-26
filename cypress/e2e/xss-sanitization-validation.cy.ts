@@ -12,11 +12,7 @@ const LESSON_LINK_XSS = '3002';
 const LESSON_SAFE_CONTENT = '3003';
 
 describe('XSS Sanitization Validation (Section I)', () => {
-  let confirmVal = true;
-
   beforeEach(() => {
-    confirmVal = true;
-    cy.on('window:confirm', () => confirmVal);
     // Fail-safe net: if any payload in this spec manages to pop a native
     // alert (whether during live editor preview or on the saved lesson
     // page), this stub records the call so we can assert against it,
@@ -43,6 +39,10 @@ describe('XSS Sanitization Validation (Section I)', () => {
     cy.contains('button', 'Edit Lesson').click();
     cy.get('.modal-dialog').first().should('be.visible');
     cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+    // This delete is the only prompt any test in this spec should raise — a payload
+    // that managed to trigger an extra confirm would show up as a longer array.
+    cy.get('@confirms').should('have.length', 1);
+    cy.get('@confirms').its(0).should('contain', 'delete this lesson');
     cy.url().should('eq', Cypress.config().baseUrl + COURSE_PATH);
     cy.contains('.lesson-link', `Lesson ${lessonNumber}: ${lessonTitle}`).should('not.exist');
   };
@@ -50,6 +50,10 @@ describe('XSS Sanitization Validation (Section I)', () => {
   it(`neutralizes raw HTML XSS payloads (img onerror, script, svg onload) on Lesson ${LESSON_HTML_XSS} (Test Case 14)`, () => {
     cy.signedInSession('editor');
     cy.deleteLessonIfExists(COURSE_PATH, LESSON_HTML_XSS);
+
+    // Capture after the cleanup helper so only this test's own prompts are counted.
+    cy.captureConfirms().as('confirms');
+
     cy.visit(COURSE_PATH);
 
     const marker = generateDateHash('xss-html-marker');
@@ -85,6 +89,10 @@ describe('XSS Sanitization Validation (Section I)', () => {
   it(`renders a javascript: URI markdown link as inert text without a href on Lesson ${LESSON_LINK_XSS} (Test Case 14)`, () => {
     cy.signedInSession('editor');
     cy.deleteLessonIfExists(COURSE_PATH, LESSON_LINK_XSS);
+
+    // Capture after the cleanup helper so only this test's own prompts are counted.
+    cy.captureConfirms().as('confirms');
+
     cy.visit(COURSE_PATH);
 
     const marker = generateDateHash('xss-link-marker');
@@ -113,6 +121,10 @@ describe('XSS Sanitization Validation (Section I)', () => {
   it(`still renders legitimate HTML tags and links normally on Lesson ${LESSON_SAFE_CONTENT} (Test Case 14)`, () => {
     cy.signedInSession('editor');
     cy.deleteLessonIfExists(COURSE_PATH, LESSON_SAFE_CONTENT);
+
+    // Capture after the cleanup helper so only this test's own prompts are counted.
+    cy.captureConfirms().as('confirms');
+
     cy.visit(COURSE_PATH);
 
     const marker = generateDateHash('xss-safe-marker');
