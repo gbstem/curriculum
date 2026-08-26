@@ -3,5 +3,6 @@ declare namespace Cypress {
     signedInSession(role: string): Chainable<any>;
     signOutViaUi(): Chainable<any>;
     deleteLessonIfExists(coursePath: string, lessonNumber: string): Chainable<any>;
+    captureConfirms(answer?: boolean | (() => boolean)): Chainable<string[]>;
   }
 }

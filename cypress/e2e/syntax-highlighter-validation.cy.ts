@@ -5,6 +5,10 @@ describe('React Syntax Highlighter Integration Validation (Section G)', () => {
   it('creates Lesson 2000 with a Python code block and verifies syntax highlighting (Test Case 11)', () => {
     cy.signedInSession('editor');
     cy.deleteLessonIfExists('/cs/scratch1A', '2000');
+
+    // Capture after the cleanup helper so only this test's own prompts are counted.
+    cy.captureConfirms().as('confirms');
+
     cy.visit('/cs/scratch1A');
 
     const lessonTitle = generateDateHash('Syntax and Blocks Integration Test');
@@ -56,14 +60,11 @@ def battle_ready(pokemon):
     cy.contains('button', 'Edit Lesson').click();
     cy.get('.modal-dialog').first().should('be.visible');
 
-    let confirmVal = true;
-    cy.on('window:confirm', () => {
-      return confirmVal;
-    });
-    cy.then(() => {
-      confirmVal = true;
-    });
     cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+
+    // Deleting is the only thing in this test that should have prompted.
+    cy.get('@confirms').should('have.length', 1);
+    cy.get('@confirms').its(0).should('contain', 'delete this lesson');
 
     // Verify redirection and removal
     cy.url().should('eq', Cypress.config().baseUrl + '/cs/scratch1A');

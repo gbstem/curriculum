@@ -2,17 +2,10 @@
 import { generateDateHash } from '../support/utils';
 
 describe('Editor Role Validation (Section E)', () => {
-  let confirmVal = true;
-
-  beforeEach(() => {
-    // Set up confirm stub
-    confirmVal = true;
-    cy.on('window:confirm', () => {
-      return confirmVal;
-    });
-  });
-
   it('allows Editor to login and verify reads & diffs on Lesson 1 (Test Case 8)', () => {
+    // Nothing in this read-only flow should prompt; capturing lets us assert that.
+    cy.captureConfirms().as('confirms');
+
     // 1. Visit login and authenticate as Editor
     cy.visit('/login');
     const passwordKey = 'NEXT_CURRICULUM_EDITOR_ACCESS_PASSWORD';
@@ -53,11 +46,20 @@ describe('Editor Role Validation (Section E)', () => {
     cy.get('.modal-dialog').last().contains('Close').click();
     cy.get('.modal-dialog').first().contains('Close').click();
     cy.get('.modal-dialog').should('not.exist');
+
+    cy.get('@confirms').should('have.length', 0);
   });
 
   it('verifies Editor create, edit, restore, and delete loop for Lesson 1000 (Test Case 9)', () => {
     cy.signedInSession('editor');
     cy.deleteLessonIfExists('/cs/scratch1A', '1000');
+
+    // Capture after the cleanup helper so only this test's own prompts are counted.
+    // The answer is a function because this test both dismisses and accepts prompts,
+    // and a confirm handler can't be swapped out once registered.
+    let confirmVal = true;
+    cy.captureConfirms(() => confirmVal).as('confirms');
+
     cy.visit('/cs/scratch1A');
 
     // Define unique test content using generateDateHash
@@ -112,6 +114,8 @@ describe('Editor Role Validation (Section E)', () => {
       confirmVal = false;
     });
     cy.get('.modal-dialog').first().find('tbody tr').eq(1).contains('Restore').click();
+    cy.get('@confirms').should('have.length', 1);
+    cy.get('@confirms').its(0).should('contain', 'revert to an older version');
     cy.get('.curriculum-content').should('contain', updatedContent);
 
     // 6. Confirm Restore
@@ -119,6 +123,8 @@ describe('Editor Role Validation (Section E)', () => {
       confirmVal = true;
     });
     cy.get('.modal-dialog').first().find('tbody tr').eq(1).contains('Restore').click();
+    cy.get('@confirms').should('have.length', 2);
+    cy.get('@confirms').its(1).should('contain', 'revert to an older version');
     // Modal closes automatically on successful restore reload
     cy.get('.curriculum-content').should('contain', initialContent);
 
@@ -133,6 +139,8 @@ describe('Editor Role Validation (Section E)', () => {
       confirmVal = false;
     });
     cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+    cy.get('@confirms').should('have.length', 3);
+    cy.get('@confirms').its(2).should('contain', 'delete this lesson');
     cy.get('.modal-dialog').first().contains('button', 'Cancel').click();
     cy.get('.curriculum-content').should('contain', initialContent);
 
@@ -142,6 +150,8 @@ describe('Editor Role Validation (Section E)', () => {
       confirmVal = true;
     });
     cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+    cy.get('@confirms').should('have.length', 4);
+    cy.get('@confirms').its(3).should('contain', 'delete this lesson');
 
     // URL redirects to curriculum listing page
     cy.url().should('eq', Cypress.config().baseUrl + '/cs/scratch1A');
@@ -150,6 +160,7 @@ describe('Editor Role Validation (Section E)', () => {
 
   it('verifies real-time preview and toolbar formatting helpers (Test Case 13)', () => {
     cy.signedInSession('editor');
+    cy.captureConfirms().as('confirms');
     cy.visit('/cs/scratch1A');
 
     // 1. Open Editor Modal
@@ -212,10 +223,13 @@ describe('Editor Role Validation (Section E)', () => {
     // 6. Cancel to discard changes
     cy.get('.modal-dialog').first().contains('button', 'Cancel').click();
     cy.get('.modal-dialog').should('not.exist');
+
+    cy.get('@confirms').should('have.length', 0);
   });
 
   it('discards unsaved edits when closing the modal and reopening (Test Case 13b)', () => {
     cy.signedInSession('editor');
+    cy.captureConfirms().as('confirms');
     cy.visit('/cs/scratch1A/lesson/1');
 
     // Open editor and type unsaved draft content
@@ -227,10 +241,13 @@ describe('Editor Role Validation (Section E)', () => {
     cy.contains('button', 'Edit Lesson').click();
     cy.get('#content-textarea').should('not.contain', '[Unsaved Draft Content]');
     cy.contains('.modal-dialog button', 'Cancel').click();
+
+    cy.get('@confirms').should('have.length', 0);
   });
 
   it('verifies draggable center divider resizes columns (Test Case 13c)', () => {
     cy.signedInSession('editor');
+    cy.captureConfirms().as('confirms');
     cy.visit('/cs/scratch1A');
 
     cy.contains('button', 'Add New Lesson').click();
@@ -246,15 +263,20 @@ describe('Editor Role Validation (Section E)', () => {
     cy.get('.w-md-editor-content').should('have.attr', 'style').and('include', '--split-percent');
 
     cy.contains('.modal-dialog button', 'Cancel').click();
+
+    cy.get('@confirms').should('have.length', 0);
   });
 
   it('uses almost-fullscreen layout for editor dialog (Test Case 13d)', () => {
     cy.signedInSession('editor');
+    cy.captureConfirms().as('confirms');
     cy.visit('/cs/scratch1A');
 
     cy.contains('button', 'Add New Lesson').click();
     cy.get('.modal-dialog').first().should('have.class', 'modal-almost-fullscreen');
 
     cy.contains('.modal-dialog button', 'Cancel').click();
+
+    cy.get('@confirms').should('have.length', 0);
   });
 });

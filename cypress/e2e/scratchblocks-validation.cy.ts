@@ -2,18 +2,13 @@
 import { generateDateHash } from '../support/utils';
 
 describe('Scratchblocks React Integration Validation (Section H)', () => {
-  let confirmVal = true;
-
-  beforeEach(() => {
-    confirmVal = true;
-    cy.on('window:confirm', () => {
-      return confirmVal;
-    });
-  });
-
   it('renders Scratch blocks graphically and cleans up by deleting Lesson 2001 (Test Case 12)', () => {
     cy.signedInSession('editor');
     cy.deleteLessonIfExists('/cs/scratch1A', '2001');
+
+    // Capture after the cleanup helper so only this test's own prompts are counted.
+    cy.captureConfirms().as('confirms');
+
     cy.visit('/cs/scratch1A');
 
     const lessonTitle = generateDateHash('Scratch Blocks Integration Test');
@@ -57,10 +52,11 @@ describe('Scratchblocks React Integration Validation (Section H)', () => {
     cy.contains('button', 'Edit Lesson').click();
     cy.get('.modal-dialog').first().should('be.visible');
 
-    cy.then(() => {
-      confirmVal = true;
-    });
     cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+
+    // Deleting is the only thing in this test that should have prompted.
+    cy.get('@confirms').should('have.length', 1);
+    cy.get('@confirms').its(0).should('contain', 'delete this lesson');
 
     // Verify redirection and removal
     cy.url().should('eq', Cypress.config().baseUrl + '/cs/scratch1A');
