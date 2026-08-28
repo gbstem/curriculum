@@ -78,7 +78,7 @@ jobs:
       # firebase-tools' bundled Firestore emulator requires a JDK 21+ runtime;
       # ubuntu-latest's default `java` on PATH isn't guaranteed to be that new.
       - name: Set up JDK 21 (required by the Firestore emulator)
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '21'
