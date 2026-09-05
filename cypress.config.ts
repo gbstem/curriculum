@@ -6,6 +6,8 @@ import installLogsPrinter from 'cypress-terminal-report/src/installLogsPrinter';
 const { combinedEnv } = loadEnvConfig(process.cwd());
 
 export default defineConfig({
+  // Cypress 16 deprecated bundled Electron as the implicit default browser.
+  defaultBrowser: 'chrome',
   // Public, non-sensitive configuration values
   expose: {
     FIRESTORE_EMULATOR_HOST: combinedEnv.FIRESTORE_EMULATOR_HOST,
