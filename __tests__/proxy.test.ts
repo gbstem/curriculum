@@ -15,10 +15,11 @@ jest.mock('iron-session', () => ({
   getIronSession: jest.fn(),
 }));
 
-function makeRequest(pathname: string, headers: Record<string, string> = {}) {
-  const url = `http://localhost:3000${pathname}`;
+function makeRequest(pathAndQuery: string, headers: Record<string, string> = {}) {
+  const url = `http://localhost:3000${pathAndQuery}`;
+  const { pathname, search, searchParams } = new URL(url);
   return {
-    nextUrl: { pathname },
+    nextUrl: { pathname, search, searchParams },
     url,
     headers: {
       get: (name: string) => headers[name.toLowerCase()] ?? null,
@@ -37,7 +38,39 @@ describe('proxy middleware', () => {
 
   it('redirects to /login when not logged in and not already on /login', async () => {
     const result = await proxy(makeRequest('/cs'));
+    expect(result).toMatchObject({
+      type: 'redirect',
+      url: 'http://localhost:3000/login?redirect=%2Fcs',
+    });
+  });
+
+  it('preserves the deep-linked destination (including query string) in the redirect param', async () => {
+    const result = await proxy(makeRequest('/cs/scratch1A?foo=bar'));
+    expect(result).toMatchObject({
+      type: 'redirect',
+      url: 'http://localhost:3000/login?redirect=%2Fcs%2Fscratch1A%3Ffoo%3Dbar',
+    });
+  });
+
+  it('does not add a redirect param when the destination is already home', async () => {
+    const result = await proxy(makeRequest('/'));
     expect(result).toMatchObject({ type: 'redirect', url: 'http://localhost:3000/login' });
+  });
+
+  it('sends a logged-in user visiting /login back to their originally-requested destination', async () => {
+    mockSession.isLoggedIn = true;
+    const result = await proxy(makeRequest('/login?redirect=%2Fcs%2Fscratch1A'));
+    expect(result).toMatchObject({
+      type: 'redirect',
+      url: 'http://localhost:3000/cs/scratch1A',
+    });
+    expect(mockSession.save).not.toHaveBeenCalled();
+  });
+
+  it('ignores a protocol-relative redirect param (open-redirect guard) and falls back home', async () => {
+    mockSession.isLoggedIn = true;
+    const result = await proxy(makeRequest('/login?redirect=%2F%2Fevil.example.com'));
+    expect(result).toMatchObject({ type: 'redirect', url: 'http://localhost:3000/' });
   });
 
   it('does not redirect when not logged in and already on /login', async () => {

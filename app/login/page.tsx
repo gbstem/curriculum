@@ -1,11 +1,17 @@
 'use client';
 
 import { useSession } from '@/lib/useSession';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { Suspense, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 
-export default function LoginPage() {
+// Only accept a same-origin path (starting with a single '/', not '//') to
+// avoid an open redirect via this param.
+function sanitizeRedirect(redirect: string | null): string {
+  return redirect && redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/';
+}
+
+function LoginPageInner() {
   const [role, setRole] = useState<'viewer' | 'editor'>('viewer');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -13,6 +19,7 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const { refreshSession } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   React.useEffect(() => {
     setMounted(true);
@@ -36,9 +43,10 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        // Successful login, refresh session and redirect to home
+        // Successful login, refresh session and redirect to the originally
+        // requested destination (or home if there wasn't one)
         await refreshSession();
-        router.push('/');
+        router.push(sanitizeRedirect(searchParams.get('redirect')));
         router.refresh();
       } else {
         const data = await response.json();
@@ -136,5 +144,13 @@ export default function LoginPage() {
         </Modal.Body>
       </Modal>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageInner />
+    </Suspense>
   );
 }

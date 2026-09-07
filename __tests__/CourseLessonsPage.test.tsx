@@ -170,6 +170,40 @@ describe('CourseLessonsPage component', () => {
     expect(screen.getByText('Track not found')).toBeInTheDocument();
   });
 
+  it('shows a link to the fall course when the spring course is empty but the fall course has lessons', async () => {
+    mockParams = { track: 'cs', course: 'scratch1B' };
+    (getCurriculumByCourse as jest.Mock).mockImplementation((course: string) =>
+      Promise.resolve(course === 'scratch1A' ? dummyLessons : [])
+    );
+    const params = Promise.resolve({ track: 'cs', course: 'scratch1B' });
+    render(<CourseLessonsPage params={params} />);
+
+    expect(await screen.findByText(/No lessons found for Scratch 1B/)).toBeInTheDocument();
+    const fallLink = await screen.findByRole('link', {
+      name: /2 lessons were found for Scratch 1A/,
+    });
+    expect(fallLink).toHaveAttribute('href', '/cs/scratch1A');
+  });
+
+  it('does not show a fall course link when the fall course is also empty', async () => {
+    mockParams = { track: 'cs', course: 'scratch1B' };
+    (getCurriculumByCourse as jest.Mock).mockResolvedValue([]);
+    const params = Promise.resolve({ track: 'cs', course: 'scratch1B' });
+    render(<CourseLessonsPage params={params} />);
+
+    expect(await screen.findByText('No lessons found for Scratch 1B')).toBeInTheDocument();
+    expect(screen.queryByText(/were found for/)).not.toBeInTheDocument();
+  });
+
+  it('does not attempt a fall course lookup for a fall ("A") course', async () => {
+    (getCurriculumByCourse as jest.Mock).mockResolvedValue([]);
+    const params = Promise.resolve({ track: 'cs', course: 'scratch1A' });
+    render(<CourseLessonsPage params={params} />);
+
+    expect(await screen.findByText('No lessons found for Scratch 1A')).toBeInTheDocument();
+    expect(getCurriculumByCourse).toHaveBeenCalledTimes(1);
+  });
+
   it('throws error when course is invalid', async () => {
     mockParams = { track: 'cs', course: 'invalid-course' };
     const params = Promise.resolve({ track: 'cs', course: 'invalid-course' });

@@ -106,6 +106,18 @@ Follow these steps to establish a clean, predictable, local testing environment.
   - After step 4, the login fails and does not redirect. An error message `"Incorrect password"` is displayed in red below the password input.
   - After step 6, the login succeeds and redirects to the main dashboard page (`http://localhost:3000/`).
 
+#### Test Case 15: Deep-Link Preservation Through Login
+
+- **Description**: Ensure a deep link (e.g. one shared from the portal) survives the login round-trip instead of dropping the user on the home page.
+- **Steps**:
+  1. While logged out, navigate directly to a course page, e.g. `http://localhost:3000/cs/scratch1A`.
+  2. Log in with the Viewer password.
+  3. Separately, while already logged in, navigate to `http://localhost:3000/login?redirect=/cs/scratch1A`.
+- **Expected Results (Assertions)**:
+  - Step 1 redirects to `http://localhost:3000/login?redirect=%2Fcs%2Fscratch1A`, not a bare `/login`.
+  - After step 2, the user lands on `http://localhost:3000/cs/scratch1A` (the originally-requested page), not `/`.
+  - Step 3 redirects immediately to `http://localhost:3000/cs/scratch1A` rather than showing the login form again.
+
 ---
 
 ### Section B: Curriculum & Lesson Page Interaction Loop
@@ -224,6 +236,16 @@ _Execute these steps for **Lesson 1** of any selected course (e.g., `/cs/scratch
   - Clicking "Next" from Lesson 1 correctly routes to `/lesson/2`.
   - Clicking "Prev" from Lesson 2 correctly routes back to `/lesson/1`.
   - Clicking "Curriculum" routes successfully back to the parent class page (e.g., `/cs/scratch1A`).
+
+#### Test Case 16: Spring ("B") Semester Fallback to Fall ("A") Content
+
+- **Description**: Many spring ("B") courses intentionally have no lessons of their own -- instructors are meant to reuse the matching fall ("A") course instead. Verify the empty state points them there.
+- **Steps**:
+  1. Navigate to a spring course with no seeded lessons, e.g. `http://localhost:3000/cs/scratch1B`.
+- **Expected Results (Assertions)**:
+  - The empty state reads `"No lessons found for Scratch 1B but N lessons were found for Scratch 1A"`, where `N` matches the fall course's actual lesson count.
+  - The `"N lessons were found for Scratch 1A"` portion is a link to `/cs/scratch1A`.
+  - Clicking it navigates to the fall course page and shows its populated lesson list.
 
 ---
 
