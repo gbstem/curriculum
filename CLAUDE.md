@@ -4,6 +4,14 @@
 
 This supplements [README.md](README.md) (architecture, setup, emulator/`db:pull`/`db:seed` workflow) with code-level conventions the README doesn't cover. Read the README first. This repo is **independent** — its own Firebase project, not shared with the `admin` or `portal` repos.
 
+## One file is shared with admin and portal: `app/data/courses.json`
+
+The single exception to the independence above. It is a **verbatim copy** of the admin repo's `src/lib/data/courses.json` — the catalog of which courses gbSTEM actually offers each semester — shared the same way `semesterDates.json` is shared between admin, portal and website. **Edit it in admin and copy it here**, per admin's README section "Adding a New Semester"; never hand-edit this copy, because the next rollover overwrites it.
+
+Portal builds every `curriculum.gbstem.org` link an instructor clicks by deriving `/{track}/{id}` straight from that catalog, so an id it contains that this repo has no page for is a dead link in a live dashboard. `__tests__/courses.test.ts` is what keeps the two in step: it fails if the catalog and [`app/data/tracks.ts`](app/data/tracks.ts) disagree about which courses exist, which track one belongs to, or what its URL is. **Adding a course to `tracks.ts` alone will fail that test** — add it to the catalog in admin first.
+
+Note the asymmetry that makes those ids load-bearing: `app/[track]/[course]/page.tsx` lowercases the track segment before lookup but **not** the course segment, so `/cs/webdevA` resolves and `/cs/webdeva` throws "Class not found". Course ids are case-sensitive URL segments, not just keys.
+
 ## Middleware lives in `proxy.ts`, not `middleware.ts`
 
 Next.js's conventional `middleware.ts` doesn't exist here — the entry point is `proxy.ts` (exported as `proxy`, matched via its own `matcher` config) which matches the conventions for new Next.js versions. If asked to change auth/session gating, edit `proxy.ts`, not a file you'd create named `middleware.ts`.
