@@ -2,14 +2,16 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import LoginPage from '../app/login/page';
 
-// Mock useRouter from next/navigation
+// Mock useRouter/useSearchParams from next/navigation
 const mockPush = jest.fn();
 const mockRefresh = jest.fn();
+let mockSearchParams = new URLSearchParams();
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: mockPush,
     refresh: mockRefresh,
   }),
+  useSearchParams: () => mockSearchParams,
 }));
 
 describe('LoginPage component', () => {
@@ -18,6 +20,7 @@ describe('LoginPage component', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     global.fetch = jest.fn();
+    mockSearchParams = new URLSearchParams();
   });
 
   afterEach(() => {
@@ -64,6 +67,38 @@ describe('LoginPage component', () => {
 
     expect(mockPush).toHaveBeenCalledWith('/');
     expect(mockRefresh).toHaveBeenCalled();
+  });
+
+  it('redirects to the ?redirect destination after a successful login', async () => {
+    mockSearchParams = new URLSearchParams('redirect=%2Fcs%2Fscratch1A');
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ username: 'viewer', role: 'viewer', isLoggedIn: true }),
+    });
+
+    render(<LoginPage />);
+
+    await act(async () => {
+      fireEvent.submit(screen.getByRole('button', { name: /Access Curriculum/i }).closest('form')!);
+    });
+
+    expect(mockPush).toHaveBeenCalledWith('/cs/scratch1A');
+  });
+
+  it('ignores a protocol-relative ?redirect destination and falls back to home', async () => {
+    mockSearchParams = new URLSearchParams('redirect=%2F%2Fevil.example.com');
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ username: 'viewer', role: 'viewer', isLoggedIn: true }),
+    });
+
+    render(<LoginPage />);
+
+    await act(async () => {
+      fireEvent.submit(screen.getByRole('button', { name: /Access Curriculum/i }).closest('form')!);
+    });
+
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 
   it('handles failed login and displays error message', async () => {

@@ -106,6 +106,18 @@ Follow these steps to establish a clean, predictable, local testing environment.
   - After step 4, the login fails and does not redirect. An error message `"Incorrect password"` is displayed in red below the password input.
   - After step 6, the login succeeds and redirects to the main dashboard page (`http://localhost:3000/`).
 
+#### Test Case 15: Deep-Link Preservation Through Login
+
+- **Description**: Ensure a deep link (e.g. one shared from the portal) survives the login round-trip instead of dropping the user on the home page.
+- **Steps**:
+  1. While logged out, navigate directly to a course page, e.g. `http://localhost:3000/cs/scratch1A`.
+  2. Log in with the Viewer password.
+  3. Separately, while already logged in, navigate to `http://localhost:3000/login?redirect=/cs/scratch1A`.
+- **Expected Results (Assertions)**:
+  - Step 1 redirects to `http://localhost:3000/login?redirect=%2Fcs%2Fscratch1A`, not a bare `/login`.
+  - After step 2, the user lands on `http://localhost:3000/cs/scratch1A` (the originally-requested page), not `/`.
+  - Step 3 redirects immediately to `http://localhost:3000/cs/scratch1A` rather than showing the login form again.
+
 ---
 
 ### Section B: Curriculum & Lesson Page Interaction Loop

@@ -20,14 +20,27 @@ export async function proxy(req: NextRequest) {
     return res;
   }
 
-  // Redirect to /login if not logged in and not on the login page
+  // Redirect to /login if not logged in and not on the login page, preserving
+  // the originally-requested destination so login can deep-link back to it.
   if (!session.isLoggedIn && pathname !== '/login') {
-    return NextResponse.redirect(new URL('/login', req.url));
+    const loginUrl = new URL('/login', req.url);
+    const destination = pathname + req.nextUrl.search;
+    if (destination !== '/') {
+      loginUrl.searchParams.set('redirect', destination);
+    }
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Redirect to home if logged in and trying to access /login
+  // Redirect to the originally-requested destination (or home) if logged in
+  // and trying to access /login. Only accept a same-origin path (starting
+  // with a single '/', not '//') to avoid an open redirect via this param.
   if (session.isLoggedIn && pathname === '/login') {
-    return NextResponse.redirect(new URL('/', req.url));
+    const redirectParam = req.nextUrl.searchParams.get('redirect');
+    const destination =
+      redirectParam && redirectParam.startsWith('/') && !redirectParam.startsWith('//')
+        ? redirectParam
+        : '/';
+    return NextResponse.redirect(new URL(destination, req.url));
   }
 
   // Extend the session duration if user is active (sliding session), but

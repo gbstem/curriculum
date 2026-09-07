@@ -64,6 +64,32 @@ describe('Authentication and Basic Navigation (Section A)', () => {
     });
   });
 
+  it('preserves a deep link through login instead of dropping the user on the home page', () => {
+    cy.visit('/cs/scratch1A');
+    cy.url().should('eq', Cypress.config().baseUrl + '/login?redirect=%2Fcs%2Fscratch1A');
+
+    const passwordKey = 'NEXT_CURRICULUM_VIEWER_ACCESS_PASSWORD';
+    cy.env([passwordKey]).then((passwords) => {
+      const password =
+        typeof passwords === 'object' && passwords !== null ? passwords[passwordKey] : passwords;
+
+      cy.get('#role-select').select('viewer');
+      cy.get('#password-input').type(password);
+      cy.get('button[type="submit"]').click();
+
+      // Lands on the originally-requested course page, not the home dashboard
+      cy.url().should('eq', Cypress.config().baseUrl + '/cs/scratch1A');
+      cy.get('h1').should('contain', 'Scratch 1A Curriculum');
+    });
+  });
+
+  it('sends an already-authenticated user straight through /login to their intended page', () => {
+    cy.signedInSession('viewer');
+    cy.visit('/login?redirect=%2Fcs%2Fscratch1A');
+    cy.url().should('eq', Cypress.config().baseUrl + '/cs/scratch1A');
+    cy.get('h1').should('contain', 'Scratch 1A Curriculum');
+  });
+
   it('navigates back to home using the gbSTEM logo and logs out', () => {
     cy.signedInSession('viewer');
 
