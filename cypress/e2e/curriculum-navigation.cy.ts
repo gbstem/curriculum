@@ -111,4 +111,22 @@ describe('Curriculum & Lesson Page Interaction Loop (Section B)', () => {
   it('navigates loop for Engineering (Engineering - engineering1A)', () => {
     testCurriculumFlow('engineering', 'engineering1A', 'Engineering 1A', false);
   });
+
+  it('links an empty spring ("B") course to its populated fall ("A") counterpart', () => {
+    // scratch1B has no seeded lessons (spring reuses the fall curriculum), while
+    // scratch1A has 6 -- exercises the "No lessons found ... but N lessons were
+    // found for ..." fallback message and its link.
+    cy.visit('/cs/scratch1B');
+    cy.get('h1').should('contain', 'Scratch 1B Curriculum');
+    cy.contains('No lessons found for Scratch 1B').should('be.visible');
+
+    cy.contains('a', '6 lessons were found for Scratch 1A')
+      .should('be.visible')
+      .and('have.attr', 'href', '/cs/scratch1A')
+      .click();
+
+    cy.url().should('eq', Cypress.config().baseUrl + '/cs/scratch1A');
+    cy.get('h1').should('contain', 'Scratch 1A Curriculum');
+    cy.get('.lesson-link').should('have.length.at.least', 1);
+  });
 });

@@ -237,6 +237,16 @@ _Execute these steps for **Lesson 1** of any selected course (e.g., `/cs/scratch
   - Clicking "Prev" from Lesson 2 correctly routes back to `/lesson/1`.
   - Clicking "Curriculum" routes successfully back to the parent class page (e.g., `/cs/scratch1A`).
 
+#### Test Case 16: Spring ("B") Semester Fallback to Fall ("A") Content
+
+- **Description**: Many spring ("B") courses intentionally have no lessons of their own -- instructors are meant to reuse the matching fall ("A") course instead. Verify the empty state points them there.
+- **Steps**:
+  1. Navigate to a spring course with no seeded lessons, e.g. `http://localhost:3000/cs/scratch1B`.
+- **Expected Results (Assertions)**:
+  - The empty state reads `"No lessons found for Scratch 1B but N lessons were found for Scratch 1A"`, where `N` matches the fall course's actual lesson count.
+  - The `"N lessons were found for Scratch 1A"` portion is a link to `/cs/scratch1A`.
+  - Clicking it navigates to the fall course page and shows its populated lesson list.
+
 ---
 
 ### Section D: Home and Logout Controls

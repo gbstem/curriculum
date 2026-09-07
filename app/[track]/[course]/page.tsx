@@ -52,6 +52,33 @@ export default function CourseLessonsPage({ params }: PageProps) {
     loadCurriculum();
   }, [loadCurriculum]);
 
+  // Many "B" (spring) courses intentionally have no content of their own --
+  // instructors are meant to reuse the matching "A" (fall) course instead.
+  const fallCourseId = course.endsWith('B') ? `${course.slice(0, -1)}A` : null;
+  const fallCourseData = fallCourseId
+    ? trackData.courses.find((c) => c.id === fallCourseId)
+    : undefined;
+
+  const [fallLessonCount, setFallLessonCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (loading || curriculum.length > 0 || !fallCourseId || !fallCourseData) {
+      setFallLessonCount(null);
+      return;
+    }
+    let cancelled = false;
+    getCurriculumByCourse(fallCourseId)
+      .then((data) => {
+        if (!cancelled) setFallLessonCount(data.length);
+      })
+      .catch(() => {
+        if (!cancelled) setFallLessonCount(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, curriculum.length, fallCourseId, fallCourseData]);
+
   if (error) {
     throw error;
   }
@@ -136,7 +163,19 @@ export default function CourseLessonsPage({ params }: PageProps) {
               {curriculum.length === 0 ? (
                 <div className="rounded bg-white py-5 text-center shadow-sm">
                   <i className="fas fa-book fa-3x text-muted mb-3"></i>
-                  <h4>No lessons found for {courseTitle}</h4>
+                  <h4>
+                    No lessons found for {courseTitle}
+                    {fallLessonCount !== null && fallLessonCount > 0 && fallCourseData && (
+                      <>
+                        {' '}
+                        but{' '}
+                        <Link href={`/${normalizedTrack}/${fallCourseId}`}>
+                          {fallLessonCount} lesson{fallLessonCount === 1 ? '' : 's'}{' '}
+                          {fallLessonCount === 1 ? 'was' : 'were'} found for {fallCourseData.title}
+                        </Link>
+                      </>
+                    )}
+                  </h4>
                   <p className="text-muted mb-4">Start by adding your first lesson!</p>
                   <Button
                     variant="primary"
