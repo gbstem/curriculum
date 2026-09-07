@@ -35,61 +35,6 @@ export default function CourseLessonsPage({ params }: PageProps) {
   const [showEditor, setShowEditor] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
 
-  const getTrackDisplayName = (tr: string) => {
-    switch (tr) {
-      case 'cs':
-        return 'CS';
-      case 'math':
-        return 'Math';
-      case 'science':
-        return 'Science';
-      case 'engineering':
-        return 'Engineering';
-      default:
-        return tr.toUpperCase();
-    }
-  };
-
-  const getCourseTitle = (c: string): string => {
-    const courseMap: Record<string, string> = {
-      // CS
-      python1A: 'Python 1A',
-      python1B: 'Python 1B',
-      python2A: 'Python 2A',
-      python2B: 'Python 2B',
-      scratch1A: 'Scratch 1A',
-      scratch1B: 'Scratch 1B',
-      scratch2A: 'Scratch 2A',
-      scratch2B: 'Scratch 2B',
-      webdevA: 'Web Development A',
-      webdevB: 'Web Development B',
-      // Math
-      math1A: 'Math 1A',
-      math1B: 'Math 1B',
-      math2A: 'Math 2A',
-      math2B: 'Math 2B',
-      math3A: 'Math 3A',
-      math3B: 'Math 3B',
-      math4A: 'Math 4A',
-      math4B: 'Math 4B',
-      math5A: 'Math 5A',
-      math5B: 'Math 5B',
-      // Science
-      environmentalA: 'Environmental Science A',
-      environmentalB: 'Environmental Science B',
-      physicsA: 'Physics A',
-      physicsB: 'Physics B',
-      // Engineering
-      engineering1A: 'Engineering 1A',
-      engineering1B: 'Engineering 1B',
-      engineering2A: 'Engineering 2A',
-      engineering2B: 'Engineering 2B',
-      engineering3A: 'Engineering 3A',
-      engineering3B: 'Engineering 3B',
-    };
-    return courseMap[c] || c;
-  };
-
   const loadCurriculum = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -164,7 +109,7 @@ export default function CourseLessonsPage({ params }: PageProps) {
     );
   }
 
-  const courseTitle = getCourseTitle(course);
+  const courseTitle = courseData.title;
 
   return (
     <div>
@@ -219,7 +164,7 @@ export default function CourseLessonsPage({ params }: PageProps) {
 
               <div className="mt-5 mb-4 text-center">
                 <Link href={`/${normalizedTrack}`} className="btn btn-secondary">
-                  ← Back to {getTrackDisplayName(normalizedTrack)} Courses
+                  ← Back to {trackData.shortTitle} Courses
                 </Link>
               </div>
             </div>

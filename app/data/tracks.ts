@@ -74,10 +74,14 @@ export const tracks: Track[] = [
       { title: 'Python 1B', href: '/cs/python1B' },
       { title: 'Python 2A', href: '/cs/python2A' },
       { title: 'Python 2B', href: '/cs/python2B' },
+      { title: 'Python 3A', href: '/cs/python3A' },
+      { title: 'Python 3B', href: '/cs/python3B' },
       { title: 'Scratch 1A', href: '/cs/scratch1A' },
       { title: 'Scratch 1B', href: '/cs/scratch1B' },
       { title: 'Scratch 2A', href: '/cs/scratch2A' },
       { title: 'Scratch 2B', href: '/cs/scratch2B' },
+      { title: 'Scratch 3A', href: '/cs/scratch3A' },
+      { title: 'Scratch 3B', href: '/cs/scratch3B' },
       { title: 'Web Development A', href: '/cs/webdevA' },
       { title: 'Web Development B', href: '/cs/webdevB' },
     ],
@@ -169,6 +173,42 @@ export const tracks: Track[] = [
         ],
       },
       {
+        id: 'scratch3A',
+        title: 'Scratch 3A',
+        badge: 'Advanced',
+        color: '#d63384',
+        bgOpacity: 'rgba(214, 51, 132, 0.1)',
+        icon: 'fas fa-puzzle-piece',
+        description:
+          'The final Scratch course, building on Scratch 2 with larger independent projects and more advanced block-based techniques.',
+        links: [
+          {
+            label: 'Start Teaching',
+            href: '/cs/scratch3A',
+            style: { background: '#d63384' },
+            textWhite: true,
+          },
+        ],
+      },
+      {
+        id: 'scratch3B',
+        title: 'Scratch 3B',
+        badge: 'Advanced',
+        color: '#d63384',
+        bgOpacity: 'rgba(214, 51, 132, 0.1)',
+        icon: 'fas fa-puzzle-piece',
+        description:
+          'The final Scratch course, building on Scratch 2 with larger independent projects and more advanced block-based techniques.',
+        links: [
+          {
+            label: 'Start Teaching',
+            href: '/cs/scratch3B',
+            style: { background: '#d63384' },
+            textWhite: true,
+          },
+        ],
+      },
+      {
         id: 'python1A',
         title: 'Python 1A',
         badge: 'Intermediate',
@@ -238,6 +278,42 @@ export const tracks: Track[] = [
         ],
         links: [
           { label: 'Start Teaching', href: '/cs/python2B', variant: 'success', textWhite: true },
+        ],
+      },
+      {
+        id: 'python3A',
+        title: 'Python 3A',
+        badge: 'Advanced',
+        color: '#6f42c1',
+        bgOpacity: 'rgba(111, 66, 193, 0.1)',
+        icon: 'fab fa-python',
+        description:
+          'The final Python course, extending Python 2 with larger programs, external libraries, and independent project work.',
+        links: [
+          {
+            label: 'Start Teaching',
+            href: '/cs/python3A',
+            style: { background: '#6f42c1' },
+            textWhite: true,
+          },
+        ],
+      },
+      {
+        id: 'python3B',
+        title: 'Python 3B',
+        badge: 'Advanced',
+        color: '#6f42c1',
+        bgOpacity: 'rgba(111, 66, 193, 0.1)',
+        icon: 'fab fa-python',
+        description:
+          'The final Python course, extending Python 2 with larger programs, external libraries, and independent project work.',
+        links: [
+          {
+            label: 'Start Teaching',
+            href: '/cs/python3B',
+            style: { background: '#6f42c1' },
+            textWhite: true,
+          },
         ],
       },
       {
@@ -630,6 +706,8 @@ export const tracks: Track[] = [
       { title: 'Engineering 2B', href: '/engineering/engineering2B' },
       { title: 'Engineering 3A', href: '/engineering/engineering3A' },
       { title: 'Engineering 3B', href: '/engineering/engineering3B' },
+      { title: 'Lego Robotics Competition A', href: '/engineering/legoroboticsA' },
+      { title: 'Lego Robotics Competition B', href: '/engineering/legoroboticsB' },
     ],
     courses: [
       {
@@ -736,6 +814,44 @@ export const tracks: Track[] = [
             label: 'Start Teaching',
             href: '/engineering/engineering3B',
             style: { background: '#6f42c1' },
+            textWhite: true,
+          },
+        ],
+      },
+      {
+        id: 'legoroboticsA',
+        title: 'Lego Robotics Competition A',
+        badge: 'Competition',
+        color: '#dc3545',
+        isDarkText: false,
+        bgOpacity: 'rgba(220, 53, 69, 0.1)',
+        icon: 'fas fa-robot',
+        description:
+          'Build and program Lego robots to complete challenges, working towards a competition at the end of the season.',
+        links: [
+          {
+            label: 'Start Teaching',
+            href: '/engineering/legoroboticsA',
+            style: { background: '#dc3545' },
+            textWhite: true,
+          },
+        ],
+      },
+      {
+        id: 'legoroboticsB',
+        title: 'Lego Robotics Competition B',
+        badge: 'Competition',
+        color: '#dc3545',
+        isDarkText: false,
+        bgOpacity: 'rgba(220, 53, 69, 0.1)',
+        icon: 'fas fa-robot',
+        description:
+          'Build and program Lego robots to complete challenges, working towards a competition at the end of the season.',
+        links: [
+          {
+            label: 'Start Teaching',
+            href: '/engineering/legoroboticsB',
+            style: { background: '#dc3545' },
             textWhite: true,
           },
         ],
