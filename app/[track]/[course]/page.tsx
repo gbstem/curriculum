@@ -169,7 +169,10 @@ export default function CourseLessonsPage({ params }: PageProps) {
                       <>
                         {' '}
                         but{' '}
-                        <Link href={`/${normalizedTrack}/${fallCourseId}`}>
+                        <Link
+                          href={`/${normalizedTrack}/${fallCourseId}`}
+                          style={{ fontFamily: 'inherit', fontSize: 'inherit' }}
+                        >
                           {fallLessonCount} lesson{fallLessonCount === 1 ? '' : 's'}{' '}
                           {fallLessonCount === 1 ? 'was' : 'were'} found for {fallCourseData.title}
                         </Link>
