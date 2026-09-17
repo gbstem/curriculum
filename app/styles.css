@@ -281,6 +281,13 @@ strong {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* Bootstrap's outer .modal overlay scrolls when the dialog is taller than the
+   viewport; without this, scrolling past its bounds chains through to the
+   page behind it instead of stopping at the dialog (worst on mobile touch). */
+.modal {
+  overscroll-behavior: contain;
+}
+
 .modal-header {
   border-radius: 15px 15px 0 0;
 }

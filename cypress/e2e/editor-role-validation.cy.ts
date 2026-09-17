@@ -280,3 +280,140 @@ describe('Editor Role Validation (Section E)', () => {
     cy.get('@confirms').should('have.length', 0);
   });
 });
+
+describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
+  // iPhone 12 Pro logical viewport - comfortably below the 768px breakpoint
+  // where curriculum.css switches the editor/preview split from side-by-side
+  // columns to a stacked, scrolling layout.
+  beforeEach(() => {
+    cy.viewport(390, 844);
+  });
+
+  it('stacks the preview below the editor without overlapping the footer buttons (Test Case 13e)', () => {
+    cy.signedInSession('editor');
+    cy.captureConfirms().as('confirms');
+    cy.visit('/cs/scratch1A');
+
+    cy.contains('button', 'Add New Lesson').click();
+    cy.get('.modal-dialog').first().should('have.class', 'modal-almost-fullscreen');
+    cy.get('.w-md-editor-drag-divider', { timeout: 10000 }).should('be.visible');
+
+    // Real content is essential here: with an empty lesson the stacked
+    // fields + editor + preview are short enough to fit within a single
+    // 100dvh box even with the containment bug below, so the regression
+    // never shows up. Typing enough content to push the form past one
+    // screen's height is what actually exercises it.
+    cy.get('#content-textarea').type(
+      '# Heading\n\nSome sample paragraph content to fill the preview pane with real text so it is not empty.\n\n- item one\n- item two\n- item three'
+    );
+
+    // Editor, divider, and preview must stack top-to-bottom in that order,
+    // and the preview must end before the footer's buttons begin. This is
+    // the regression: the library positions the preview pane absolutely
+    // (top/right/bottom: 0) for the desktop side-by-side layout, which, left
+    // unset for the stacked mobile layout, has it float over the editor and
+    // spill down over the Save/Cancel/Delete buttons.
+    cy.get('.w-md-editor-area').then(($area) => {
+      const areaRect = $area[0].getBoundingClientRect();
+
+      cy.get('.w-md-editor-drag-divider').then(($divider) => {
+        const dividerRect = $divider[0].getBoundingClientRect();
+        expect(dividerRect.top, 'divider starts at/after the editor ends').to.be.at.least(
+          areaRect.bottom - 1
+        );
+
+        cy.get('.w-md-editor-preview').then(($preview) => {
+          const previewRect = $preview[0].getBoundingClientRect();
+          expect(previewRect.top, 'preview starts at/after the divider ends').to.be.at.least(
+            dividerRect.bottom - 1
+          );
+
+          cy.contains('.modal-dialog button', 'Cancel').then(($cancel) => {
+            const cancelRect = $cancel[0].getBoundingClientRect();
+            expect(
+              previewRect.bottom,
+              'preview ends before the footer buttons begin'
+            ).to.be.at.most(cancelRect.top + 1);
+          });
+        });
+      });
+    });
+
+    // The white dialog card itself must grow to contain the whole stacked
+    // layout, footer included, rather than clipping at a fixed viewport
+    // height with the overflow spilling onto the backdrop behind it. That
+    // was the actual regression: the desktop rule sets modal-content's
+    // `height` (not just `max-height`) to 96vh, and a mobile override that
+    // only raised `min-height` couldn't grow the box past that - it can
+    // only ever raise the floor, not override an explicit, smaller height.
+    cy.get('.modal-footer').then(($footer) => {
+      const footerRect = $footer[0].getBoundingClientRect();
+      cy.get('.modal-content').then(($content) => {
+        const contentRect = $content[0].getBoundingClientRect();
+        expect(
+          contentRect.bottom,
+          'the dialog card contains the footer, not just the viewport'
+        ).to.be.at.least(footerRect.bottom - 1);
+      });
+    });
+
+    // Scrolling the dialog itself (not the page behind it, per the earlier
+    // overscroll-behavior fix) must reach the footer, and the button must be
+    // genuinely clickable there - not covered by the preview pane - without
+    // forcing past Cypress's actionability check.
+    cy.get('.modal').first().scrollTo('bottom');
+    cy.get('.modal')
+      .first()
+      .then(($modal) => {
+        expect($modal[0].scrollTop, 'the dialog actually scrolled').to.be.greaterThan(0);
+      });
+
+    cy.contains('.modal-dialog button', 'Cancel').then(($cancel) => {
+      const rect = $cancel[0].getBoundingClientRect();
+      expect(rect.bottom, 'button bottom is within the viewport').to.be.at.most(844);
+      expect(rect.top, 'button top is within the viewport').to.be.at.least(0);
+    });
+    cy.contains('.modal-dialog button', 'Cancel').click();
+    cy.get('.modal-dialog').should('not.exist');
+
+    cy.get('@confirms').should('have.length', 0);
+  });
+
+  it('resizes editor vs. preview height by touch-dragging the horizontal divider (Test Case 13f)', () => {
+    cy.signedInSession('editor');
+    cy.captureConfirms().as('confirms');
+    cy.visit('/cs/scratch1A');
+
+    cy.contains('button', 'Add New Lesson').click();
+    cy.get('.w-md-editor-drag-divider', { timeout: 10000 }).should('be.visible');
+
+    // Simulate a touch drag on the divider, the same way Test Case 13c does
+    // for a mouse drag on the desktop (vertical) divider.
+    cy.get('.w-md-editor-drag-divider').then(($divider) => {
+      const rect = $divider[0].getBoundingClientRect();
+      const clientX = rect.left + rect.width / 2;
+      const startClientY = rect.top + rect.height / 2;
+
+      cy.wrap($divider)
+        .trigger('touchstart', {
+          touches: [{ clientX, clientY: startClientY }],
+          bubbles: true,
+          cancelable: true,
+        })
+        .trigger('touchmove', {
+          touches: [{ clientX, clientY: startClientY + 150 }],
+          bubbles: true,
+          cancelable: true,
+        })
+        .trigger('touchend', { bubbles: true, cancelable: true, force: true });
+    });
+
+    // Verify the vertical split variable was applied (the horizontal one,
+    // --split-percent, is what the desktop drag in Test Case 13c sets).
+    cy.get('.w-md-editor-content').should('have.attr', 'style').and('include', '--split-percent-y');
+
+    cy.contains('.modal-dialog button', 'Cancel').click();
+
+    cy.get('@confirms').should('have.length', 0);
+  });
+});
