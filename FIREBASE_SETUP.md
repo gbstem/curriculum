@@ -68,26 +68,7 @@ yarn install
 For production, you should set up proper security rules. In the Firestore Database section:
 
 1. Click on "Rules" tab
-2. Replace the default rules with:
-
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Allow public read access to curriculum
-    match /curriculum/{document} {
-      allow read: if true;
-      allow write: if false; // Deny all public client writes (handled securely on the server via Server Actions)
-    }
-
-    // Allow public read access to curriculum versions
-    match /curriculum_versions/{document} {
-      allow read: if true;
-      allow write: if false; // Deny all public client writes (handled securely on the server via Server Actions)
-    }
-  }
-}
-```
+2. Replace the default rules with the contents of `firestore.rules`.
 
 ## Step 7: Test the Setup
 

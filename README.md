@@ -202,26 +202,35 @@ Below is an alphabetical list of the top-level directories and significant confi
 
 - **`.github/`**: Contains GitHub configuration for GitHub, including our Dependabot configuration for automating minor and patch package updates, and our Continuous Integration (CI) test workflows.
 - **`.husky/`**: Configuration for Husky, managing Git hooks like pre-commit formatting and linting.
+- **`.next/`**: Automatically generated directory containing Next.js build output, route manifests, and cache.
+- **`.vscode/`**: Contains Visual Studio Code workspace configuration settings, recommended extensions, and tasks.
 - **`__mocks__/`**: Contains mock implementations for unit testing (e.g., mock Next.js headers).
 - **`__tests__/`**: Contains all of our Jest unit tests. Tests are organized generally by route or component domain (e.g. `actions.test.ts`, `EditorModal.test.tsx`).
 - **`app/`**: The core Next.js App Router directory. This handles the application's URL routing. Includes the `app/components/` subdirectory for reusable React UI components (like `EditorModal.tsx`, `renderContent.tsx`).
 - **`cypress/`**: Contains our Cypress end-to-end integration tests and configurations, verifying the live site functions correctly in a real browser.
 - **`lib/`**: Contains library utilities and centralized static data constants (like session configuration and iron-session helper definitions).
+- **`node_modules/`**: Automatically generated directory containing the project's dependencies.
 - **`public/`**: Static assets such as images, logos, and icons that can be accessed publicly by the browser.
 - **`scripts/`**: Contains developer utility scripts (e.g., Firestore sync scripts to pull/seed database).
 
 ### Files
 
+- **`.env.example`**: Template file defining required local environment variables (pre-configured for the Firebase Emulator Suite).
 - **`.firebaserc`**: Firebase project selection configuration.
 - **`.gitignore`**: Specifies which files and directories Git should ignore (like `node_modules/` and `.next/`).
 - **`.prettierignore`**: Specifies which files and directories Prettier should ignore when formatting.
 - **`.prettierrc`**: Configuration rules for Prettier, ensuring consistent code formatting across the project.
+- **`.yarnrc.yml`**: Configuration file for Yarn Berry (v4 package manager), defining package management settings.
 - **`AGENTS.md`**: Custom rules and guidelines for AI coding agents interacting with the repository.
+- **`CLAUDE.md`**: Quick reference guide and developer instructions for AI coding assistants.
 - **`cypress.config.ts`**: The configuration file for our Cypress end-to-end testing environment.
 - **`eslint.config.mjs`**: Configuration rules for ESLint, ensuring consistent code style and checking for common errors across the project.
 - **`firebase.json`**: Configuration for local Firebase Emulator Suite ports and services.
+- **`FIREBASE_SETUP.md`**: Setup guide for configuring Cloud Firestore and authentication for the curriculum editing system.
+- **`firestore.rules`**: Firebase security rules defining read/write permissions for the Cloud Firestore database.
 - **`jest.config.ts`**: The configuration file for our Jest testing environment, specifically tailored to work alongside Next.js.
 - **`jest.setup.ts`**: Initial setup code that runs before our Jest tests, importing tools like `@testing-library/jest-dom` for custom DOM matchers.
+- **`LICENSE.md`**: License terms under which this project's code is distributed.
 - **`next-env.d.ts`**: Automatically generated TypeScript declaration file that ensures the Next.js types are picked up by the compiler. Do not edit manually.
 - **`next.config.ts`**: General Next.js build and server configuration file.
 - **`package.json`**: Defines the project's details, scripts (like `yarn dev`), and dependencies (the npm packages we rely on).
