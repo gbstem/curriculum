@@ -258,6 +258,7 @@ pre code.hljs {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  overscroll-behavior: contain;
   padding: 1.25rem;
 }
 
@@ -315,6 +316,7 @@ pre code.hljs {
   align-items: center;
   justify-content: center;
   user-select: none;
+  touch-action: none;
   z-index: 10;
   flex-shrink: 0;
   transition:
@@ -350,4 +352,90 @@ pre code.hljs {
 .modal-almost-fullscreen .w-md-editor-input {
   height: 100% !important;
   overflow-y: auto;
+}
+
+/* On narrow/short mobile viewports the desktop layout's fixed 96vh height plus
+   the editor's 350px floor doesn't fit, and modal-body's overflow: hidden then
+   clips the excess with no way to reach it. Drop the fixed-height scheme for
+   an organically-sized dialog, and stack editor above preview since there's
+   no room for side-by-side columns at this width. */
+@media (max-width: 768px) {
+  .modal-almost-fullscreen {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    margin: 0 !important;
+  }
+
+  .modal-almost-fullscreen .modal-content {
+    /* The base (desktop) rule above sets a hard `height: 96vh`, not just a
+       max-height; left in place, min-height alone can only raise that floor,
+       never let the box grow to fit a taller stacked layout. Override height
+       itself so the card grows to contain its content instead of clipping it
+       (with default overflow: visible) onto the backdrop behind the card. */
+    height: auto !important;
+    min-height: 100dvh;
+    max-height: none !important;
+    border-radius: 0;
+  }
+
+  /* Let the whole dialog (header, fields, editor/preview, footer) scroll
+     together as a single region via Bootstrap's outer .modal, rather than
+     boxing modal-body into its own scroller. A nested scroller can reach the
+     end of its own content and, because of overscroll-behavior: contain
+     above, decline to hand the rest of the gesture up to .modal — stranding
+     the footer below the fold with no way to reach it. */
+  .modal-almost-fullscreen .modal-body {
+    overflow: visible !important;
+  }
+
+  .modal-almost-fullscreen .editor-form,
+  .modal-almost-fullscreen .editor-content-group,
+  .modal-almost-fullscreen .editor-col {
+    flex: none;
+    min-height: 0;
+  }
+
+  .modal-almost-fullscreen .w-md-editor {
+    height: auto !important;
+    min-height: 0;
+  }
+
+  .modal-almost-fullscreen .w-md-editor-content {
+    flex-direction: column !important;
+    height: 60vh !important;
+  }
+
+  .modal-almost-fullscreen .w-md-editor-area {
+    width: 100% !important;
+    height: var(--split-percent-y, 50%) !important;
+  }
+
+  /* The library positions the preview pane absolutely (top/right/bottom: 0)
+     to sit beside the editor on desktop; that has it overlap the editor once
+     stacked in a column here, so take it out of absolute positioning. */
+  .modal-almost-fullscreen .w-md-editor-preview {
+    width: 100% !important;
+    height: calc(100% - var(--split-percent-y, 50%) - 16px) !important;
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+  }
+
+  /* Same divider as the desktop split, turned sideways: dragging vertically
+     resizes editor vs. preview height instead of width. */
+  .modal-almost-fullscreen .w-md-editor-drag-divider {
+    width: 100%;
+    height: 16px;
+    cursor: row-resize;
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .modal-almost-fullscreen .w-md-editor-drag-divider span {
+    display: inline-block;
+    transform: rotate(90deg);
+  }
 }

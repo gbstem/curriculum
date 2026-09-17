@@ -63,27 +63,64 @@ const EditorModal: React.FC<EditorModalProps> = ({
         divider.title = 'Drag horizontally to resize editor / preview columns';
         divider.innerHTML = '<span>⋮</span>';
 
-        divider.addEventListener('mousedown', (e: MouseEvent) => {
-          e.preventDefault();
-          document.body.style.cursor = 'col-resize';
+        // Below 768px (matching the stacked mobile layout in curriculum.css) the
+        // divider resizes editor vs. preview height instead of width.
+        const isStackedLayout = () => window.matchMedia('(max-width: 768px)').matches;
+
+        const startResize = () => {
+          const vertical = isStackedLayout();
+          document.body.style.cursor = vertical ? 'row-resize' : 'col-resize';
           document.body.style.userSelect = 'none';
 
-          const handleMouseMove = (moveEvent: MouseEvent) => {
+          const applyPosition = (clientX: number, clientY: number) => {
             const rect = editorContent.getBoundingClientRect();
-            const offsetX = moveEvent.clientX - rect.left;
-            const newPercent = Math.max(15, Math.min(85, (offsetX / rect.width) * 100));
-            (editorContent as HTMLElement).style.setProperty('--split-percent', `${newPercent}%`);
+            if (vertical) {
+              const offsetY = clientY - rect.top;
+              const newPercent = Math.max(15, Math.min(85, (offsetY / rect.height) * 100));
+              (editorContent as HTMLElement).style.setProperty(
+                '--split-percent-y',
+                `${newPercent}%`
+              );
+            } else {
+              const offsetX = clientX - rect.left;
+              const newPercent = Math.max(15, Math.min(85, (offsetX / rect.width) * 100));
+              (editorContent as HTMLElement).style.setProperty('--split-percent', `${newPercent}%`);
+            }
           };
 
-          const handleMouseUp = () => {
+          const handleMouseMove = (moveEvent: MouseEvent) => {
+            applyPosition(moveEvent.clientX, moveEvent.clientY);
+          };
+
+          const handleTouchMove = (touchEvent: TouchEvent) => {
+            const touch = touchEvent.touches[0];
+            if (!touch) return;
+            touchEvent.preventDefault();
+            applyPosition(touch.clientX, touch.clientY);
+          };
+
+          const stopResize = () => {
             document.body.style.cursor = '';
             document.body.style.userSelect = '';
             window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('mouseup', stopResize);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', stopResize);
           };
 
           window.addEventListener('mousemove', handleMouseMove);
-          window.addEventListener('mouseup', handleMouseUp);
+          window.addEventListener('mouseup', stopResize);
+          window.addEventListener('touchmove', handleTouchMove, { passive: false });
+          window.addEventListener('touchend', stopResize);
+        };
+
+        divider.addEventListener('mousedown', (e: MouseEvent) => {
+          e.preventDefault();
+          startResize();
+        });
+
+        divider.addEventListener('touchstart', () => {
+          startResize();
         });
 
         area.after(divider);
