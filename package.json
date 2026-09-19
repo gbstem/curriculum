@@ -2,6 +2,9 @@
   "name": "gbstem-curriculum",
   "version": "2.0.0",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -92,5 +95,5 @@
       "built": true
     }
   },
-  "packageManager": "yarn@4.17.1"
+  "packageManager": "yarn@4.18.0"
 }
