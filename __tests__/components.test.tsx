@@ -30,7 +30,7 @@ describe('tracks data configuration', () => {
 
 describe('TrackHero component', () => {
   it('renders title, description, and icon correctly', () => {
-    const { container } = render(
+    render(
       <TrackHero
         title="Test Track"
         description="Test description of the track"
@@ -41,8 +41,7 @@ describe('TrackHero component', () => {
 
     expect(screen.getByText('Test Track')).toBeInTheDocument();
     expect(screen.getByText('Test description of the track')).toBeInTheDocument();
-    const iconElement = container.querySelector('.fa-test-icon');
-    expect(iconElement).toBeInTheDocument();
+    expect(screen.getByTestId('track-hero-icon')).toHaveClass('fa-test-icon');
   });
 
   it('applies text-dark class when isDarkText is true', () => {

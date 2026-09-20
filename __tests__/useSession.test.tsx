@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { navigateTo } from '../lib/navigation';
 import { SessionProvider, useSession } from '../lib/useSession';
 
@@ -108,11 +108,11 @@ describe('SessionProvider and useSession hook', () => {
     await screen.findByText('yes');
 
     // Trigger logout
-    await act(async () => {
-      screen.getByText('Logout').click();
-    });
+    fireEvent.click(screen.getByText('Logout'));
 
+    await waitFor(() => {
+      expect(navigateTo).toHaveBeenCalledWith('/login');
+    });
     expect(global.fetch).toHaveBeenCalledWith('/api/auth', { method: 'DELETE' });
-    expect(navigateTo).toHaveBeenCalledWith('/login');
   });
 });

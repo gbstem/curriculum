@@ -15,6 +15,9 @@ describe('<Footer> Component', () => {
     expect(link).toHaveAttribute('href', href);
     expect(link).toHaveAttribute('target', '_blank');
 
+    // The icon is `aria-hidden`, so it's unreachable by any Testing Library
+    // role/label query on purpose - direct DOM access is the only option.
+    // eslint-disable-next-line testing-library/no-node-access
     const svg = link.querySelector('svg');
     expect(svg).not.toBeNull();
     expect(svg).toHaveAttribute('width', '35');

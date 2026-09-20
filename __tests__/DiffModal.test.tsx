@@ -19,7 +19,7 @@ describe('DiffModal component', () => {
     const { container } = render(
       <DiffModal show={true} onHide={() => {}} currentContent="current content" version={null} />
     );
-    expect(container.firstChild).toBeNull();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('renders and displays diff when version is provided', () => {

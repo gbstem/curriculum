@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { RenderContent } from '../app/components/renderContent';
 
 // Mock react-syntax-highlighter to simplify rendering in JSDOM
@@ -22,7 +22,7 @@ jest.mock('scratchblocks-react', () => {
 describe('RenderContent component', () => {
   it('renders nothing when content is empty', () => {
     const { container } = render(<RenderContent content="" />);
-    expect(container.firstChild).toBeNull();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('renders headings of different levels with appropriate tags', () => {
@@ -85,12 +85,14 @@ describe('RenderContent component', () => {
   it('does not render a clickable link for javascript: or data: markdown link targets', () => {
     const markdown =
       "Click [here](javascript:window.location='http://evil.example') or [this](data:text/plain;base64,eHNz)";
-    const { container } = render(<RenderContent content={markdown} />);
+    render(<RenderContent content={markdown} />);
 
-    expect(container.querySelector('a[href]')).toBeNull();
+    // An `<a>` with no `href` carries no accessible "link" role, so this also
+    // confirms neither target survived sanitization with its href intact.
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
     // The display text should still be present, just not as a clickable link
-    expect(container.textContent).toContain('here');
-    expect(container.textContent).toContain('this');
+    expect(screen.getByText(/here/)).toBeInTheDocument();
+    expect(screen.getByText(/this/)).toBeInTheDocument();
   });
 
   it('renders inline code blocks', () => {
@@ -124,6 +126,9 @@ describe('RenderContent component', () => {
     const markdown = '> This is a quote\n> Second line of quote';
     const { container } = render(<RenderContent content={markdown} />);
 
+    // <blockquote> carries no distinct ARIA role for getByRole to key off, so
+    // there's no query-based way to assert this specific tag was used.
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
     const blockquote = container.querySelector('blockquote');
     expect(blockquote).toBeInTheDocument();
     expect(blockquote).toHaveTextContent('This is a quote');
@@ -169,25 +174,23 @@ describe('RenderContent component', () => {
 
   it('renders ordered lists correctly', () => {
     const markdown = '1. First item\n2. Second item';
-    const { container } = render(<RenderContent content={markdown} />);
+    render(<RenderContent content={markdown} />);
 
-    const ol = container.querySelector('ol');
-    expect(ol).toBeInTheDocument();
-    const items = container.querySelectorAll('ol > li');
-    expect(items.length).toBe(2);
+    const list = screen.getByRole('list');
+    expect(list.tagName).toBe('OL');
+    const items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(2);
     expect(items[0]).toHaveTextContent('First item');
     expect(items[1]).toHaveTextContent('Second item');
   });
 
   it('renders list item with bold text inside a list item', () => {
     const markdown = '- **Term**: def';
-    const { container } = render(<RenderContent content={markdown} />);
+    render(<RenderContent content={markdown} />);
 
-    const li = container.querySelector('li');
-    expect(li).toBeInTheDocument();
-    const strong = li?.querySelector('strong');
-    expect(strong).toBeInTheDocument();
-    expect(strong).toHaveTextContent('Term');
+    const li = screen.getByRole('listitem');
+    const strong = within(li).getByText('Term');
+    expect(strong.tagName).toBe('STRONG');
     expect(li).toHaveTextContent('Term: def');
   });
 
@@ -195,6 +198,9 @@ describe('RenderContent component', () => {
     const markdown = '```\nprint("hello")\n```';
     const { container } = render(<RenderContent content={markdown} />);
 
+    // <blockquote> carries no distinct ARIA role, so there's no query-based
+    // way to assert this tag is absent.
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
     expect(container.querySelector('blockquote')).toBeNull();
     const highlighter = screen.getByTestId('syntax-highlighter');
     expect(highlighter).toBeInTheDocument();
@@ -207,40 +213,39 @@ describe('RenderContent component', () => {
     render(<RenderContent content={markdown} />);
 
     const heading = screen.getByRole('heading', { level: 4 });
-    expect(heading).toBeInTheDocument();
-    const code = heading.querySelector('code');
-    expect(code).toHaveTextContent('print()');
-    const link = heading.querySelector('a');
+    const code = within(heading).getByText('print()');
+    expect(code.tagName).toBe('CODE');
+    const link = within(heading).getByRole('link', { name: 'docs' });
     expect(link).toHaveAttribute('href', 'https://example.com');
-    expect(link).toHaveTextContent('docs');
   });
 
   it('renders GFM tables', () => {
     const markdown = '| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |';
-    const { container } = render(<RenderContent content={markdown} />);
+    render(<RenderContent content={markdown} />);
 
-    const table = container.querySelector('table');
-    expect(table).toBeInTheDocument();
-    expect(container.querySelector('th')).toHaveTextContent('Header 1');
-    expect(container.querySelector('td')).toHaveTextContent('Cell 1');
+    expect(screen.getByRole('table')).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: 'Header 1' })).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'Cell 1' })).toBeInTheDocument();
   });
 
   it('renders markdown images with alt text', () => {
     const markdown = '![Diagram](https://example.com/diagram.png)';
-    const { container } = render(<RenderContent content={markdown} />);
+    render(<RenderContent content={markdown} />);
 
-    const img = container.querySelector('img');
-    expect(img).toBeInTheDocument();
+    const img = screen.getByRole('img', { name: 'Diagram' });
     expect(img).toHaveAttribute('src', 'https://example.com/diagram.png');
-    expect(img).toHaveAttribute('alt', 'Diagram');
   });
 
   it('renders bold with nested italic text inside', () => {
     const markdown = '**bold with *italic* inside**';
     const { container } = render(<RenderContent content={markdown} />);
 
+    // Neither <strong> nor <em> carries a distinct ARIA role, so there's no
+    // query-based way to assert this specific nesting.
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
     const strong = container.querySelector('strong');
     expect(strong).toBeInTheDocument();
+    // eslint-disable-next-line testing-library/no-node-access
     const em = strong?.querySelector('em');
     expect(em).toBeInTheDocument();
     expect(em).toHaveTextContent('italic');
@@ -250,8 +255,12 @@ describe('RenderContent component', () => {
     const markdown = 'Line 1\nLine 2';
     const { container } = render(<RenderContent content={markdown} />);
 
+    // Neither <p> nor <br> carries a distinct ARIA role, so there's no
+    // query-based way to assert this specific tag/nesting.
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
     const paragraphs = container.querySelectorAll('p');
     expect(paragraphs.length).toBe(1);
+    // eslint-disable-next-line testing-library/no-node-access
     expect(paragraphs[0].querySelector('br')).toBeInTheDocument();
     expect(paragraphs[0]).toHaveTextContent(/Line 1\s*Line 2/);
   });

@@ -55,7 +55,8 @@ describe('Authentication and Basic Navigation (Section A)', () => {
       const password =
         typeof passwords === 'object' && passwords !== null ? passwords[passwordKey] : passwords;
 
-      cy.get('#password-input').clear().type(password);
+      cy.get('#password-input').clear();
+      cy.get('#password-input').type(password);
       cy.get('button[type="submit"]').click();
 
       // Assert successful login

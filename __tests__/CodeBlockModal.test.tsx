@@ -11,10 +11,8 @@ jest.mock('react-syntax-highlighter', () => ({
 
 describe('CodeBlockModal component', () => {
   it('does not render when show is false', () => {
-    const { container } = render(
-      <CodeBlockModal show={false} onHide={() => {}} onInsert={() => {}} />
-    );
-    expect(container.querySelector('.modal')).not.toBeInTheDocument();
+    render(<CodeBlockModal show={false} onHide={() => {}} onInsert={() => {}} />);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('renders correctly when show is true', () => {

@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# lint/format cache
+.eslintcache
+
 # next.js
 /.next/
 /out/
