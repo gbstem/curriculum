@@ -22,7 +22,7 @@ export default function RootError({ error, reset }: ErrorProps) {
 
   return (
     <Container className="d-flex align-items-center justify-content-center min-h-[80vh] py-5">
-      <Card className="w-100 max-w-[600px] border-0 bg-white p-4 text-center shadow-lg">
+      <Card className="w-100 max-w-150 border-0 bg-white p-4 text-center shadow-lg">
         <Card.Body>
           <div className={isNotFound ? 'text-warning mb-4' : 'text-danger mb-4'}>
             <i
@@ -40,7 +40,7 @@ export default function RootError({ error, reset }: ErrorProps) {
               : 'Something went wrong while communicating with the gbSTEM database. Please share the details below with the gbSTEM website maintainers.'}
           </Card.Text>
 
-          <div className="bg-light font-monospace small mb-4 max-h-[200px] overflow-y-auto rounded border p-3 text-start">
+          <div className="bg-light font-monospace small mb-4 max-h-50 overflow-y-auto rounded border p-3 text-start">
             <div className={isNotFound ? 'fw-bold text-warning mb-1' : 'fw-bold text-danger mb-1'}>
               {isNotFound ? 'Details:' : 'Error Message:'}
             </div>
@@ -49,9 +49,7 @@ export default function RootError({ error, reset }: ErrorProps) {
               <>
                 <hr className="my-2" />
                 <div className="fw-bold text-secondary mb-1">Stack Trace:</div>
-                <pre className="mt-1 mb-0 text-[0.75rem] break-all whitespace-pre-wrap">
-                  {error.stack}
-                </pre>
+                <pre className="mt-1 mb-0 text-xs break-all whitespace-pre-wrap">{error.stack}</pre>
               </>
             )}
             {!isNotFound && error.digest && (

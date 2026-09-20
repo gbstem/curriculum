@@ -195,7 +195,7 @@ export default function CourseLessonsPage({ params }: PageProps) {
                     <div key={lesson.id} className="col-md-6">
                       <Link
                         href={`/${normalizedTrack}/${course}/lesson/${lesson.lessonNumber}`}
-                        className="btn btn-primary btn-lg lesson-link d-flex align-items-center justify-content-center min-h-[64px] w-100 text-white shadow-sm"
+                        className="btn btn-primary btn-lg lesson-link d-flex align-items-center justify-content-center min-h-16 w-100 text-white shadow-sm"
                       >
                         Lesson {lesson.lessonNumber}: {lesson.title}
                       </Link>

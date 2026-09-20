@@ -31,7 +31,7 @@ export default function TrackHero({
             <p className={`lead mb-0 ${textColorClass}`}>{description}</p>
           </div>
           <div className={`col-lg-4 mt-lg-0 mt-4 text-center ${textColorClass}`}>
-            <i className={`${icon} fa-5x`}></i>
+            <i className={`${icon} fa-5x`} data-testid="track-hero-icon"></i>
           </div>
         </div>
       </div>

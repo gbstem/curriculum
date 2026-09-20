@@ -84,13 +84,15 @@ describe('Editor Role Validation (Section E)', () => {
 
     // 2. Edit & Cancel edit
     cy.contains('button', 'Edit Lesson').click();
-    cy.get('#content-textarea').clear().type(cancelledContent);
+    cy.get('#content-textarea').clear();
+    cy.get('#content-textarea').type(cancelledContent);
     cy.get('.modal-dialog').first().contains('button', 'Cancel').click();
     cy.get('.curriculum-content').should('contain', initialContent);
 
     // 3. Edit & Save edit
     cy.contains('button', 'Edit Lesson').click();
-    cy.get('#content-textarea').clear().type(updatedContent);
+    cy.get('#content-textarea').clear();
+    cy.get('#content-textarea').type(updatedContent);
     cy.get('.modal-dialog').first().contains('button', 'Save').click();
     cy.get('.curriculum-content').should('contain', updatedContent);
 
@@ -182,7 +184,8 @@ describe('Editor Role Validation (Section E)', () => {
     cy.get('.preview-col').find('strong').should('contain', 'bold');
 
     // 3. Italic helper formatting test
-    cy.get('#content-textarea').clear().type('italic');
+    cy.get('#content-textarea').clear();
+    cy.get('#content-textarea').type('italic');
     cy.get('#content-textarea').then(($el) => {
       const el = $el[0] as HTMLTextAreaElement;
       el.setSelectionRange(0, 6); // select "italic"
@@ -254,10 +257,9 @@ describe('Editor Role Validation (Section E)', () => {
     cy.get('.w-md-editor-drag-divider', { timeout: 10000 }).should('be.visible');
 
     // Simulate drag action on the splitter
-    cy.get('.w-md-editor-drag-divider')
-      .trigger('mousedown', { which: 1 })
-      .trigger('mousemove', { clientX: 300, clientY: 300 })
-      .trigger('mouseup', { force: true });
+    cy.get('.w-md-editor-drag-divider').trigger('mousedown', { which: 1 });
+    cy.get('.w-md-editor-drag-divider').trigger('mousemove', { clientX: 300, clientY: 300 });
+    cy.get('.w-md-editor-drag-divider').trigger('mouseup', { force: true });
 
     // Verify custom split variable was applied
     cy.get('.w-md-editor-content').should('have.attr', 'style').and('include', '--split-percent');
@@ -394,18 +396,17 @@ describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
       const clientX = rect.left + rect.width / 2;
       const startClientY = rect.top + rect.height / 2;
 
-      cy.wrap($divider)
-        .trigger('touchstart', {
-          touches: [{ clientX, clientY: startClientY }],
-          bubbles: true,
-          cancelable: true,
-        })
-        .trigger('touchmove', {
-          touches: [{ clientX, clientY: startClientY + 150 }],
-          bubbles: true,
-          cancelable: true,
-        })
-        .trigger('touchend', { bubbles: true, cancelable: true, force: true });
+      cy.wrap($divider).trigger('touchstart', {
+        touches: [{ clientX, clientY: startClientY }],
+        bubbles: true,
+        cancelable: true,
+      });
+      cy.wrap($divider).trigger('touchmove', {
+        touches: [{ clientX, clientY: startClientY + 150 }],
+        bubbles: true,
+        cancelable: true,
+      });
+      cy.wrap($divider).trigger('touchend', { bubbles: true, cancelable: true, force: true });
     });
 
     // Verify the vertical split variable was applied (the horizontal one,

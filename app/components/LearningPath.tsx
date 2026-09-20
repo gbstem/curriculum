@@ -24,7 +24,7 @@ export default function LearningPath({ steps }: LearningPathProps) {
               <React.Fragment key={step.stepNumber}>
                 <div className="col-md-2 learning-path-step">
                   <div
-                    className="rounded-circle mb-3 inline-flex h-[90px] w-[90px] items-center justify-center p-4"
+                    className="rounded-circle mb-3 inline-flex size-[90px] items-center justify-center p-4"
                     style={{
                       backgroundColor: step.bgOpacity,
                       color: step.color,

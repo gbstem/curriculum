@@ -394,12 +394,12 @@ describe('actions.ts server actions', () => {
 
       // But every console.error call must have the newline stripped from any logged string.
       expect(errorSpy).toHaveBeenCalled();
-      for (const call of errorSpy.mock.calls) {
-        for (const arg of call) {
-          if (typeof arg === 'string') {
-            expect(arg.includes(newline)).toBe(false);
-          }
-        }
+      const loggedStrings = errorSpy.mock.calls
+        .flat()
+        .filter((arg): arg is string => typeof arg === 'string');
+      expect(loggedStrings.length).toBeGreaterThan(0);
+      for (const arg of loggedStrings) {
+        expect(arg.includes(newline)).toBe(false);
       }
       // The sanitized course text (minus the newline) should still be present for debuggability.
       const loggedMessages = errorSpy.mock.calls.map((call) => call[0]).join(' ');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import EditorModal from '../app/components/EditorModal';
 import { deleteCurriculum } from '../app/services/curriculumService';
 import { navigateTo } from '@/lib/navigation';
@@ -164,16 +164,16 @@ describe('EditorModal component', () => {
     );
 
     const deleteBtn = screen.getByRole('button', { name: /Delete/i });
-    await act(async () => {
-      fireEvent.click(deleteBtn);
-    });
+    fireEvent.click(deleteBtn);
 
     expect(window.confirm).toHaveBeenCalledWith(
       'Are you sure you want to delete this lesson? This cannot be undone.'
     );
+    await waitFor(() => {
+      expect(navigateTo).toHaveBeenCalledWith('/cs/scratch1A');
+    });
     expect(deleteCurriculum).toHaveBeenCalledWith('lesson-1');
     expect(mockOnHide).toHaveBeenCalled();
-    expect(navigateTo).toHaveBeenCalledWith('/cs/scratch1A');
   });
 
   it('asks for confirmation when Delete is clicked and stops if cancelled', async () => {
@@ -189,9 +189,7 @@ describe('EditorModal component', () => {
     );
 
     const deleteBtn = screen.getByRole('button', { name: /Delete/i });
-    await act(async () => {
-      fireEvent.click(deleteBtn);
-    });
+    fireEvent.click(deleteBtn);
 
     expect(window.confirm).toHaveBeenCalledWith(
       'Are you sure you want to delete this lesson? This cannot be undone.'

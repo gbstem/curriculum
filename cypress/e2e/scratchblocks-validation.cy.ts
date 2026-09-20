@@ -27,7 +27,8 @@ describe('Scratchblocks React Integration Validation (Section H)', () => {
     cy.get('button[title="Insert Code Block"]').click();
     cy.get('.modal-dialog').last().should('be.visible');
     cy.get('.modal-dialog').last().find('select').select('scratchblocks');
-    cy.get('.modal-dialog').last().find('textarea').clear().type(scratchCode);
+    cy.get('.modal-dialog').last().find('textarea').clear();
+    cy.get('.modal-dialog').last().find('textarea').type(scratchCode);
     cy.get('.modal-dialog').last().contains('button', 'Insert Code Block').click();
 
     cy.get('.modal-dialog').first().contains('button', 'Save').click();

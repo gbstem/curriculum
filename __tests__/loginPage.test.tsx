@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginPage from '../app/login/page';
 
 // Mock useRouter/useSearchParams from next/navigation
@@ -50,9 +50,7 @@ describe('LoginPage component', () => {
     fireEvent.change(roleSelect, { target: { value: 'editor' } });
     fireEvent.change(passwordInput, { target: { value: 'editor-pass' } });
 
-    await act(async () => {
-      fireEvent.submit(screen.getByRole('button', { name: /Access Curriculum/i }).closest('form')!);
-    });
+    fireEvent.click(screen.getByRole('button', { name: /Access Curriculum/i }));
 
     expect(global.fetch).toHaveBeenCalledWith('/api/auth', {
       method: 'POST',
@@ -65,7 +63,9 @@ describe('LoginPage component', () => {
       }),
     });
 
-    expect(mockPush).toHaveBeenCalledWith('/');
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/');
+    });
     expect(mockRefresh).toHaveBeenCalled();
   });
 
@@ -78,11 +78,11 @@ describe('LoginPage component', () => {
 
     render(<LoginPage />);
 
-    await act(async () => {
-      fireEvent.submit(screen.getByRole('button', { name: /Access Curriculum/i }).closest('form')!);
-    });
+    fireEvent.click(screen.getByRole('button', { name: /Access Curriculum/i }));
 
-    expect(mockPush).toHaveBeenCalledWith('/cs/scratch1A');
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/cs/scratch1A');
+    });
   });
 
   it('ignores a protocol-relative ?redirect destination and falls back to home', async () => {
@@ -94,11 +94,11 @@ describe('LoginPage component', () => {
 
     render(<LoginPage />);
 
-    await act(async () => {
-      fireEvent.submit(screen.getByRole('button', { name: /Access Curriculum/i }).closest('form')!);
-    });
+    fireEvent.click(screen.getByRole('button', { name: /Access Curriculum/i }));
 
-    expect(mockPush).toHaveBeenCalledWith('/');
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/');
+    });
   });
 
   it('handles failed login and displays error message', async () => {
@@ -112,9 +112,7 @@ describe('LoginPage component', () => {
     const passwordInput = screen.getByLabelText('Password');
     fireEvent.change(passwordInput, { target: { value: 'wrong-pass' } });
 
-    await act(async () => {
-      fireEvent.submit(screen.getByRole('button', { name: /Access Curriculum/i }).closest('form')!);
-    });
+    fireEvent.click(screen.getByRole('button', { name: /Access Curriculum/i }));
 
     expect(await screen.findByText('Incorrect password')).toBeInTheDocument();
   });
