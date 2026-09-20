@@ -25,14 +25,14 @@ const VERSIONS_COLLECTION = 'curriculum_versions';
 async function checkEditorAuth(): Promise<boolean> {
   const cookieStore = await cookies();
   const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
-  return session.isLoggedIn && session.role === 'editor';
+  return Boolean(session.isLoggedIn && session.role === 'editor');
 }
 
 // Helper to check if authorized as viewer or editor
 async function checkViewerAuth(): Promise<boolean> {
   const cookieStore = await cookies();
   const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
-  return session.isLoggedIn && (session.role === 'viewer' || session.role === 'editor');
+  return Boolean(session.isLoggedIn && (session.role === 'viewer' || session.role === 'editor'));
 }
 
 // Strips newlines and other control characters from a user-supplied value before it is
