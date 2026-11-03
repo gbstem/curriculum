@@ -158,7 +158,7 @@ For those manual updates, we use the [npm-check-updates (ncu)](https://github.co
 Once `ncu` is installed, follow this sequence of commands to update dependencies:
 
 > [!IMPORTANT]
-> **Pin TypeScript to version 6 (`^6.x.x`) due to Next.js not supporting v7 yet, `@types/node` to version 24 (`^24.x.x`) due to us configuring Vercel to use Node.js 24.x, and firebase/firebase-admin to their current versions**.
+> **Pin TypeScript to version 6 (`^6.x.x`) due to Next.js not supporting v7 yet, `@types/node` to version 26 (`^26.x.x`) due to us configuring Vercel to use Node.js 26.x, and firebase/firebase-admin to their current versions**.
 >
 > When executing `ncu -u`, ensure TypeScript and `@types/node` are not upgraded to major versions beyond v6 and v24, which the commands below avoid, or manually revert their versions in `package.json` before installing.
 
