@@ -10,16 +10,16 @@ describe('Home and Logout Controls (Section D)', () => {
     cy.visit('/cs/scratch1A');
 
     // Test Case 6: Navigation Back to Home Dashboard
-    cy.get('.navbar-brand').should('be.visible').click();
+    cy.get('[data-testid="nav-home"]').should('be.visible').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/');
     cy.get('h1').should('contain', 'Choose a Curriculum Track');
 
     // Test Case 7: Session Termination (Logout)
-    cy.contains('.nav-link, a', 'Logout').click();
+    cy.get('[data-testid="nav-logout"]').click();
 
     // Assert session is terminated and redirected to login page
     cy.url().should('include', '/login');
     cy.contains('gbSTEM Curriculum Access').should('be.visible');
-    cy.get('.navbar').should('not.exist');
+    cy.get('[data-testid="navbar"]').should('not.exist');
   });
 });

@@ -120,7 +120,7 @@ export default function CourseLessonsPage({ params }: PageProps) {
       <div className="container mt-5">
         <div className="row">
           <div className="col-lg-8 mx-auto">
-            <Alert variant="danger">
+            <Alert variant="danger" data-testid="error-alert">
               <Alert.Heading>Error Loading Curriculum</Alert.Heading>
               <p>{error}</p>
               <hr />
@@ -196,6 +196,7 @@ export default function CourseLessonsPage({ params }: PageProps) {
                       <Link
                         href={`/${normalizedTrack}/${course}/lesson/${lesson.lessonNumber}`}
                         className="btn btn-primary btn-lg lesson-link d-flex align-items-center justify-content-center min-h-16 w-100 text-white shadow-sm"
+                        data-testid="lesson-link"
                       >
                         Lesson {lesson.lessonNumber}: {lesson.title}
                       </Link>

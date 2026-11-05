@@ -28,7 +28,7 @@ Cypress.Commands.add('signedInSession', (role: string) => {
 });
 
 Cypress.Commands.add('signOutViaUi', () => {
-  cy.contains('.nav-link, a', 'Logout').click();
+  cy.get('[data-testid="nav-logout"]').click();
   cy.url().should('include', '/login');
   cy.get('#role-select').should('be.visible');
 });
@@ -40,11 +40,13 @@ Cypress.Commands.add('deleteLessonIfExists', (coursePath: string, lessonNumber: 
     cy.visit(coursePath);
     cy.get('[role="status"]').should('not.exist');
     cy.get('body').then(($body) => {
-      if ($body.find(`.lesson-link:contains("Lesson ${lessonNumber}:")`).length > 0) {
-        cy.contains('.lesson-link', `Lesson ${lessonNumber}:`).first().click();
+      if (
+        $body.find(`[data-testid="lesson-link"]:contains("Lesson ${lessonNumber}:")`).length > 0
+      ) {
+        cy.contains('[data-testid="lesson-link"]', `Lesson ${lessonNumber}:`).first().click();
         cy.contains('button', 'Edit Lesson').click();
-        cy.get('.modal-dialog').first().should('be.visible');
-        cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+        cy.get('[data-testid="editor-modal"]').should('be.visible');
+        cy.get('[data-testid="editor-modal"]').contains('button', 'Delete').click();
         cy.url().should('eq', Cypress.config().baseUrl + coursePath);
         checkAndDelete();
       }

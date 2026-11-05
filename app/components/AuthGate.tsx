@@ -44,8 +44,18 @@ export default function AuthGate({ children }: AuthGateProps) {
 
   return (
     <div className="d-flex min-h-screen flex-col">
-      <Navbar variant="dark" expand="lg" className="bg-[#1D2256] py-2 shadow-sm">
-        <Navbar.Brand as={Link} href="/" className="d-flex align-items-center ms-5">
+      <Navbar
+        variant="dark"
+        expand="lg"
+        className="bg-[#1D2256] py-2 shadow-sm"
+        data-testid="navbar"
+      >
+        <Navbar.Brand
+          as={Link}
+          href="/"
+          className="d-flex align-items-center ms-5"
+          data-testid="nav-home"
+        >
           <img
             alt="gbSTEM Logo"
             src="/images/penguin.png"
@@ -61,6 +71,7 @@ export default function AuthGate({ children }: AuthGateProps) {
                 key={track.id}
                 title={track.shortTitle}
                 id={track.dropdownId}
+                data-testid={`nav-${track.id}`}
                 className="font-monospace mx-2 text-center"
               >
                 {track.dropdownItems.map((item, idx) => (
@@ -80,6 +91,7 @@ export default function AuthGate({ children }: AuthGateProps) {
           <Nav className="ms-auto me-5">
             <Nav.Link
               onClick={logout}
+              data-testid="nav-logout"
               className="d-flex align-items-center cursor-pointer text-white"
             >
               <i className="fas fa-sign-out-alt me-1"></i>

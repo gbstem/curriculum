@@ -24,7 +24,7 @@ const DiffModal: React.FC<DiffModalProps> = ({ show, onHide, currentContent, ver
   if (!version) return null;
 
   return (
-    <Modal show={show} onHide={onHide} size="xl" centered>
+    <Modal show={show} onHide={onHide} size="xl" centered data-testid="diff-modal">
       <Modal.Header closeButton className="bg-info text-white">
         <Modal.Title>
           <i className="fas fa-columns me-2"></i>

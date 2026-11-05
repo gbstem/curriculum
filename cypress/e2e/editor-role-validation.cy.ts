@@ -1,6 +1,17 @@
 // Implements TEST_PLAN.md Section E: Editor Role Validation
 import { generateDateHash } from '../support/utils';
 
+// The lesson editor fills nearly the whole viewport (96vw wide) rather than opening as a
+// standard-size dialog. Measured instead of read off a class name, so a restyle that keeps the
+// layout still passes.
+const assertEditorFillsViewportWidth = () => {
+  cy.window().then((win) => {
+    cy.get('[data-testid="editor-modal"]')
+      .invoke('outerWidth')
+      .should('be.at.least', win.innerWidth * 0.95);
+  });
+};
+
 describe('Editor Role Validation (Section E)', () => {
   it('allows Editor to login and verify reads & diffs on Lesson 1 (Test Case 8)', () => {
     // Nothing in this read-only flow should prompt; capturing lets us assert that.
@@ -23,29 +34,29 @@ describe('Editor Role Validation (Section E)', () => {
 
     // 2. Navigate to CS -> Scratch 1A -> Lesson 1
     cy.contains('Explore CS').click();
-    cy.contains('.card', 'Scratch 1A').contains('Start Teaching').click();
-    cy.contains('.lesson-link', /^Lesson 1:/).click();
+    cy.contains('[data-testid="course-card"]', 'Scratch 1A').contains('Start Teaching').click();
+    cy.contains('[data-testid="lesson-link"]', /^Lesson 1:/).click();
     cy.url().should('include', '/cs/scratch1A/lesson/1');
 
     // Assert Lesson detail page elements
     cy.get('h1').should('be.visible').and('not.be.empty');
     cy.contains('p, div', 'Lesson 1').should('be.visible');
-    cy.get('.curriculum-content').should('be.visible').and('not.be.empty');
-    cy.get('.alert-danger').should('not.exist');
+    cy.get('[data-testid="lesson-content"]').should('be.visible').and('not.be.empty');
+    cy.get('[data-testid="error-alert"]').should('not.exist');
 
     // 3. Open Version History & Diff View
     cy.contains('button', 'Version History').click();
-    cy.get('.modal-dialog').first().should('be.visible');
+    cy.get('[data-testid="version-history-modal"]').should('be.visible');
 
     // Open Diff Modal for the first historical version (index 1)
-    cy.get('.modal-dialog').first().find('tbody tr').eq(1).contains('Diff').click();
-    cy.get('.modal-dialog').last().should('be.visible');
-    cy.contains('.modal-title', 'Diff:').should('be.visible');
+    cy.get('[data-testid="version-history-modal"]').find('tbody tr').eq(1).contains('Diff').click();
+    cy.get('[data-testid="diff-modal"]').should('be.visible');
+    cy.get('[data-testid="diff-modal"]').should('contain', 'Diff:');
 
     // Close modals
-    cy.get('.modal-dialog').last().contains('Close').click();
-    cy.get('.modal-dialog').first().contains('Close').click();
-    cy.get('.modal-dialog').should('not.exist');
+    cy.get('[data-testid="diff-modal"]').contains('Close').click();
+    cy.get('[data-testid="version-history-modal"]').contains('Close').click();
+    cy.get('[data-testid$="-modal"]').should('not.exist');
 
     cy.get('@confirms').should('have.length', 0);
   });
@@ -70,94 +81,108 @@ describe('Editor Role Validation (Section E)', () => {
 
     // 1. Add New Lesson
     cy.contains('button', 'Add New Lesson').click();
-    cy.get('.modal-dialog').first().should('be.visible');
+    cy.get('[data-testid="editor-modal"]').should('be.visible');
 
-    cy.get('.modal-dialog').first().find('input[type="number"]').type('1000');
-    cy.get('.modal-dialog').first().find('input[placeholder="Lesson title"]').type(lessonTitle);
+    cy.get('[data-testid="editor-modal"]').find('input[type="number"]').type('1000');
+    cy.get('[data-testid="editor-modal"]')
+      .find('input[placeholder="Lesson title"]')
+      .type(lessonTitle);
     cy.get('#content-textarea').type(initialContent);
-    cy.get('.modal-dialog').first().contains('button', 'Save').click();
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Save').click();
 
     // Verify button exists and click it
-    cy.contains('.lesson-link', `Lesson 1000: ${lessonTitle}`).should('be.visible').click();
+    cy.contains('[data-testid="lesson-link"]', `Lesson 1000: ${lessonTitle}`)
+      .should('be.visible')
+      .click();
     cy.url().should('include', '/cs/scratch1A/lesson/1000');
-    cy.get('.curriculum-content').should('contain', initialContent);
+    cy.get('[data-testid="lesson-content"]').should('contain', initialContent);
 
     // 2. Edit & Cancel edit
     cy.contains('button', 'Edit Lesson').click();
     cy.get('#content-textarea').clear();
     cy.get('#content-textarea').type(cancelledContent);
-    cy.get('.modal-dialog').first().contains('button', 'Cancel').click();
-    cy.get('.curriculum-content').should('contain', initialContent);
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Cancel').click();
+    cy.get('[data-testid="lesson-content"]').should('contain', initialContent);
 
     // 3. Edit & Save edit
     cy.contains('button', 'Edit Lesson').click();
     cy.get('#content-textarea').clear();
     cy.get('#content-textarea').type(updatedContent);
-    cy.get('.modal-dialog').first().contains('button', 'Save').click();
-    cy.get('.curriculum-content').should('contain', updatedContent);
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Save').click();
+    cy.get('[data-testid="lesson-content"]').should('contain', updatedContent);
 
     // 4. Verify Persistence
-    cy.get('.lesson-navigation').contains('Curriculum').click();
-    cy.contains('.lesson-link', `Lesson 1000: ${lessonTitle}`).click();
-    cy.get('.curriculum-content').should('contain', updatedContent);
+    cy.get('[data-testid="lesson-navigation"]').contains('Curriculum').click();
+    cy.contains('[data-testid="lesson-link"]', `Lesson 1000: ${lessonTitle}`).click();
+    cy.get('[data-testid="lesson-content"]').should('contain', updatedContent);
 
     // 5. Version History & Cancel Restore
     cy.contains('button', 'Version History').click();
-    cy.get('.modal-dialog').first().should('be.visible');
-    cy.get('.modal-dialog').first().find('tbody tr').should('have.length.at.least', 2);
+    cy.get('[data-testid="version-history-modal"]').should('be.visible');
+    cy.get('[data-testid="version-history-modal"]')
+      .find('tbody tr')
+      .should('have.length.at.least', 2);
 
     // Diff validation
-    cy.get('.modal-dialog').first().find('tbody tr').eq(1).contains('Diff').click();
-    cy.get('.modal-dialog').last().should('be.visible');
-    cy.get('.modal-dialog').last().contains('Close').click();
+    cy.get('[data-testid="version-history-modal"]').find('tbody tr').eq(1).contains('Diff').click();
+    cy.get('[data-testid="diff-modal"]').should('be.visible');
+    cy.get('[data-testid="diff-modal"]').contains('Close').click();
 
     // Trigger Restore but cancel
     cy.then(() => {
       confirmVal = false;
     });
-    cy.get('.modal-dialog').first().find('tbody tr').eq(1).contains('Restore').click();
+    cy.get('[data-testid="version-history-modal"]')
+      .find('tbody tr')
+      .eq(1)
+      .contains('Restore')
+      .click();
     cy.get('@confirms').should('have.length', 1);
     cy.get('@confirms').its(0).should('contain', 'revert to an older version');
-    cy.get('.curriculum-content').should('contain', updatedContent);
+    cy.get('[data-testid="lesson-content"]').should('contain', updatedContent);
 
     // 6. Confirm Restore
     cy.then(() => {
       confirmVal = true;
     });
-    cy.get('.modal-dialog').first().find('tbody tr').eq(1).contains('Restore').click();
+    cy.get('[data-testid="version-history-modal"]')
+      .find('tbody tr')
+      .eq(1)
+      .contains('Restore')
+      .click();
     cy.get('@confirms').should('have.length', 2);
     cy.get('@confirms').its(1).should('contain', 'revert to an older version');
     // Modal closes automatically on successful restore reload
-    cy.get('.curriculum-content').should('contain', initialContent);
+    cy.get('[data-testid="lesson-content"]').should('contain', initialContent);
 
     // 7. Verify Restored Content Persistence
-    cy.get('.lesson-navigation').contains('Curriculum').click();
-    cy.contains('.lesson-link', `Lesson 1000: ${lessonTitle}`).click();
-    cy.get('.curriculum-content').should('contain', initialContent);
+    cy.get('[data-testid="lesson-navigation"]').contains('Curriculum').click();
+    cy.contains('[data-testid="lesson-link"]', `Lesson 1000: ${lessonTitle}`).click();
+    cy.get('[data-testid="lesson-content"]').should('contain', initialContent);
 
     // 8. Edit & Cancel Delete
     cy.contains('button', 'Edit Lesson').click();
     cy.then(() => {
       confirmVal = false;
     });
-    cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Delete').click();
     cy.get('@confirms').should('have.length', 3);
     cy.get('@confirms').its(2).should('contain', 'delete this lesson');
-    cy.get('.modal-dialog').first().contains('button', 'Cancel').click();
-    cy.get('.curriculum-content').should('contain', initialContent);
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Cancel').click();
+    cy.get('[data-testid="lesson-content"]').should('contain', initialContent);
 
     // 9. Confirm Delete
     cy.contains('button', 'Edit Lesson').click();
     cy.then(() => {
       confirmVal = true;
     });
-    cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Delete').click();
     cy.get('@confirms').should('have.length', 4);
     cy.get('@confirms').its(3).should('contain', 'delete this lesson');
 
     // URL redirects to curriculum listing page
     cy.url().should('eq', Cypress.config().baseUrl + '/cs/scratch1A');
-    cy.contains('.lesson-link', `Lesson 1000: ${lessonTitle}`).should('not.exist');
+    cy.contains('[data-testid="lesson-link"]', `Lesson 1000: ${lessonTitle}`).should('not.exist');
   });
 
   it('verifies real-time preview and toolbar formatting helpers (Test Case 13)', () => {
@@ -167,11 +192,11 @@ describe('Editor Role Validation (Section E)', () => {
 
     // 1. Open Editor Modal
     cy.contains('button', 'Add New Lesson').click();
-    cy.get('.modal-dialog').first().should('be.visible');
+    cy.get('[data-testid="editor-modal"]').should('be.visible');
 
     // Assert split preview pane layout
-    cy.get('.editor-col').should('be.visible');
-    cy.get('.preview-col').should('be.visible');
+    cy.get('[data-testid="editor-column"]').should('be.visible');
+    cy.get('[data-testid="editor-preview"]').should('be.visible');
 
     // 2. Bold helper formatting test
     cy.get('#content-textarea').type('bold');
@@ -181,7 +206,7 @@ describe('Editor Role Validation (Section E)', () => {
     });
     cy.get('button[data-name="bold"], button[title="Bold"]').first().click();
     cy.get('#content-textarea').should('have.value', '**bold**');
-    cy.get('.preview-col').find('strong').should('contain', 'bold');
+    cy.get('[data-testid="editor-preview"]').find('strong').should('contain', 'bold');
 
     // 3. Italic helper formatting test
     cy.get('#content-textarea').clear();
@@ -192,7 +217,7 @@ describe('Editor Role Validation (Section E)', () => {
     });
     cy.get('button[data-name="italic"], button[title="Italic"]').first().click();
     cy.get('#content-textarea').should('have.value', '*italic*');
-    cy.get('.preview-col').find('em').should('contain', 'italic');
+    cy.get('[data-testid="editor-preview"]').find('em').should('contain', 'italic');
 
     // 4. List helper formatting tests
     cy.get('#content-textarea').clear();
@@ -204,15 +229,17 @@ describe('Editor Role Validation (Section E)', () => {
     cy.get('#content-textarea').should('contain', '- Item 1').and('contain', '1. Item 2');
 
     // Verify live preview of list formatting
-    cy.get('.preview-col').find('ul li').should('contain', 'Item 1');
-    cy.get('.preview-col').find('ol li').should('contain', 'Item 2');
+    cy.get('[data-testid="editor-preview"]').find('ul li').should('contain', 'Item 1');
+    cy.get('[data-testid="editor-preview"]').find('ol li').should('contain', 'Item 2');
 
     // 5. Code Block insertion helper
     cy.get('button[title="Insert Code Block"]').click();
-    cy.get('.modal-dialog').last().should('be.visible');
-    cy.get('.modal-dialog').last().find('select').select('python');
-    cy.get('.modal-dialog').last().find('textarea').type('print("Hello from code helper!")');
-    cy.get('.modal-dialog').last().contains('button', 'Insert Code Block').click();
+    cy.get('[data-testid="code-block-modal"]').should('be.visible');
+    cy.get('[data-testid="code-block-modal"]').find('select').select('python');
+    cy.get('[data-testid="code-block-modal"]')
+      .find('textarea')
+      .type('print("Hello from code helper!")');
+    cy.get('[data-testid="code-block-modal"]').contains('button', 'Insert Code Block').click();
 
     // Verify insertion into textarea in addition to the text above
     cy.get('#content-textarea').should(
@@ -221,11 +248,13 @@ describe('Editor Role Validation (Section E)', () => {
     );
 
     // Verify live preview updates in real-time
-    cy.get('.preview-col').contains('Hello from code helper!').should('be.visible');
+    cy.get('[data-testid="editor-preview"]')
+      .contains('Hello from code helper!')
+      .should('be.visible');
 
     // 6. Cancel to discard changes
-    cy.get('.modal-dialog').first().contains('button', 'Cancel').click();
-    cy.get('.modal-dialog').should('not.exist');
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Cancel').click();
+    cy.get('[data-testid$="-modal"]').should('not.exist');
 
     cy.get('@confirms').should('have.length', 0);
   });
@@ -238,12 +267,12 @@ describe('Editor Role Validation (Section E)', () => {
     // Open editor and type unsaved draft content
     cy.contains('button', 'Edit Lesson').click();
     cy.get('#content-textarea').type('\n\n[Unsaved Draft Content]');
-    cy.contains('.modal-dialog button', 'Cancel').click();
+    cy.contains('[data-testid="editor-modal"] button', 'Cancel').click();
 
     // Reopen editor and verify unsaved draft content was discarded
     cy.contains('button', 'Edit Lesson').click();
     cy.get('#content-textarea').should('not.contain', '[Unsaved Draft Content]');
-    cy.contains('.modal-dialog button', 'Cancel').click();
+    cy.contains('[data-testid="editor-modal"] button', 'Cancel').click();
 
     cy.get('@confirms').should('have.length', 0);
   });
@@ -264,7 +293,7 @@ describe('Editor Role Validation (Section E)', () => {
     // Verify custom split variable was applied
     cy.get('.w-md-editor-content').should('have.attr', 'style').and('include', '--split-percent');
 
-    cy.contains('.modal-dialog button', 'Cancel').click();
+    cy.contains('[data-testid="editor-modal"] button', 'Cancel').click();
 
     cy.get('@confirms').should('have.length', 0);
   });
@@ -275,9 +304,17 @@ describe('Editor Role Validation (Section E)', () => {
     cy.visit('/cs/scratch1A');
 
     cy.contains('button', 'Add New Lesson').click();
-    cy.get('.modal-dialog').first().should('have.class', 'modal-almost-fullscreen');
+    assertEditorFillsViewportWidth();
+    // ...and, on a desktop-size screen, nearly the whole height (96vh). The footer's parent is
+    // the dialog's white card.
+    cy.window().then((win) => {
+      cy.get('[data-testid="editor-modal-footer"]')
+        .parent()
+        .invoke('outerHeight')
+        .should('be.at.least', win.innerHeight * 0.95);
+    });
 
-    cy.contains('.modal-dialog button', 'Cancel').click();
+    cy.contains('[data-testid="editor-modal"] button', 'Cancel').click();
 
     cy.get('@confirms').should('have.length', 0);
   });
@@ -297,7 +334,7 @@ describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
     cy.visit('/cs/scratch1A');
 
     cy.contains('button', 'Add New Lesson').click();
-    cy.get('.modal-dialog').first().should('have.class', 'modal-almost-fullscreen');
+    assertEditorFillsViewportWidth();
     cy.get('.w-md-editor-drag-divider', { timeout: 10000 }).should('be.visible');
 
     // Real content is essential here: with an empty lesson the stacked
@@ -330,7 +367,7 @@ describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
             dividerRect.bottom - 1
           );
 
-          cy.contains('.modal-dialog button', 'Cancel').then(($cancel) => {
+          cy.contains('[data-testid="editor-modal"] button', 'Cancel').then(($cancel) => {
             const cancelRect = $cancel[0].getBoundingClientRect();
             expect(
               previewRect.bottom,
@@ -348,9 +385,10 @@ describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
     // `height` (not just `max-height`) to 96vh, and a mobile override that
     // only raised `min-height` couldn't grow the box past that - it can
     // only ever raise the floor, not override an explicit, smaller height.
-    cy.get('.modal-footer').then(($footer) => {
+    cy.get('[data-testid="editor-modal-footer"]').then(($footer) => {
       const footerRect = $footer[0].getBoundingClientRect();
-      cy.get('.modal-content').then(($content) => {
+      // The footer's parent is the dialog's white card.
+      cy.wrap($footer.parent()).then(($content) => {
         const contentRect = $content[0].getBoundingClientRect();
         expect(
           contentRect.bottom,
@@ -363,20 +401,21 @@ describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
     // overscroll-behavior fix) must reach the footer, and the button must be
     // genuinely clickable there - not covered by the preview pane - without
     // forcing past Cypress's actionability check.
-    cy.get('.modal').first().scrollTo('bottom');
-    cy.get('.modal')
-      .first()
+    // The scrolling element is the dialog's overlay, the nearest ancestor with the dialog role.
+    cy.get('[data-testid="editor-modal"]').closest('[role="dialog"]').scrollTo('bottom');
+    cy.get('[data-testid="editor-modal"]')
+      .closest('[role="dialog"]')
       .then(($modal) => {
         expect($modal[0].scrollTop, 'the dialog actually scrolled').to.be.greaterThan(0);
       });
 
-    cy.contains('.modal-dialog button', 'Cancel').then(($cancel) => {
+    cy.contains('[data-testid="editor-modal"] button', 'Cancel').then(($cancel) => {
       const rect = $cancel[0].getBoundingClientRect();
       expect(rect.bottom, 'button bottom is within the viewport').to.be.at.most(844);
       expect(rect.top, 'button top is within the viewport').to.be.at.least(0);
     });
-    cy.contains('.modal-dialog button', 'Cancel').click();
-    cy.get('.modal-dialog').should('not.exist');
+    cy.contains('[data-testid="editor-modal"] button', 'Cancel').click();
+    cy.get('[data-testid$="-modal"]').should('not.exist');
 
     cy.get('@confirms').should('have.length', 0);
   });
@@ -413,7 +452,7 @@ describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
     // --split-percent, is what the desktop drag in Test Case 13c sets).
     cy.get('.w-md-editor-content').should('have.attr', 'style').and('include', '--split-percent-y');
 
-    cy.contains('.modal-dialog button', 'Cancel').click();
+    cy.contains('[data-testid="editor-modal"] button', 'Cancel').click();
 
     cy.get('@confirms').should('have.length', 0);
   });

@@ -25,74 +25,79 @@ describe('Curriculum & Lesson Page Interaction Loop (Section B)', () => {
 
     // 2. Verify Track landing page and Track Hero
     cy.url().should('include', `/${trackId}`);
-    cy.get('.track-hero').should('be.visible');
+    cy.get('[data-testid="track-hero"]').should('be.visible');
 
     // 3. Verify Learning Path if applicable
     if (hasLearningPath) {
-      cy.get('.learning-path').should('be.visible');
-      cy.get('.learning-path-step').should('have.length.at.least', 2);
+      cy.get('[data-testid="learning-path"]').should('be.visible');
+      cy.get('[data-testid="learning-path-step"]').should('have.length.at.least', 2);
     }
 
     // 4. Click target class card "Start Teaching" button
-    cy.contains('.card', courseTitle).contains('Start Teaching').click();
+    cy.contains('[data-testid="course-card"]', courseTitle).contains('Start Teaching').click();
     cy.url().should('include', `/${trackId}/${courseId}`);
 
     // 5. Assert class page curriculum header and lesson list
     cy.get('h1').should('contain', `${courseTitle} Curriculum`);
-    cy.get('.lesson-link').should('have.length.at.least', 1);
+    cy.get('[data-testid="lesson-link"]').should('have.length.at.least', 1);
 
     // 6. Click Lesson 1 link
-    cy.contains('.lesson-link', /^Lesson 1:/).click();
+    cy.contains('[data-testid="lesson-link"]', /^Lesson 1:/).click();
     cy.url().should('include', `/${trackId}/${courseId}/lesson/1`);
 
     // 7. Assert Lesson detail page elements
     cy.get('h1').should('be.visible').and('not.be.empty');
     cy.contains('p, div', 'Lesson 1').should('be.visible');
-    cy.get('.curriculum-content').should('be.visible').and('not.be.empty');
-    cy.get('.alert-danger').should('not.exist'); // Ensure no error banner
+    cy.get('[data-testid="lesson-content"]').should('be.visible').and('not.be.empty');
+    cy.get('[data-testid="error-alert"]').should('not.exist'); // Ensure no error banner
 
     // 8. Verify Version History & Diff View
     cy.contains('button', 'Version History').click();
-    cy.get('.modal-dialog').first().should('be.visible');
+    cy.get('[data-testid="version-history-modal"]').should('be.visible');
 
     // Assert table has header and at least one version row
-    cy.get('.modal-dialog').first().find('table').should('be.visible');
-    cy.get('.modal-dialog').first().find('tbody tr').should('have.length.at.least', 1);
+    cy.get('[data-testid="version-history-modal"]').find('table').should('be.visible');
+    cy.get('[data-testid="version-history-modal"]')
+      .find('tbody tr')
+      .should('have.length.at.least', 1);
 
     // Verify Diff view if there's a historical version (tr count > 1)
-    cy.get('.modal-dialog')
-      .first()
+    cy.get('[data-testid="version-history-modal"]')
       .find('tbody tr')
       .then((rows) => {
         if (rows.length > 1) {
           // Open Diff modal
-          cy.get('.modal-dialog').first().find('tbody tr').eq(1).contains('Diff').click();
-          cy.get('.modal-dialog').last().should('be.visible');
-          cy.contains('.modal-title', 'Diff:').should('be.visible');
+          cy.get('[data-testid="version-history-modal"]')
+            .find('tbody tr')
+            .eq(1)
+            .contains('Diff')
+            .click();
+          cy.get('[data-testid="diff-modal"]').should('be.visible');
+          cy.get('[data-testid="diff-modal"]').should('contain', 'Diff:');
           // Close Diff Modal
-          cy.get('.modal-dialog').last().contains('Close').click();
+          cy.get('[data-testid="diff-modal"]').contains('Close').click();
         }
       });
 
     // Close Version History Modal
-    cy.get('.modal-dialog').first().contains('Close').click();
-    cy.get('.modal-dialog').should('not.exist');
+    cy.get('[data-testid="version-history-modal"]').contains('Close').click();
+    cy.get('[data-testid$="-modal"]').should('not.exist');
 
     // 9. Verify Footer Navigation
     // Navigate to Next
-    cy.get('.lesson-navigation').contains('Next').click();
+    cy.get('[data-testid="lesson-navigation"]').contains('Next').click();
     cy.url().should('include', `/${trackId}/${courseId}/lesson/2`);
 
     // Navigate to Prev
-    cy.get('.lesson-navigation').contains('Prev').click();
+    cy.get('[data-testid="lesson-navigation"]').contains('Prev').click();
     cy.url().should('include', `/${trackId}/${courseId}/lesson/1`);
 
     // Navigate to Next again
-    cy.get('.lesson-navigation').contains('Next').click();
+    cy.get('[data-testid="lesson-navigation"]').contains('Next').click();
     cy.url().should('include', `/${trackId}/${courseId}/lesson/2`);
 
     // Go back to curriculum page
-    cy.get('.lesson-navigation').contains('Curriculum').click();
+    cy.get('[data-testid="lesson-navigation"]').contains('Curriculum').click();
     cy.url().should('eq', Cypress.config().baseUrl + `/${trackId}/${courseId}`);
   };
 
@@ -127,6 +132,6 @@ describe('Curriculum & Lesson Page Interaction Loop (Section B)', () => {
 
     cy.url().should('eq', Cypress.config().baseUrl + '/cs/scratch1A');
     cy.get('h1').should('contain', 'Scratch 1A Curriculum');
-    cy.get('.lesson-link').should('have.length.at.least', 1);
+    cy.get('[data-testid="lesson-link"]').should('have.length.at.least', 1);
   });
 });

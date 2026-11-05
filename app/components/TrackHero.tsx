@@ -19,6 +19,7 @@ export default function TrackHero({
   return (
     <div
       className="track-hero py-5"
+      data-testid="track-hero"
       style={{
         backgroundColor: bgColor,
         color: isDarkText ? '#212529' : '#fff',
