@@ -1,0 +1,4 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "test -z \"$GBSTEM_CANONICAL_VERCEL_PROJECT\""
+}
