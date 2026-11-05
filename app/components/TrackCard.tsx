@@ -10,7 +10,7 @@ export default function TrackCard({ course }: TrackCardProps) {
   const isMultiLink = course.links.length > 1;
 
   return (
-    <div className="card hover-lift h-100 border-0 shadow-sm">
+    <div className="card hover-lift h-100 border-0 shadow-sm" data-testid="course-card">
       <div className="card-body d-flex flex-column p-4">
         {/* Header */}
         <div className="d-flex align-items-center mb-3">

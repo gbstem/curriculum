@@ -110,7 +110,7 @@ export default function LessonDetailsPage({ params }: PageProps) {
       <div className="container mt-5 py-4">
         <div className="row">
           <div className="col-lg-8 mx-auto">
-            <Alert variant="danger">
+            <Alert variant="danger" data-testid="error-alert">
               <Alert.Heading>Error Loading Lesson</Alert.Heading>
               <p>{error || 'Lesson not found'}</p>
               <hr />
@@ -175,12 +175,18 @@ export default function LessonDetailsPage({ params }: PageProps) {
           <div className="row">
             <div className="col-lg-8 mx-auto">
               <div className="card border-0 shadow-sm">
-                <div className="card-body curriculum-content p-md-5 p-4">
+                <div
+                  className="card-body curriculum-content p-md-5 p-4"
+                  data-testid="lesson-content"
+                >
                   <RenderContent content={displayContent} />
                 </div>
               </div>
 
-              <div className="d-flex lesson-navigation align-items-center mt-4 mb-5 w-100 shadow-sm">
+              <div
+                className="d-flex lesson-navigation align-items-center mt-4 mb-5 w-100 shadow-sm"
+                data-testid="lesson-navigation"
+              >
                 <div className="flex-1 text-start">
                   {prevLesson && (
                     <Link

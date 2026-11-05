@@ -198,7 +198,14 @@ const EditorModal: React.FC<EditorModalProps> = ({
 
   if (!isEditor) {
     return (
-      <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} centered>
+      <Modal
+        show={show}
+        onHide={onHide}
+        backdrop="static"
+        keyboard={false}
+        centered
+        data-testid="editor-access-modal"
+      >
         <Modal.Header className="bg-primary text-white" closeButton>
           <Modal.Title>
             <i className="fas fa-lock me-2"></i>
@@ -206,7 +213,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Alert variant="danger" className="mb-0 py-4 text-center">
+          <Alert variant="danger" data-testid="error-alert" className="mb-0 py-4 text-center">
             <i className="fas fa-exclamation-triangle fa-2x text-danger mb-3"></i>
             <h4>Access Denied</h4>
             <p className="mb-0">You need to login as an editor to make edits.</p>
@@ -223,7 +230,12 @@ const EditorModal: React.FC<EditorModalProps> = ({
 
   return (
     <>
-      <Modal show={show} onHide={onHide} dialogClassName="modal-almost-fullscreen">
+      <Modal
+        show={show}
+        onHide={onHide}
+        dialogClassName="modal-almost-fullscreen"
+        data-testid="editor-modal"
+      >
         <Modal.Header className="bg-primary text-white" closeButton>
           <Modal.Title>
             <i className="fas fa-edit me-2"></i>
@@ -232,7 +244,12 @@ const EditorModal: React.FC<EditorModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           {error && (
-            <Alert variant="danger" onClose={() => setError('')} dismissible>
+            <Alert
+              variant="danger"
+              data-testid="error-alert"
+              onClose={() => setError('')}
+              dismissible
+            >
               {error}
             </Alert>
           )}
@@ -307,7 +324,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
 
             <Form.Group className="editor-content-group">
               <Form.Label>Content</Form.Label>
-              <div className="editor-col" data-color-mode="light">
+              <div className="editor-col" data-color-mode="light" data-testid="editor-column">
                 <MDEditor
                   value={content}
                   onChange={(val) => setContent(val || '')}
@@ -320,7 +337,10 @@ const EditorModal: React.FC<EditorModalProps> = ({
                   }}
                   components={{
                     preview: (source) => (
-                      <div className="curriculum-content preview-col min-w-0 p-4">
+                      <div
+                        className="curriculum-content preview-col min-w-0 p-4"
+                        data-testid="editor-preview"
+                      >
                         <RenderContent content={typeof source === 'string' ? source : ''} />
                       </div>
                     ),
@@ -330,7 +350,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
             </Form.Group>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer data-testid="editor-modal-footer">
           <Button variant="secondary" onClick={onHide}>
             Cancel
           </Button>

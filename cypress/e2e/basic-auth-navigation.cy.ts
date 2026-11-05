@@ -5,7 +5,7 @@ describe('Authentication and Basic Navigation (Section A)', () => {
     cy.visit('/');
     cy.url().should('include', '/login');
     cy.contains('gbSTEM Curriculum Access').should('be.visible');
-    cy.get('.navbar').should('not.exist');
+    cy.get('[data-testid="navbar"]').should('not.exist');
   });
 
   it('allows logging in as a Viewer and navigates the home page', () => {
@@ -28,12 +28,12 @@ describe('Authentication and Basic Navigation (Section A)', () => {
       cy.contains('Explore Engineering').should('be.visible');
       cy.contains('Explore Science').should('be.visible');
 
-      cy.get('.navbar-brand').should('be.visible');
-      cy.get('#cs-dropdown').should('be.visible');
-      cy.get('#math-dropdown').should('be.visible');
-      cy.get('#engineering-dropdown').should('be.visible');
-      cy.get('#science-dropdown').should('be.visible');
-      cy.contains('.nav-link, a', 'Logout').should('be.visible');
+      cy.get('[data-testid="nav-home"]').should('be.visible');
+      cy.get('[data-testid="nav-cs"]').should('be.visible');
+      cy.get('[data-testid="nav-math"]').should('be.visible');
+      cy.get('[data-testid="nav-engineering"]').should('be.visible');
+      cy.get('[data-testid="nav-science"]').should('be.visible');
+      cy.get('[data-testid="nav-logout"]').should('be.visible');
     });
   });
 
@@ -97,7 +97,7 @@ describe('Authentication and Basic Navigation (Section A)', () => {
     cy.visit('/cs');
     cy.url().should('include', '/cs');
 
-    cy.get('.navbar-brand').click();
+    cy.get('[data-testid="nav-home"]').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/');
     cy.get('h1').should('contain', 'Choose a Curriculum Track');
 

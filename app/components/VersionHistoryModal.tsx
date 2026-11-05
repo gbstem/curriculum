@@ -97,7 +97,7 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
 
   return (
     <>
-      <Modal show={show} onHide={onHide} size="lg" centered>
+      <Modal show={show} onHide={onHide} size="lg" centered data-testid="version-history-modal">
         <Modal.Header className="bg-info text-white" closeButton>
           <Modal.Title>
             <i className="fas fa-history me-2"></i>
@@ -106,7 +106,12 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           {error && (
-            <Alert variant="danger" onClose={() => setError('')} dismissible>
+            <Alert
+              variant="danger"
+              data-testid="error-alert"
+              onClose={() => setError('')}
+              dismissible
+            >
               {error}
             </Alert>
           )}
@@ -215,6 +220,7 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
         backdrop="static"
         keyboard={false}
         centered
+        data-testid="restore-blocked-modal"
       >
         <Modal.Header className="bg-danger text-white" closeButton>
           <Modal.Title>

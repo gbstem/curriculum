@@ -73,7 +73,7 @@ const CodeBlockModal: React.FC<CodeBlockModalProps> = ({ show, onHide, onInsert 
   ];
 
   return (
-    <Modal show={show} onHide={onHide} size="lg" centered>
+    <Modal show={show} onHide={onHide} size="lg" centered data-testid="code-block-modal">
       <Modal.Header className="bg-dark text-white" closeButton>
         <Modal.Title>
           <i className="fas fa-code me-2"></i>

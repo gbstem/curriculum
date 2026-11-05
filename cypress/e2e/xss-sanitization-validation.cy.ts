@@ -23,13 +23,15 @@ describe('XSS Sanitization Validation (Section I)', () => {
   const createLesson = (lessonNumber: string, titlePrefix: string, content: string): string => {
     const lessonTitle = generateDateHash(titlePrefix);
     cy.contains('button', 'Add New Lesson').click();
-    cy.get('.modal-dialog').first().should('be.visible');
-    cy.get('.modal-dialog').first().find('input[type="number"]').type(lessonNumber);
-    cy.get('.modal-dialog').first().find('input[placeholder="Lesson title"]').type(lessonTitle);
+    cy.get('[data-testid="editor-modal"]').should('be.visible');
+    cy.get('[data-testid="editor-modal"]').find('input[type="number"]').type(lessonNumber);
+    cy.get('[data-testid="editor-modal"]')
+      .find('input[placeholder="Lesson title"]')
+      .type(lessonTitle);
     // parseSpecialCharSequences: false so none of the payload's punctuation
     // is misread as a Cypress key sequence.
     cy.get('#content-textarea').type(content, { parseSpecialCharSequences: false });
-    cy.get('.modal-dialog').first().contains('button', 'Save').click();
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Save').click();
     return lessonTitle;
   };
 
@@ -37,14 +39,16 @@ describe('XSS Sanitization Validation (Section I)', () => {
   // pattern in scratchblocks-validation.cy.ts / syntax-highlighter-validation.cy.ts.
   const deleteLesson = (lessonNumber: string, lessonTitle: string) => {
     cy.contains('button', 'Edit Lesson').click();
-    cy.get('.modal-dialog').first().should('be.visible');
-    cy.get('.modal-dialog').first().contains('button', 'Delete').click();
+    cy.get('[data-testid="editor-modal"]').should('be.visible');
+    cy.get('[data-testid="editor-modal"]').contains('button', 'Delete').click();
     // This delete is the only prompt any test in this spec should raise — a payload
     // that managed to trigger an extra confirm would show up as a longer array.
     cy.get('@confirms').should('have.length', 1);
     cy.get('@confirms').its(0).should('contain', 'delete this lesson');
     cy.url().should('eq', Cypress.config().baseUrl + COURSE_PATH);
-    cy.contains('.lesson-link', `Lesson ${lessonNumber}: ${lessonTitle}`).should('not.exist');
+    cy.contains('[data-testid="lesson-link"]', `Lesson ${lessonNumber}: ${lessonTitle}`).should(
+      'not.exist'
+    );
   };
 
   it(`neutralizes raw HTML XSS payloads (img onerror, script, svg onload) on Lesson ${LESSON_HTML_XSS} (Test Case 14)`, () => {
@@ -65,19 +69,19 @@ describe('XSS Sanitization Validation (Section I)', () => {
 
     const lessonTitle = createLesson(LESSON_HTML_XSS, 'XSS HTML Test', content);
 
-    cy.contains('.lesson-link', `Lesson ${LESSON_HTML_XSS}: ${lessonTitle}`)
+    cy.contains('[data-testid="lesson-link"]', `Lesson ${LESSON_HTML_XSS}: ${lessonTitle}`)
       .should('be.visible')
       .click();
     cy.url().should('include', `${COURSE_PATH}/lesson/${LESSON_HTML_XSS}`);
 
     // The benign marker proves the line-based content actually rendered...
-    cy.get('.curriculum-content').should('contain', marker);
+    cy.get('[data-testid="lesson-content"]').should('contain', marker);
     // ...while none of the disallowed script/svg elements exist as live DOM nodes,
     // and no element carries a live onerror/onload handler attribute.
-    cy.get('.curriculum-content').find('script').should('not.exist');
-    cy.get('.curriculum-content').find('svg').should('not.exist');
-    cy.get('.curriculum-content').find('[onerror]').should('not.exist');
-    cy.get('.curriculum-content').find('[onload]').should('not.exist');
+    cy.get('[data-testid="lesson-content"]').find('script').should('not.exist');
+    cy.get('[data-testid="lesson-content"]').find('svg').should('not.exist');
+    cy.get('[data-testid="lesson-content"]').find('[onerror]').should('not.exist');
+    cy.get('[data-testid="lesson-content"]').find('[onload]').should('not.exist');
 
     // No alert fired at any point: not while the editor's live preview
     // rendered the payload as it was typed, and not on the saved page.
@@ -101,17 +105,19 @@ describe('XSS Sanitization Validation (Section I)', () => {
 
     const lessonTitle = createLesson(LESSON_LINK_XSS, 'XSS Link Test', content);
 
-    cy.contains('.lesson-link', `Lesson ${LESSON_LINK_XSS}: ${lessonTitle}`)
+    cy.contains('[data-testid="lesson-link"]', `Lesson ${LESSON_LINK_XSS}: ${lessonTitle}`)
       .should('be.visible')
       .click();
     cy.url().should('include', `${COURSE_PATH}/lesson/${LESSON_LINK_XSS}`);
 
     // The link's display text still renders...
-    cy.get('.curriculum-content').should('contain', linkText);
+    cy.get('[data-testid="lesson-content"]').should('contain', linkText);
     // ...but the href attribute is stripped by rehype-sanitize, and javascript: scheme
     // never reaches the DOM.
-    cy.get('.curriculum-content').contains('a', linkText).should('not.have.attr', 'href');
-    cy.get('.curriculum-content').invoke('html').should('not.contain', 'javascript:');
+    cy.get('[data-testid="lesson-content"]')
+      .contains('a', linkText)
+      .should('not.have.attr', 'href');
+    cy.get('[data-testid="lesson-content"]').invoke('html').should('not.contain', 'javascript:');
 
     cy.get('@alertStub').should('not.have.been.called');
 
@@ -137,16 +143,16 @@ describe('XSS Sanitization Validation (Section I)', () => {
 
     const lessonTitle = createLesson(LESSON_SAFE_CONTENT, 'XSS Safe Content Test', content);
 
-    cy.contains('.lesson-link', `Lesson ${LESSON_SAFE_CONTENT}: ${lessonTitle}`)
+    cy.contains('[data-testid="lesson-link"]', `Lesson ${LESSON_SAFE_CONTENT}: ${lessonTitle}`)
       .should('be.visible')
       .click();
     cy.url().should('include', `${COURSE_PATH}/lesson/${LESSON_SAFE_CONTENT}`);
 
     // Allow-listed tags still render as real elements (demoted to h3 per site rules).
-    cy.get('.curriculum-content').find('h3').should('contain', headingText);
-    cy.get('.curriculum-content').find('strong').should('contain', boldText);
+    cy.get('[data-testid="lesson-content"]').find('h3').should('contain', headingText);
+    cy.get('[data-testid="lesson-content"]').find('strong').should('contain', boldText);
     // A legitimate https link still renders as a clickable anchor.
-    cy.get('.curriculum-content')
+    cy.get('[data-testid="lesson-content"]')
       .contains('a', 'Safe Google Link')
       .should('have.attr', 'href', 'https://www.google.com');
 
