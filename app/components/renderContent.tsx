@@ -84,8 +84,8 @@ function heading(level: number) {
     level === 1
       ? 'mt-6 mb-4 border-b-2 border-b-sky pb-2 text-navy'
       : level === 2
-        ? // TODO: probably meant as a colored bar on the left only, but it has always drawn a
-          // full box, so it still does.
+        ? // The full box (lighter on the left) began as an accident, but readers are used to
+          // it, so it stays.
           'mt-4 mb-2 border-3 border-l-divider ps-4 font-semibold text-[#2c3e50]'
         : level === 3
           ? 'my-2 border border-light pb-1 font-medium text-dark'

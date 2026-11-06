@@ -195,13 +195,11 @@ export default function CourseLessonsPage({ params }: PageProps) {
                 </div>
               ) : (
                 <div className="grid gap-4 md:grid-cols-2">
-                  {/* TODO: `self-start` keeps each lesson button its own height, as before. Without
-                      it, both buttons in a row would be as tall as the taller one. */}
                   {sortedLessons.map((lesson) => (
                     <Link
                       key={lesson.id}
                       href={`/${normalizedTrack}/${course}/lesson/${lesson.lessonNumber}`}
-                      className="btn btn-primary btn-lg flex min-h-16 w-full items-center justify-center self-start text-center whitespace-pre-line text-white shadow-sm hover:transform-[scale(1.02)]"
+                      className="btn btn-primary btn-lg flex min-h-16 w-full items-center justify-center text-center whitespace-pre-line text-white shadow-sm hover:transform-[scale(1.02)]"
                       data-testid="lesson-link"
                     >
                       Lesson {lesson.lessonNumber}: {lesson.title}
