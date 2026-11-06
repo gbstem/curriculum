@@ -40,36 +40,56 @@ function CodeBlock({ node }: any) {
 
   if (lang === 'scratch' || lang === 'scratchblocks') {
     return (
-      <div className="my-4">
+      <div className="my-6">
         <ScratchBlocks blockStyle="scratch3">{source}</ScratchBlocks>
       </div>
     );
   }
 
+  const language = lang || 'text';
   return (
     <SyntaxHighlighter
-      language={lang || 'text'}
+      language={language}
       style={oneLight}
-      customStyle={{ borderRadius: '8px', fontSize: '1rem', margin: '1rem 0' }}
+      customStyle={{
+        borderRadius: '8px',
+        borderLeft: '4px solid #67aeda',
+        fontSize: '1rem',
+        margin: '1rem 0',
+      }}
+      codeTagProps={{
+        className: `language-${language}`,
+        style: {
+          ...oneLight['code[class*="language-"]'],
+          ...oneLight[`code[class*="language-${language}"]`],
+          padding: '0.2rem 0.4rem',
+          borderRadius: '4px',
+          fontSize: '0.9rem',
+        },
+      }}
     >
       {source}
     </SyntaxHighlighter>
   );
 }
 
-// Preserves the existing demotion (h1 -> h3, capped at h6) and per-level Bootstrap classes
-// from the old renderContentHelper. The demotion matters: the lesson page already renders
-// its own <h1>.
+/** Text size and spacing for a lesson, on whatever element wraps `RenderContent`. */
+export const LESSON_TEXT = 'text-[1.1rem] leading-[1.6] narrow:text-base';
+
+// Demotes headings (h1 -> h3, capped at h6), because the lesson page already renders its own
+// <h1>, and styles each level.
 function heading(level: number) {
   const Tag = `h${Math.min(level + 2, 6)}` as React.ElementType;
   const className =
     level === 1
-      ? 'mt-4 mb-3'
+      ? 'mt-6 mb-4 border-b-2 border-b-sky pb-2 text-navy'
       : level === 2
-        ? 'mt-3 mb-2 text-purple fw-semibold border-start border-3 border-purple ps-3'
+        ? // TODO: probably meant as a colored bar on the left only, but it has always drawn a
+          // full box, so it still does.
+          'mt-4 mb-2 border-3 border-l-divider ps-4 font-semibold text-[#2c3e50]'
         : level === 3
-          ? 'mt-2 mb-2 text-dark fw-medium border-bottom border border-light pb-1'
-          : 'mt-2 mb-1 text-info fw-normal';
+          ? 'my-2 border border-light pb-1 font-medium text-dark'
+          : 'mt-2 mb-1 font-normal text-info';
 
   const Heading = ({ children }: { children?: React.ReactNode }) => (
     <Tag className={className}>{children}</Tag>
@@ -87,24 +107,38 @@ const components = {
   h5: heading(5),
   h6: heading(6),
   p: ({ children }: any) => <p className="mb-2">{children}</p>,
-  ul: ({ children }: any) => <ul className="mb-2 list-disc ps-4">{children}</ul>,
-  ol: ({ children }: any) => <ol className="mb-2 list-decimal ps-4">{children}</ol>,
+  ul: ({ children }: any) => <ul className="mb-2 list-disc ps-6">{children}</ul>,
+  ol: ({ children }: any) => <ol className="mb-2 list-decimal ps-6">{children}</ol>,
   li: ({ children }: any) => <li className="mb-1">{children}</li>,
-  blockquote: ({ children }: any) => (
-    <blockquote className="border-start border-secondary bg-light border-3 py-2 ps-3">
+  strong: ({ children }: any) => <strong className="font-semibold text-navy">{children}</strong>,
+  code: ({ children }: any) => (
+    <code className="rounded-[4px] bg-[#f7fafc] px-[0.4rem] py-[0.2rem] font-['Courier_New',monospace] text-[0.9rem] text-[#2d3748]">
       {children}
-    </blockquote>
+    </code>
+  ),
+  blockquote: ({ children }: any) => (
+    <blockquote className="border-3 border-secondary bg-light py-2 ps-4">{children}</blockquote>
   ),
   a: ({ href, children }: any) => (
     <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary">
       {children}
     </a>
   ),
-  img: ({ src, alt }: any) => <img src={src} alt={alt ?? ''} className="img-fluid my-3" />,
+  img: ({ src, alt }: any) => <img src={src} alt={alt ?? ''} className="my-4 h-auto max-w-full" />,
   table: ({ children }: any) => (
-    <div className="table-responsive my-3">
-      <table className="table-bordered table-sm table">{children}</table>
+    <div className="my-4 overflow-x-auto">
+      <table className="mb-4 w-full border-divider align-top">{children}</table>
     </div>
+  ),
+  thead: ({ children }: any) => <thead className="align-bottom">{children}</thead>,
+  tbody: ({ children }: any) => <tbody className="align-top">{children}</tbody>,
+  tr: ({ children }: any) => <tr className="border-y border-divider">{children}</tr>,
+  // Spread so a column's alignment (`| :---: |`) still reaches the cell as its `style`.
+  th: ({ node: _node, ...props }: any) => (
+    <th {...props} className="border-x border-divider bg-white p-1 text-black" />
+  ),
+  td: ({ node: _node, ...props }: any) => (
+    <td {...props} className="border-x border-divider bg-white p-1 text-black" />
   ),
 };
 

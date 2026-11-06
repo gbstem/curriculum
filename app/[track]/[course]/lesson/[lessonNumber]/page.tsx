@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Button, Spinner } from 'react-bootstrap';
+import Alert, { AlertHeading } from '../../../../components/Alert';
 import EditorModal from '../../../../components/EditorModal';
+import Spinner from '../../../../components/Spinner';
 import VersionHistoryModal from '../../../../components/VersionHistoryModal';
-import { RenderContent } from '../../../../components/renderContent';
+import { LESSON_TEXT, RenderContent } from '../../../../components/renderContent';
 import { tracks } from '../../../../data/tracks';
 import {
   CurriculumItem,
@@ -13,6 +14,10 @@ import {
   getCurriculumByCourseAndLesson,
   saveCurriculum,
 } from '../../../../services/curriculumService';
+
+// The page's main column: two thirds of the page from lg up, centered.
+const ROW = '-mx-3 flex flex-wrap';
+const MAIN_COLUMN = 'mx-auto w-full shrink-0 px-3 lg:w-2/3';
 
 interface PageProps {
   params: Promise<{
@@ -94,11 +99,9 @@ export default function LessonDetailsPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="container mt-5 py-5 text-center">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-        <p className="text-muted mt-3">Loading lesson details...</p>
+      <div className="site-container mt-12 py-12 text-center">
+        <Spinner />
+        <p className="mt-4 text-muted">Loading lesson details...</p>
       </div>
     );
   }
@@ -107,14 +110,14 @@ export default function LessonDetailsPage({ params }: PageProps) {
 
   if (error || !lessonData) {
     return (
-      <div className="container mt-5 py-4">
-        <div className="row">
-          <div className="col-lg-8 mx-auto">
-            <Alert variant="danger" data-testid="error-alert">
-              <Alert.Heading>Error Loading Lesson</Alert.Heading>
+      <div className="site-container mt-12 py-6">
+        <div className={ROW}>
+          <div className={MAIN_COLUMN}>
+            <Alert>
+              <AlertHeading>Error Loading Lesson</AlertHeading>
               <p>{error || 'Lesson not found'}</p>
               <hr />
-              <div className="d-flex justify-content-end">
+              <div className="flex justify-end">
                 <Link href={curriculumPath} className="btn btn-outline-danger">
                   Back to Curriculum
                 </Link>
@@ -145,38 +148,36 @@ export default function LessonDetailsPage({ params }: PageProps) {
   return (
     <div>
       <main>
-        <div className="bg-[#67aeda] p-5 text-center text-white">
-          <h1 className="fw-bold display-5 mb-2">{displayTitle}</h1>
-          <p className="fs-5 mb-0">Lesson {displayLessonNumber}</p>
+        <div className="bg-sky p-12 text-center text-white">
+          <h1 className="mb-2 text-display-5 font-bold">{displayTitle}</h1>
+          <p className="mb-0 text-h5">Lesson {displayLessonNumber}</p>
 
-          <div className="d-flex justify-content-center mt-3 gap-2">
-            <Button
-              variant="outline-light"
-              size="sm"
-              className="btn-primary border-0 shadow-sm"
+          <div className="mt-4 flex justify-center gap-2">
+            <button
+              type="button"
+              className="btn btn-banner btn-sm border-0 shadow-sm"
               onClick={() => setShowEditor(true)}
             >
               <i className="fas fa-edit me-1"></i>
               Edit Lesson
-            </Button>
-            <Button
-              variant="outline-light"
-              size="sm"
-              className="btn-primary border-0 shadow-sm"
+            </button>
+            <button
+              type="button"
+              className="btn btn-banner btn-sm border-0 shadow-sm"
               onClick={() => setShowVersionHistory(true)}
             >
               <i className="fas fa-history me-1"></i>
               Version History
-            </Button>
+            </button>
           </div>
         </div>
 
-        <div className="container mt-5 py-4">
-          <div className="row">
-            <div className="col-lg-8 mx-auto">
-              <div className="card border-0 shadow-sm">
+        <div className="site-container mt-12 py-6">
+          <div className={ROW}>
+            <div className={MAIN_COLUMN}>
+              <div className="relative flex min-w-0 flex-col overflow-hidden rounded-card bg-white wrap-break-word shadow-sm">
                 <div
-                  className="card-body curriculum-content p-md-5 p-4"
+                  className={`flex-auto p-6 md:p-12 ${LESSON_TEXT}`}
                   data-testid="lesson-content"
                 >
                   <RenderContent content={displayContent} />
@@ -184,14 +185,14 @@ export default function LessonDetailsPage({ params }: PageProps) {
               </div>
 
               <div
-                className="d-flex lesson-navigation align-items-center mt-4 mb-5 w-100 shadow-sm"
+                className="mt-6 mb-12 flex w-full items-center rounded-xl bg-[linear-gradient(135deg,#f8f9fa_0%,#e9ecef_100%)] p-6 shadow-sm narrow:flex-col narrow:gap-4"
                 data-testid="lesson-navigation"
               >
                 <div className="flex-1 text-start">
                   {prevLesson && (
                     <Link
                       href={`/${normalizedTrack}/${course}/lesson/${prevLesson.lessonNumber}`}
-                      className="btn btn-primary d-inline-flex align-items-center gap-1 text-white"
+                      className="btn btn-primary inline-flex items-center gap-1 text-white narrow:w-full"
                     >
                       ← Prev
                     </Link>
@@ -200,7 +201,7 @@ export default function LessonDetailsPage({ params }: PageProps) {
                 <div className="flex-1 text-center">
                   <Link
                     href={curriculumPath}
-                    className="btn btn-outline-primary d-inline-flex align-items-center gap-1"
+                    className="btn btn-outline-primary inline-flex items-center gap-1 narrow:w-full"
                   >
                     📚 Curriculum
                   </Link>
@@ -209,7 +210,7 @@ export default function LessonDetailsPage({ params }: PageProps) {
                   {nextLesson && (
                     <Link
                       href={`/${normalizedTrack}/${course}/lesson/${nextLesson.lessonNumber}`}
-                      className="btn btn-primary d-inline-flex align-items-center gap-1 text-white"
+                      className="btn btn-primary inline-flex items-center gap-1 text-white narrow:w-full"
                     >
                       Next →
                     </Link>

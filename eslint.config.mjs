@@ -28,6 +28,7 @@ const eslintConfig = defineConfig([
   eslintPluginPrettierRecommended,
   tailwindcss.configs.recommended,
   {
+    plugins: { tailwindcss },
     settings: {
       tailwindcss: {
         cssConfigPath: './app/globals.css',
@@ -50,10 +51,26 @@ const eslintConfig = defineConfig([
       // rule for the same thing just fights the formatter over ordering it
       // doesn't actually control.
       'tailwindcss/classnames-order': 'off',
-      // Bootstrap and react-bootstrap classnames (d-flex, fw-semibold, ...)
-      // are used alongside Tailwind throughout this codebase, and the rule
-      // can't tell those from an actual typo'd Tailwind class.
-      'tailwindcss/no-custom-classname': 'off',
+      // Fails on any class Tailwind doesn't know, so a typo or a Bootstrap class
+      // (d-flex, mb-3 meaning something else) can't sneak in. The exceptions are
+      // the component classes in globals.css, which the rule can't see, and
+      // Font Awesome's icon classes.
+      'tailwindcss/no-custom-classname': [
+        'error',
+        {
+          whitelist: [
+            'btn',
+            'btn-.*',
+            'input',
+            'input-lg',
+            'select',
+            'select-lg',
+            'lesson-editor',
+            'fa[srb]?',
+            'fa-.*',
+          ],
+        },
+      ],
     },
   },
   // Scoped to the Cypress tree on purpose: the plugin's own `recommended` config

@@ -6,10 +6,16 @@ import '@uiw/react-markdown-preview/markdown.css';
 import '@uiw/react-md-editor/markdown-editor.css';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { CurriculumItem, deleteCurriculum } from '../services/curriculumService';
+import Alert from './Alert';
 import CodeBlockModal from './CodeBlockModal';
-import { RenderContent } from './renderContent';
+import Modal, { ModalBody, ModalFooter, ModalHeader } from './Modal';
+import Spinner from './Spinner';
+import { LESSON_TEXT, RenderContent } from './renderContent';
+
+// The form, its content field and the editor box each pass the dialog's leftover height down to
+// the markdown editor on desktop. On phones the dialog grows with its content instead.
+const EDITOR_FILL = 'flex min-h-0 flex-auto flex-col narrow:flex-none';
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
@@ -63,7 +69,7 @@ const EditorModal: React.FC<EditorModalProps> = ({
         divider.title = 'Drag horizontally to resize editor / preview columns';
         divider.innerHTML = '<span>⋮</span>';
 
-        // Below 768px (matching the stacked mobile layout in curriculum.css) the
+        // At 768px and below (matching the stacked mobile layout in globals.css) the
         // divider resizes editor vs. preview height instead of width.
         const isStackedLayout = () => window.matchMedia('(max-width: 768px)').matches;
 
@@ -198,32 +204,23 @@ const EditorModal: React.FC<EditorModalProps> = ({
 
   if (!isEditor) {
     return (
-      <Modal
-        show={show}
-        onHide={onHide}
-        backdrop="static"
-        keyboard={false}
-        centered
-        data-testid="editor-access-modal"
-      >
-        <Modal.Header className="bg-primary text-white" closeButton>
-          <Modal.Title>
-            <i className="fas fa-lock me-2"></i>
-            Curriculum Editor Access
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Alert variant="danger" data-testid="error-alert" className="mb-0 py-4 text-center">
-            <i className="fas fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+      <Modal show={show} onHide={onHide} staticBackdrop centered testId="editor-access-modal">
+        <ModalHeader className="bg-primary text-white" onClose={onHide}>
+          <i className="fas fa-lock me-2"></i>
+          Curriculum Editor Access
+        </ModalHeader>
+        <ModalBody>
+          <Alert className="mb-0 py-6 text-center">
+            <i className="fas fa-exclamation-triangle fa-2x mb-4 text-danger"></i>
             <h4>Access Denied</h4>
             <p className="mb-0">You need to login as an editor to make edits.</p>
           </Alert>
-          <div className="d-flex justify-content-end mt-3">
-            <Button variant="secondary" onClick={onHide}>
+          <div className="mt-4 flex justify-end">
+            <button type="button" className="btn btn-secondary" onClick={onHide}>
               Close
-            </Button>
+            </button>
           </div>
-        </Modal.Body>
+        </ModalBody>
       </Modal>
     );
   }
@@ -233,33 +230,32 @@ const EditorModal: React.FC<EditorModalProps> = ({
       <Modal
         show={show}
         onHide={onHide}
-        dialogClassName="modal-almost-fullscreen"
-        data-testid="editor-modal"
+        size="fullscreen"
+        testId="editor-modal"
+        className="lesson-editor h-[96vh] narrow:h-auto narrow:min-h-dvh narrow:rounded-none"
       >
-        <Modal.Header className="bg-primary text-white" closeButton>
-          <Modal.Title>
-            <i className="fas fa-edit me-2"></i>
-            Curriculum Editor
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {error && (
-            <Alert
-              variant="danger"
-              data-testid="error-alert"
-              onClose={() => setError('')}
-              dismissible
-            >
-              {error}
-            </Alert>
-          )}
+        <ModalHeader className="bg-primary text-white" onClose={onHide}>
+          <i className="fas fa-edit me-2"></i>
+          Curriculum Editor
+        </ModalHeader>
+        {/* On phones the whole dialog scrolls as one, instead of this body scrolling inside it:
+            a scroller nested in another can stop at its own end and strand the footer below. */}
+        <ModalBody className="flex flex-col overflow-hidden overscroll-contain p-5 narrow:overflow-visible">
+          {error && <Alert onClose={() => setError('')}>{error}</Alert>}
 
-          <Form className="editor-form">
-            <Row className="align-items-md-end mb-3">
-              <Col md={4} className="mb-md-0 mb-3">
-                <Form.Group>
-                  <Form.Label>Course</Form.Label>
-                  <Form.Select value={course} onChange={(e) => setCourse(e.target.value)}>
+          <form className={EDITOR_FILL}>
+            <div className="-mx-3 mb-4 flex flex-wrap md:items-end">
+              <div className="mb-4 w-full shrink-0 px-3 md:mb-0 md:w-1/3">
+                <div>
+                  <label htmlFor="course-select" className="mb-2">
+                    Course
+                  </label>
+                  <select
+                    id="course-select"
+                    className="select"
+                    value={course}
+                    onChange={(e) => setCourse(e.target.value)}
+                  >
                     <option value="">Select Course</option>
                     <option value="python1A">Python 1A</option>
                     <option value="python1B">Python 1B</option>
@@ -295,36 +291,46 @@ const EditorModal: React.FC<EditorModalProps> = ({
                     <option value="environmentalB">Environmental Science B</option>
                     <option value="physicsA">Physics A</option>
                     <option value="physicsB">Physics B</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={2} className="mb-md-0 mb-3">
-                <Form.Group>
-                  <Form.Label>Lesson Number</Form.Label>
-                  <Form.Control
+                  </select>
+                </div>
+              </div>
+              <div className="mb-4 w-full shrink-0 px-3 md:mb-0 md:w-1/6">
+                <div>
+                  <label htmlFor="lesson-number-input" className="mb-2">
+                    Lesson Number
+                  </label>
+                  <input
+                    id="lesson-number-input"
+                    className="input"
                     type="number"
                     value={lessonNumber}
                     onChange={(e) => setLessonNumber(e.target.value)}
                     placeholder="Lesson number"
                   />
-                </Form.Group>
-              </Col>
-              <Col md={6} className="mb-md-0 mb-3">
-                <Form.Group>
-                  <Form.Label>Title</Form.Label>
-                  <Form.Control
+                </div>
+              </div>
+              <div className="mb-4 w-full shrink-0 px-3 md:mb-0 md:w-1/2">
+                <div>
+                  <label htmlFor="title-input" className="mb-2">
+                    Title
+                  </label>
+                  <input
+                    id="title-input"
+                    className="input"
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Lesson title"
                   />
-                </Form.Group>
-              </Col>
-            </Row>
+                </div>
+              </div>
+            </div>
 
-            <Form.Group className="editor-content-group">
-              <Form.Label>Content</Form.Label>
-              <div className="editor-col" data-color-mode="light" data-testid="editor-column">
+            <div className={EDITOR_FILL}>
+              <label htmlFor="content-textarea" className="mb-2">
+                Content
+              </label>
+              <div className={EDITOR_FILL} data-color-mode="light" data-testid="editor-column">
                 <MDEditor
                   value={content}
                   onChange={(val) => setContent(val || '')}
@@ -337,41 +343,35 @@ const EditorModal: React.FC<EditorModalProps> = ({
                   }}
                   components={{
                     preview: (source) => (
-                      <div
-                        className="curriculum-content preview-col min-w-0 p-4"
-                        data-testid="editor-preview"
-                      >
+                      <div className={`min-w-0 p-6 ${LESSON_TEXT}`} data-testid="editor-preview">
                         <RenderContent content={typeof source === 'string' ? source : ''} />
                       </div>
                     ),
                   }}
                 />
               </div>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer data-testid="editor-modal-footer">
-          <Button variant="secondary" onClick={onHide}>
+            </div>
+          </form>
+        </ModalBody>
+        <ModalFooter testId="editor-modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={onHide}>
             Cancel
-          </Button>
+          </button>
           {curriculumData && curriculumData.id && (
-            <Button variant="danger" onClick={handleDelete}>
+            <button type="button" className="btn btn-danger" onClick={handleDelete}>
               <i className="fas fa-trash me-2"></i>
               Delete
-            </Button>
+            </button>
           )}
-          <Button
-            variant="primary"
+          <button
+            type="button"
+            className="btn btn-primary"
             onClick={handleSave}
             disabled={isLoading || !title || !content || !course || !lessonNumber}
           >
             {isLoading ? (
               <>
-                <span
-                  className="spinner-border spinner-border-sm me-2"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
+                <Spinner small className="me-2" />
                 Saving...
               </>
             ) : (
@@ -380,8 +380,8 @@ const EditorModal: React.FC<EditorModalProps> = ({
                 Save
               </>
             )}
-          </Button>
-        </Modal.Footer>
+          </button>
+        </ModalFooter>
       </Modal>
 
       <CodeBlockModal

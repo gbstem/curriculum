@@ -23,7 +23,7 @@ This project relies on several key modern web technologies:
 - **[React](https://react.dev/)**: The underlying JavaScript library for building user interfaces and component-based architecture.
 - **[TypeScript](https://www.typescriptlang.org/)**: A strongly typed programming language that builds on JavaScript, giving you better tooling and strict type-checking at any scale.
 - **[Tailwind CSS](https://tailwindcss.com/)**: A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
-- **[Bootstrap](https://getbootstrap.com/) & [React-Bootstrap](https://react-bootstrap.netlify.app/)**: Used for rapid, responsive UI development. React-Bootstrap replaces the standard Bootstrap JavaScript with native React components (like `Accordion`, `Carousel`, and `Modal`).
+- **[Headless UI](https://headlessui.com/)**: Unstyled, accessible interactive components (the navigation `Menu` and every `Dialog`), styled with the same Tailwind classes as everything else.
 - **[Jest](https://jestjs.io/) & [React Testing Library](https://testing-library.com/)**: Our primary testing suite. We use Jest to write unit tests for components to ensure they render properly and maintain high code coverage, preventing regressions as the codebase is passed between different high school maintainers.
 - **[Cypress](https://www.cypress.io/)**: Used for end-to-end integration tests, ensuring the live site functions correctly in a real browser.
 - **[iron-session](https://github.com/vvo/iron-session)**: Used for secure, stateless, and encrypted session management. Cookies are encrypted on the server side and decrypted automatically.

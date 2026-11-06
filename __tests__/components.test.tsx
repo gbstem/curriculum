@@ -89,7 +89,7 @@ describe('TrackCard component', () => {
     expect(linkBtn).toHaveAttribute('href', '/cs/scratch1A');
   });
 
-  it('applies w-100 class to single link for math/science/engineering courses', () => {
+  it('makes the single link full width for math/science/engineering courses', () => {
     const mathCourse = {
       ...dummyCourse,
       id: 'math1A',
@@ -99,7 +99,7 @@ describe('TrackCard component', () => {
     render(<TrackCard course={mathCourse} />);
 
     const linkBtn = screen.getByRole('link', { name: 'Start Teaching' });
-    expect(linkBtn).toHaveClass('w-100');
+    expect(linkBtn).toHaveClass('w-full');
   });
 
   it('renders multi-link courses (like WebDev) correctly', () => {

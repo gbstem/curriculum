@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Modal, Button, Table, Badge, Alert } from 'react-bootstrap';
 import {
   getVersionHistory,
   restoreVersion,
   CurriculumVersion,
 } from '../services/curriculumService';
+import Alert from './Alert';
 import DiffModal from './DiffModal';
+import Modal, { ModalBody, ModalFooter, ModalHeader } from './Modal';
+import Spinner from './Spinner';
 import { useSession } from '@/lib/useSession';
 
 interface VersionHistoryModalProps {
@@ -97,112 +99,103 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
 
   return (
     <>
-      <Modal show={show} onHide={onHide} size="lg" centered data-testid="version-history-modal">
-        <Modal.Header className="bg-info text-white" closeButton>
-          <Modal.Title>
-            <i className="fas fa-history me-2"></i>
-            Version History
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {error && (
-            <Alert
-              variant="danger"
-              data-testid="error-alert"
-              onClose={() => setError('')}
-              dismissible
-            >
-              {error}
-            </Alert>
-          )}
+      <Modal show={show} onHide={onHide} size="lg" centered testId="version-history-modal">
+        <ModalHeader className="bg-info text-white" onClose={onHide}>
+          <i className="fas fa-history me-2"></i>
+          Version History
+        </ModalHeader>
+        <ModalBody>
+          {error && <Alert onClose={() => setError('')}>{error}</Alert>}
 
-          <div className="mb-3">
+          <div className="mb-4">
             <h6>Course: {course}</h6>
             <h6>Lesson: {lessonNumber}</h6>
           </div>
 
           {loading ? (
-            <div className="py-4 text-center">
-              <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
+            <div className="py-6 text-center">
+              <Spinner />
               <p className="mt-2">Loading version history...</p>
             </div>
           ) : versions.length === 0 ? (
-            <div className="py-4 text-center">
-              <i className="fas fa-history fa-3x text-muted mb-3"></i>
+            <div className="py-6 text-center">
+              <i className="fas fa-history fa-3x mb-4 text-muted"></i>
               <p>No version history found for this lesson.</p>
             </div>
           ) : (
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>Version</th>
-                  <th>Date</th>
-                  <th>Title</th>
-                  <th>Diff</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {versions.map((version, index) => (
-                  <tr key={version.id}>
-                    <td>
-                      <Badge bg={index === 0 ? 'success' : 'secondary'}>
-                        {index === 0 ? 'Current' : `v${versions.length - index}`}
-                      </Badge>
-                    </td>
-                    <td>{formatDate(version.versionTimestamp)}</td>
-                    <td>{version.title || 'Untitled'}</td>
-                    <td>
-                      {index > 0 && (
-                        <Button
-                          variant="outline-info"
-                          size="sm"
-                          onClick={() => handleShowDiff(version)}
-                        >
-                          <i className="fas fa-columns me-1"></i>
-                          Diff
-                        </Button>
-                      )}
-                    </td>
-                    <td>
-                      {index > 0 && (
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          onClick={() => handleRestore(version.id!)}
-                          disabled={restoring === version.id}
-                        >
-                          {restoring === version.id ? (
-                            <>
-                              <span
-                                className="spinner-border spinner-border-sm me-1"
-                                role="status"
-                                aria-hidden="true"
-                              ></span>
-                              Restoring...
-                            </>
-                          ) : (
-                            <>
-                              <i className="fas fa-undo me-1"></i>
-                              Restore
-                            </>
-                          )}
-                        </Button>
-                      )}
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="mb-4 w-full border-divider align-top text-black">
+                <thead className="align-bottom">
+                  <tr className="border-y border-divider">
+                    {['Version', 'Date', 'Title', 'Diff', 'Actions'].map((heading) => (
+                      <th key={heading} className="border-x border-divider bg-white p-2">
+                        {heading}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody className="align-top">
+                  {versions.map((version, index) => (
+                    <tr key={version.id} className="group border-y border-divider">
+                      <td className="border-x border-divider bg-white p-2 group-odd:bg-[#f2f2f2] group-hover:bg-[#ececec]">
+                        <span
+                          className={`inline-block rounded-md px-3 py-2 text-center text-xs leading-none font-bold whitespace-nowrap text-white ${index === 0 ? 'bg-success' : 'bg-secondary'}`}
+                        >
+                          {index === 0 ? 'Current' : `v${versions.length - index}`}
+                        </span>
+                      </td>
+                      <td className="border-x border-divider bg-white p-2 group-odd:bg-[#f2f2f2] group-hover:bg-[#ececec]">
+                        {formatDate(version.versionTimestamp)}
+                      </td>
+                      <td className="border-x border-divider bg-white p-2 group-odd:bg-[#f2f2f2] group-hover:bg-[#ececec]">
+                        {version.title || 'Untitled'}
+                      </td>
+                      <td className="border-x border-divider bg-white p-2 group-odd:bg-[#f2f2f2] group-hover:bg-[#ececec]">
+                        {index > 0 && (
+                          <button
+                            type="button"
+                            className="btn btn-outline-info btn-sm"
+                            onClick={() => handleShowDiff(version)}
+                          >
+                            <i className="fas fa-columns me-1"></i>
+                            Diff
+                          </button>
+                        )}
+                      </td>
+                      <td className="border-x border-divider bg-white p-2 group-odd:bg-[#f2f2f2] group-hover:bg-[#ececec]">
+                        {index > 0 && (
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary btn-sm"
+                            onClick={() => handleRestore(version.id!)}
+                            disabled={restoring === version.id}
+                          >
+                            {restoring === version.id ? (
+                              <>
+                                <Spinner small className="me-1" />
+                                Restoring...
+                              </>
+                            ) : (
+                              <>
+                                <i className="fas fa-undo me-1"></i>
+                                Restore
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
+        </ModalBody>
+        <ModalFooter>
+          <button type="button" className="btn btn-secondary" onClick={onHide}>
             Close
-          </Button>
-        </Modal.Footer>
+          </button>
+        </ModalFooter>
       </Modal>
 
       {/* Diff Modal */}
@@ -217,28 +210,32 @@ const VersionHistoryModal: React.FC<VersionHistoryModalProps> = ({
       <Modal
         show={showAccessDeniedModal}
         onHide={() => setShowAccessDeniedModal(false)}
-        backdrop="static"
-        keyboard={false}
+        staticBackdrop
         centered
-        data-testid="restore-blocked-modal"
+        testId="restore-blocked-modal"
       >
-        <Modal.Header className="bg-danger text-white" closeButton>
-          <Modal.Title>
-            <i className="fas fa-exclamation-triangle me-2"></i>
-            Restore Blocked
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="py-3 text-center">
+        <ModalHeader
+          className="bg-danger text-white"
+          onClose={() => setShowAccessDeniedModal(false)}
+        >
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          Restore Blocked
+        </ModalHeader>
+        <ModalBody>
+          <div className="py-4 text-center">
             <h4 className="text-danger">Access Denied</h4>
-            <p className="text-muted mt-2">You need to login as an editor to make edits.</p>
+            <p className="mt-2 text-muted">You need to login as an editor to make edits.</p>
           </div>
-          <div className="d-flex justify-content-end mt-3">
-            <Button variant="secondary" onClick={() => setShowAccessDeniedModal(false)}>
+          <div className="mt-4 flex justify-end">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setShowAccessDeniedModal(false)}
+            >
               Close
-            </Button>
+            </button>
           </div>
-        </Modal.Body>
+        </ModalBody>
       </Modal>
     </>
   );
