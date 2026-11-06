@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { Course } from '../data/tracks';
+import { CARD_LIFT } from './cardStyles';
 
 interface TrackCardProps {
   course: Course;
@@ -10,17 +11,17 @@ export default function TrackCard({ course }: TrackCardProps) {
   const isMultiLink = course.links.length > 1;
 
   return (
-    <div className="card hover-lift h-100 border-0 shadow-sm" data-testid="course-card">
-      <div className="card-body d-flex flex-column p-4">
+    <div className={CARD_LIFT} data-testid="course-card">
+      <div className="flex flex-auto flex-col p-6">
         {/* Header */}
-        <div className="d-flex align-items-center mb-3">
-          <div className="me-3 rounded p-3" style={{ background: course.bgOpacity }}>
+        <div className="mb-4 flex items-center">
+          <div className="me-4 rounded-md p-4" style={{ background: course.bgOpacity }}>
             <i className={`${course.icon} fa-2x`} style={{ color: course.color }}></i>
           </div>
           <div>
-            <h4 className="card-title fw-bold mb-1">{course.title}</h4>
+            <h4 className="mb-1 font-bold">{course.title}</h4>
             <span
-              className="badge"
+              className="inline-block rounded-md px-3 py-2 text-center text-xs leading-none font-bold whitespace-nowrap"
               style={{
                 background: course.color,
                 color: course.isDarkText ? '#212529' : '#fff',
@@ -32,14 +33,14 @@ export default function TrackCard({ course }: TrackCardProps) {
         </div>
 
         {/* Description */}
-        <p className="card-text text-muted mb-3">{course.description}</p>
+        <p className="mb-4 text-muted">{course.description}</p>
 
         {/* Syllabus / Features list */}
         {course.syllabus && course.syllabus.length > 0 && (
-          <ul className="list-unstyled mb-4">
+          <ul className="mb-6 list-none pl-0">
             {course.syllabus.map((item, index) => (
               <li key={index}>
-                <i className="fas fa-check text-success me-2"></i>
+                <i className="fas fa-check me-2 text-success"></i>
                 {item}
               </li>
             ))}
@@ -47,11 +48,11 @@ export default function TrackCard({ course }: TrackCardProps) {
         )}
 
         {/* Buttons / Actions */}
-        <div className={`mt-auto ${isMultiLink ? 'd-flex gap-2' : ''}`}>
+        <div className={`mt-auto ${isMultiLink ? 'flex gap-2' : ''}`}>
           {course.links.map((link, idx) => {
             let btnClass = 'btn';
             if (isMultiLink) {
-              btnClass += ' flex-fill';
+              btnClass += ' flex-auto';
             } else {
               // Ensure full-width buttons for standard math/science/engineering track pages
               if (
@@ -60,7 +61,7 @@ export default function TrackCard({ course }: TrackCardProps) {
                 course.id.startsWith('physics') ||
                 course.id.startsWith('engineering')
               ) {
-                btnClass += ' w-100';
+                btnClass += ' w-full';
               }
             }
 

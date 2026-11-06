@@ -1,26 +1,573 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Space+Mono&display=swap');
 @import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Lesson pages and the editor need wider breakpoints than this in a few spots: see `narrow`. */
+@custom-variant narrow (@media (max-width: 768px));
+
+/*
+ * Design tokens. Every value here becomes Tailwind classes: `--color-muted` gives `text-muted`,
+ * `bg-muted`, `border-muted`; `--text-h4` gives `text-h4`; and so on.
+ *
+ * The values were carried over from the Bootstrap theme this site used to load, so the site
+ * looks the same as it did then. Change them here, not with one-off arbitrary values.
+ */
+@theme {
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-space-mono: 'Space Mono', monospace;
+  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  /* Bootstrap's breakpoints rather than Tailwind's defaults (640/768/1024/1280/1536). */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1400px;
+
+  --color-navy: #1d2256;
+  --color-sky: #67aeda;
+  --color-primary: #0d6efd;
+  --color-secondary: #6c757d;
+  --color-success: #198754;
+  --color-info: #0dcaf0;
+  --color-warning: #ffc107;
+  --color-danger: #dc3545;
+  --color-dark: #212529;
+  --color-muted: rgb(33 37 41 / 0.75);
+  --color-light: #f8f9fa;
+  --color-divider: #dee2e6;
+
+  /* Heading sizes grow with the viewport up to a cap reached at 1200px wide. */
+  --text-h1: min(calc(1.375rem + 1.5vw), 2.5rem);
+  --text-h2: min(calc(1.325rem + 0.9vw), 2rem);
+  --text-h3: min(calc(1.3rem + 0.6vw), 1.75rem);
+  --text-h4: min(calc(1.275rem + 0.3vw), 1.5rem);
+  --text-h5: 1.25rem;
+  --text-h6: 1rem;
+  --text-display-4: min(calc(1.475rem + 2.7vw), 3.5rem);
+  --text-display-5: min(calc(1.425rem + 2.1vw), 3rem);
+  --text-display-6: min(calc(1.375rem + 1.5vw), 2.5rem);
+  /* Introductory paragraph under a heading; pair with `font-light`. */
+  --text-lead: 1.25rem;
+  /* Bootstrap's line height for headings, also used by base h1-h6 below. */
+  --leading-heading: 1.2;
+
+  --radius-card: 15px;
+  --shadow-sm: 0 0.125rem 0.25rem rgb(0 0 0 / 0.075);
+  --shadow-lg: 0 1rem 3rem rgb(0 0 0 / 0.175);
+  --shadow-lift: 0 10px 25px rgb(0 0 0 / 0.15);
+  --shadow-dialog: 0 20px 40px rgb(0 0 0 / 0.15);
+
+  --animate-spin: spin 0.75s linear infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/*
+ * Default styles for plain HTML elements. These sit in Tailwind's `base` layer, so any utility
+ * class on an element overrides them: `<p class="mb-0">` really has no bottom margin.
+ */
+@layer base {
+  @media (prefers-reduced-motion: no-preference) {
+    :root {
+      scroll-behavior: smooth;
+    }
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-dark);
+    background-color: var(--color-light);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: var(--leading-heading);
+  }
+  h1 {
+    font-family: var(--font-montserrat);
+    font-size: var(--text-h1);
+    font-weight: 700;
+  }
+  h2 {
+    font-family: var(--font-montserrat);
+    font-size: var(--text-h2);
+    font-weight: 700;
+  }
+  h3 {
+    font-size: var(--text-h3);
+  }
+  h4 {
+    font-size: var(--text-h4);
+  }
+  h5 {
+    font-size: var(--text-h5);
+  }
+  h6 {
+    font-size: var(--text-h6);
+  }
+
+  p,
+  ol,
+  ul,
+  blockquote,
+  pre {
+    margin-bottom: 1rem;
+  }
+  ol,
+  ul {
+    padding-left: 2rem;
+  }
+  :is(ol, ul) :is(ol, ul) {
+    margin-bottom: 0;
+  }
+
+  p,
+  a,
+  li,
+  label,
+  strong {
+    font-family: var(--font-montserrat);
+    font-size: 1.2rem;
+  }
+
+  b,
+  strong {
+    font-weight: bolder;
+  }
+
+  small {
+    font-size: 0.875em;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+  a:hover {
+    opacity: 0.8;
+  }
+
+  hr {
+    margin: 1rem 0;
+    border-top-width: 1px;
+    opacity: 0.25;
+  }
+
+  pre {
+    overflow: auto;
+    font-size: 0.875em;
+  }
+  code {
+    font-size: 0.875em;
+    color: #d63384;
+    overflow-wrap: break-word;
+  }
+  pre code {
+    font-size: inherit;
+    color: inherit;
+    word-break: normal;
+  }
+
+  img,
+  svg {
+    vertical-align: middle;
+  }
+
+  th {
+    text-align: inherit;
+    text-align: -webkit-match-parent;
+  }
+
+  label {
+    display: inline-block;
+  }
+
+  button:not(:disabled),
+  [role='button'] {
+    cursor: pointer;
+  }
+  button:focus:not(:focus-visible) {
+    outline: 0;
+  }
+
+  textarea {
+    resize: vertical;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /*
+   * Buttons, for both <button> and links styled as one: `btn` plus a color (`btn-primary`,
+   * `btn-outline-danger`, ...) and optionally a size (`btn-sm`, `btn-lg`). Each color sets the
+   * variables below; utilities such as `text-white` or `w-full` still override them.
+   */
+  .btn {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    font-family: var(--font-montserrat);
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--btn-color, var(--color-dark));
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    user-select: none;
+    background-color: var(--btn-bg, transparent);
+    border: 1px solid var(--btn-border, transparent);
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: var(--btn-hover-color, var(--btn-color, var(--color-dark)));
+      background-color: var(--btn-hover-bg, var(--btn-bg, transparent));
+      border-color: var(--btn-hover-border, var(--btn-border, transparent));
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgb(0 0 0 / 0.15);
+    }
+    &:focus-visible {
+      outline: 0;
+      color: var(--btn-hover-color, var(--btn-color, var(--color-dark)));
+      background-color: var(--btn-hover-bg, var(--btn-bg, transparent));
+      border-color: var(--btn-hover-border, var(--btn-border, transparent));
+      box-shadow: 0 0 0 0.25rem rgb(var(--btn-focus-rgb, 108 117 125) / 0.5);
+    }
+    &:active {
+      color: var(--btn-hover-color, var(--btn-color, var(--color-dark)));
+      background-color: var(--btn-active-bg, var(--btn-hover-bg, var(--btn-bg, transparent)));
+      border-color: var(--btn-active-border, var(--btn-hover-border, transparent));
+    }
+    &:disabled {
+      pointer-events: none;
+      color: var(--btn-disabled-color, var(--btn-color, var(--color-dark)));
+      background-color: var(--btn-disabled-bg, var(--btn-bg, transparent));
+      border-color: var(--btn-disabled-border, var(--btn-border, transparent));
+      opacity: 0.65;
+    }
+  }
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+  }
+  .btn-lg {
+    padding: 0.5rem 1rem;
+  }
+
+  /* Navy at rest, lighting up blue on hover. */
+  .btn-primary {
+    --btn-color: white;
+    --btn-bg: var(--color-navy);
+    --btn-border: var(--color-primary);
+    --btn-hover-bg: #0b5ed7;
+    --btn-hover-border: #0a58ca;
+    --btn-active-bg: #0a58ca;
+    --btn-active-border: #0a53be;
+    --btn-disabled-bg: var(--color-primary);
+    --btn-focus-rgb: 49 132 253;
+  }
+  .btn-secondary {
+    --btn-color: white;
+    --btn-bg: var(--color-secondary);
+    --btn-border: var(--color-secondary);
+    --btn-hover-bg: #5c636a;
+    --btn-hover-border: #565e64;
+    --btn-active-bg: #565e64;
+    --btn-active-border: #51585e;
+    --btn-focus-rgb: 130 138 145;
+  }
+  .btn-success {
+    --btn-color: white;
+    --btn-bg: var(--color-success);
+    --btn-border: var(--color-success);
+    --btn-hover-bg: #157347;
+    --btn-hover-border: #146c43;
+    --btn-active-bg: #146c43;
+    --btn-active-border: #13653f;
+    --btn-focus-rgb: 60 153 110;
+  }
+  .btn-info {
+    --btn-color: black;
+    --btn-bg: var(--color-info);
+    --btn-border: var(--color-info);
+    --btn-hover-bg: #31d2f2;
+    --btn-hover-border: #25cff2;
+    --btn-active-bg: #3dd5f3;
+    --btn-active-border: #25cff2;
+    --btn-focus-rgb: 11 172 204;
+  }
+  .btn-warning {
+    --btn-color: black;
+    --btn-bg: var(--color-warning);
+    --btn-border: var(--color-warning);
+    --btn-hover-bg: #ffca2c;
+    --btn-hover-border: #ffc720;
+    --btn-active-bg: #ffcd39;
+    --btn-active-border: #ffc720;
+    --btn-focus-rgb: 217 164 6;
+  }
+  .btn-danger {
+    --btn-color: white;
+    --btn-bg: var(--color-danger);
+    --btn-border: var(--color-danger);
+    --btn-hover-bg: #bb2d3b;
+    --btn-hover-border: #b02a37;
+    --btn-active-bg: #b02a37;
+    --btn-active-border: #a52834;
+    --btn-focus-rgb: 225 83 97;
+  }
+  .btn-outline-primary {
+    --btn-color: var(--color-primary);
+    --btn-border: var(--color-primary);
+    --btn-hover-color: white;
+    --btn-hover-bg: var(--color-primary);
+    --btn-focus-rgb: 13 110 253;
+  }
+  .btn-outline-secondary {
+    --btn-color: var(--color-secondary);
+    --btn-border: var(--color-secondary);
+    --btn-hover-color: white;
+    --btn-hover-bg: var(--color-secondary);
+    --btn-focus-rgb: 108 117 125;
+  }
+  .btn-outline-info {
+    --btn-color: var(--color-info);
+    --btn-border: var(--color-info);
+    --btn-hover-color: black;
+    --btn-hover-bg: var(--color-info);
+    --btn-focus-rgb: 13 202 240;
+  }
+  .btn-outline-danger {
+    --btn-color: var(--color-danger);
+    --btn-border: var(--color-danger);
+    --btn-hover-color: white;
+    --btn-hover-bg: var(--color-danger);
+    --btn-focus-rgb: 220 53 69;
+  }
+  /* For a button on a colored banner: navy at rest, white on hover. */
+  .btn-banner {
+    --btn-color: var(--color-light);
+    --btn-bg: var(--color-navy);
+    --btn-border: transparent;
+    --btn-hover-color: black;
+    --btn-hover-bg: var(--color-light);
+    --btn-focus-rgb: 248 249 250;
+  }
+
+  /* Text inputs and textareas. */
+  .input {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-dark);
+    appearance: none;
+    background-color: white;
+    background-clip: padding-box;
+    border: 1px solid var(--color-divider);
+    border-radius: 0.375rem;
+    transition:
+      border-color 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
+
+    &::placeholder {
+      color: var(--color-muted);
+    }
+    &:focus {
+      border-color: var(--color-navy);
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgb(29 34 86 / 0.25);
+    }
+  }
+
+  .input-lg {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    border-radius: 0.5rem;
+  }
+
+  /* Dropdowns (<select>), with the chevron drawn as a background image. */
+  .select {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-dark);
+    appearance: none;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    border: 1px solid var(--color-divider);
+    border-radius: 0.375rem;
+    transition:
+      border-color 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out;
+
+    &:focus {
+      border-color: #86b7fe;
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 0.25);
+    }
+  }
+  .select-lg {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.25rem;
+    border-radius: 0.5rem;
+  }
+}
+
+/* Centered, padded page column whose width steps up at each breakpoint. */
+@utility site-container {
+  width: 100%;
+  padding-inline: 0.75rem;
+  margin-inline: auto;
+
+  @variant sm {
+    max-width: 540px;
+  }
+  @variant md {
+    max-width: 720px;
+  }
+  @variant lg {
+    max-width: 960px;
+  }
+  @variant xl {
+    max-width: 1140px;
+  }
+  @variant 2xl {
+    max-width: 1320px;
+  }
+}
+
+/*
+ * Layout overrides for the markdown editor library (@uiw/react-md-editor) inside the lesson
+ * editor dialog. They target the library's own class names, and stay outside Tailwind's layers
+ * (with `!important`) because the library's stylesheet is unlayered too and would otherwise win.
+ *
+ * Desktop: editor and preview sit side by side, split by the draggable divider EditorModal adds,
+ * which sets `--split-percent`. Phones (768px and below): they stack, and the divider sets
+ * `--split-percent-y` instead.
+ */
+.lesson-editor .w-md-editor {
+  flex: 1 1 auto !important;
+  height: 100% !important;
+  min-height: 350px;
+  box-shadow: none;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+}
+
+.lesson-editor .w-md-editor-content {
+  display: flex !important;
+  flex-direction: row !important;
+  position: relative !important;
+  height: calc(100% - 44px) !important;
+}
+
+.lesson-editor .w-md-editor-area {
+  width: var(--split-percent, 50%) !important;
+  flex: none !important;
+  height: 100% !important;
+}
+
+.lesson-editor .w-md-editor-drag-divider {
+  width: 12px;
+  cursor: col-resize;
+  background: #f1f3f5;
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: none;
+  z-index: 10;
+  flex-shrink: 0;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.lesson-editor .w-md-editor-drag-divider:hover,
+.lesson-editor .w-md-editor-drag-divider:active {
+  background: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.lesson-editor .w-md-editor-drag-divider span {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.lesson-editor .w-md-editor-drag-divider:hover span,
+.lesson-editor .w-md-editor-drag-divider:active span {
+  color: #ffffff;
+}
+
+.lesson-editor .w-md-editor-preview {
+  width: calc(100% - var(--split-percent, 50%) - 12px) !important;
+  flex: none !important;
+  height: 100% !important;
+  overflow-y: auto;
+}
+
+.lesson-editor .w-md-editor-input {
+  height: 100% !important;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .lesson-editor .w-md-editor {
+    height: auto !important;
+    min-height: 0;
+  }
+
+  .lesson-editor .w-md-editor-content {
+    flex-direction: column !important;
+    height: 60vh !important;
+  }
+
+  .lesson-editor .w-md-editor-area {
+    width: 100% !important;
+    height: var(--split-percent-y, 50%) !important;
+  }
+
+  /* The library positions the preview pane absolutely (top/right/bottom: 0) to sit beside the
+     editor on desktop, which would overlap the editor once stacked in a column. */
+  .lesson-editor .w-md-editor-preview {
+    width: 100% !important;
+    height: calc(100% - var(--split-percent-y, 50%) - 16px) !important;
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+  }
+
+  /* The desktop divider turned sideways: dragging it resizes editor vs. preview height. */
+  .lesson-editor .w-md-editor-drag-divider {
+    width: 100%;
+    height: 16px;
+    cursor: row-resize;
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .lesson-editor .w-md-editor-drag-divider span {
+    display: inline-block;
+    transform: rotate(90deg);
+  }
 }

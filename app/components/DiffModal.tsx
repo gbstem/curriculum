@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
 import ReactDiffViewer from 'react-diff-viewer';
+import Modal, { ModalBody, ModalFooter, ModalHeader } from './Modal';
 
 interface DiffModalProps {
   show: boolean;
@@ -24,14 +24,12 @@ const DiffModal: React.FC<DiffModalProps> = ({ show, onHide, currentContent, ver
   if (!version) return null;
 
   return (
-    <Modal show={show} onHide={onHide} size="xl" centered data-testid="diff-modal">
-      <Modal.Header closeButton className="bg-info text-white">
-        <Modal.Title>
-          <i className="fas fa-columns me-2"></i>
-          Diff: Current vs. {version.title || 'Untitled'}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="max-h-[70vh] overflow-y-auto">
+    <Modal show={show} onHide={onHide} size="xl" centered testId="diff-modal">
+      <ModalHeader className="bg-info text-white" onClose={onHide}>
+        <i className="fas fa-columns me-2"></i>
+        Diff: Current vs. {version.title || 'Untitled'}
+      </ModalHeader>
+      <ModalBody className="max-h-[70vh] overflow-y-auto p-4">
         {mounted && (
           <ReactDiffViewer
             oldValue={version.content || ''}
@@ -60,12 +58,12 @@ const DiffModal: React.FC<DiffModalProps> = ({ show, onHide, currentContent, ver
             }}
           />
         )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+      </ModalBody>
+      <ModalFooter>
+        <button type="button" className="btn btn-secondary" onClick={onHide}>
           Close
-        </Button>
-      </Modal.Footer>
+        </button>
+      </ModalFooter>
     </Modal>
   );
 };

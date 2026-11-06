@@ -17,35 +17,27 @@ const SOCIAL_LINKS = [
 const Footer = () => {
   return (
     <footer>
-      <section className="bg-dark py-5 text-center text-white">
-        <div className="container">
+      <section className="bg-dark py-12 text-center text-white">
+        <div className="site-container flow-root">
           <a href="mailto:contact@gbstem.org" className="text-primary">
             <u>contact@gbstem.org</u>
           </a>
-          <div className="row justify-content-center">
-            <ul className="clear socials d-flex justify-content-center mt-4 list-none p-0 text-blue-600">
-              {SOCIAL_LINKS.map(({ href, label, Icon }) => (
-                <li key={label} className="mx-3">
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={label}
-                    className="text-white"
-                  >
-                    <Icon size={35} aria-hidden="true" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul className="mt-6 flex list-none justify-center p-0">
+            {SOCIAL_LINKS.map(({ href, label, Icon }) => (
+              <li key={label} className="mx-4">
+                <a href={href} target="_blank" rel="noreferrer" aria-label={label}>
+                  <Icon size={35} aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <p className="mt-4 text-white">
+        <p className="mt-6">
           The Greater Boston STEM Program is an independent non-profit 501(c)3 organization, EIN
           88-1760321
         </p>
-        <small className="d-block mt-5 text-white">
+        <small className="mt-12 block">
           © {COPYRIGHT_YEAR} The Greater Boston STEM Program, all rights reserved
         </small>
       </section>

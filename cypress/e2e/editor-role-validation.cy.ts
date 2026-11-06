@@ -322,7 +322,7 @@ describe('Editor Role Validation (Section E)', () => {
 
 describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
   // iPhone 12 Pro logical viewport - comfortably below the 768px breakpoint
-  // where curriculum.css switches the editor/preview split from side-by-side
+  // where globals.css switches the editor/preview split from side-by-side
   // columns to a stacked, scrolling layout.
   beforeEach(() => {
     cy.viewport(390, 844);
@@ -445,7 +445,14 @@ describe('Editor Modal Mobile Responsive Layout (Section E, mobile)', () => {
         bubbles: true,
         cancelable: true,
       });
-      cy.wrap($divider).trigger('touchend', { bubbles: true, cancelable: true, force: true });
+      // A real touchend always lists the lifted finger in changedTouches, and the dialog's
+      // outside-tap check reads it.
+      cy.wrap($divider).trigger('touchend', {
+        changedTouches: [{ clientX, clientY: startClientY + 150 }],
+        bubbles: true,
+        cancelable: true,
+        force: true,
+      });
     });
 
     // Verify the vertical split variable was applied (the horizontal one,

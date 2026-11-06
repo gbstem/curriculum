@@ -20,7 +20,7 @@ export default function TrackPage({ params }: PageProps) {
   }
 
   return (
-    <div className="container-fluid p-0">
+    <div>
       <TrackHero
         title={trackData.title}
         description={trackData.longDescription}
@@ -29,12 +29,10 @@ export default function TrackPage({ params }: PageProps) {
         isDarkText={trackData.isDarkText}
       />
 
-      <div className="container py-5">
-        <div className="row g-4">
+      <div className="site-container py-12">
+        <div className="grid gap-6 lg:grid-cols-2">
           {trackData.courses.map((course) => (
-            <div key={course.id} className="col-lg-6">
-              <TrackCard course={course} />
-            </div>
+            <TrackCard key={course.id} course={course} />
           ))}
         </div>
       </div>

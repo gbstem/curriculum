@@ -3,7 +3,8 @@
 import { useSession } from '@/lib/useSession';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { Suspense, useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import Modal, { ModalBody, ModalHeader } from '../components/Modal';
+import Spinner from '../components/Spinner';
 
 // Only accept a same-origin path (starting with a single '/', not '//') to
 // avoid an open redirect via this param.
@@ -61,75 +62,69 @@ function LoginPageInner() {
   };
 
   if (!mounted) {
-    return (
-      <div className="d-flex justify-content-center align-items-center min-h-screen bg-[#f4f6f9]" />
-    );
+    return <div className="flex min-h-screen items-center justify-center bg-[#f4f6f9]" />;
   }
 
   return (
-    <div className="d-flex justify-content-center align-items-center min-h-screen bg-[#f4f6f9]">
-      <Modal show={true} onHide={() => {}} backdrop="static" keyboard={false} centered>
-        <Modal.Header className="bg-primary py-4 text-center text-white">
-          <Modal.Title className="fs-4 fw-bold w-100">
-            <i className="fas fa-lock me-2"></i>
-            gbSTEM Curriculum Access
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="p-4">
-          <div className="mb-4 text-center">
-            <img
-              src="/images/penguin.png"
-              alt="gbSTEM Logo"
-              className="img-fluid mb-3 max-w-[150px]"
-            />
-            <h4 className="fw-bold">Welcome to gbSTEM Curriculum</h4>
+    <div className="flex min-h-screen items-center justify-center bg-[#f4f6f9]">
+      <Modal show={true} onHide={() => {}} staticBackdrop centered testId="login-modal">
+        <ModalHeader
+          className="bg-primary py-6 text-center text-white"
+          titleClassName="w-full font-bold"
+        >
+          <i className="fas fa-lock me-2"></i>
+          gbSTEM Curriculum Access
+        </ModalHeader>
+        <ModalBody className="p-6">
+          <div className="mb-6 text-center">
+            <img src="/images/penguin.png" alt="gbSTEM Logo" className="mb-4 h-auto max-w-full" />
+            <h4 className="font-bold">Welcome to gbSTEM Curriculum</h4>
             <p className="text-muted">
               Please enter your role and password to access the curriculum.
             </p>
           </div>
 
-          <Form onSubmit={handleLoginSubmit}>
-            <Form.Group className="mb-3" controlId="role-select">
-              <Form.Label className="fw-semibold">Role</Form.Label>
-              <Form.Select
+          <form onSubmit={handleLoginSubmit}>
+            <div className="mb-4">
+              <label htmlFor="role-select" className="mb-2 font-semibold">
+                Role
+              </label>
+              <select
+                id="role-select"
                 value={role}
                 onChange={(e) => setRole(e.target.value as 'viewer' | 'editor')}
-                size="lg"
-                className="mb-3"
+                className="select select-lg mb-4"
               >
                 <option value="viewer">Viewer</option>
                 <option value="editor">Editor</option>
-              </Form.Select>
-            </Form.Group>
+              </select>
+            </div>
 
-            <Form.Group className="mb-3" controlId="password-input">
-              <Form.Label className="fw-semibold">Password</Form.Label>
-              <Form.Control
+            <div className="mb-4">
+              <label htmlFor="password-input" className="mb-2 font-semibold">
+                Password
+              </label>
+              <input
+                id="password-input"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
-                autoFocus
-                size="lg"
+                data-autofocus
+                className="input input-lg"
               />
-              {error && <div className="text-danger fw-medium mt-2">{error}</div>}
-            </Form.Group>
+              {error && <div className="mt-2 font-medium text-danger">{error}</div>}
+            </div>
 
-            <div className="d-grid mt-4">
-              <Button
+            <div className="mt-6 grid">
+              <button
                 type="submit"
-                variant="primary"
-                size="lg"
-                className="fw-semibold py-2"
+                className="btn btn-primary btn-lg py-2 font-semibold"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
+                    <Spinner small className="me-2" />
                     Verifying...
                   </>
                 ) : (
@@ -138,10 +133,10 @@ function LoginPageInner() {
                     Access Curriculum
                   </>
                 )}
-              </Button>
+              </button>
             </div>
-          </Form>
-        </Modal.Body>
+          </form>
+        </ModalBody>
       </Modal>
     </div>
   );

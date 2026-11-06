@@ -2,14 +2,19 @@
 
 import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Button, Spinner } from 'react-bootstrap';
+import Alert, { AlertHeading } from '../../components/Alert';
 import EditorModal from '../../components/EditorModal';
+import Spinner from '../../components/Spinner';
 import {
   CurriculumItem,
   getCurriculumByCourse,
   saveCurriculum,
 } from '../../services/curriculumService';
 import { tracks } from '../../data/tracks';
+
+// The page's main column: two thirds of the page from lg up, centered.
+const ROW = '-mx-3 flex flex-wrap';
+const MAIN_COLUMN = 'mx-auto w-full shrink-0 px-3 lg:w-2/3';
 
 interface PageProps {
   params: Promise<{ track: string; course: string }>;
@@ -102,13 +107,11 @@ export default function CourseLessonsPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="container mt-5 py-5">
-        <div className="row">
-          <div className="col-lg-8 mx-auto text-center">
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
-            <p className="text-muted mt-3">Loading lessons list...</p>
+      <div className="site-container mt-12 py-12">
+        <div className={ROW}>
+          <div className={`${MAIN_COLUMN} text-center`}>
+            <Spinner />
+            <p className="mt-4 text-muted">Loading lessons list...</p>
           </div>
         </div>
       </div>
@@ -117,14 +120,14 @@ export default function CourseLessonsPage({ params }: PageProps) {
 
   if (error) {
     return (
-      <div className="container mt-5">
-        <div className="row">
-          <div className="col-lg-8 mx-auto">
-            <Alert variant="danger" data-testid="error-alert">
-              <Alert.Heading>Error Loading Curriculum</Alert.Heading>
+      <div className="site-container mt-12">
+        <div className={ROW}>
+          <div className={MAIN_COLUMN}>
+            <Alert>
+              <AlertHeading>Error Loading Curriculum</AlertHeading>
               <p>{error}</p>
               <hr />
-              <div className="d-flex justify-content-end">
+              <div className="flex justify-end">
                 <Link href={`/${normalizedTrack}`} className="btn btn-outline-danger">
                   Back to Courses
                 </Link>
@@ -141,28 +144,29 @@ export default function CourseLessonsPage({ params }: PageProps) {
   return (
     <div>
       <main>
-        <div className="bg-[#67aeda] p-5 text-center text-white">
-          <h1 className="display-4 fw-bold">{courseTitle} Curriculum</h1>
-          <h3 className="fw-light mb-0 font-extralight">Complete Course Guide</h3>
-          <div className="mt-3">
-            <Button
-              variant="outline-light"
-              className="btn-primary border-0 shadow-sm"
-              size="sm"
+        <div className="bg-sky p-12 text-center text-white">
+          <h1 className="text-display-4 font-bold narrow:text-[2.5rem]">
+            {courseTitle} Curriculum
+          </h1>
+          <h3 className="mb-0 font-light">Complete Course Guide</h3>
+          <div className="mt-4">
+            <button
+              type="button"
+              className="btn btn-banner btn-sm border-0 shadow-sm"
               onClick={() => setShowEditor(true)}
             >
               <i className="fas fa-plus me-1"></i>
               Add New Lesson
-            </Button>
+            </button>
           </div>
         </div>
 
-        <div className="container mt-5 py-4">
-          <div className="row">
-            <div className="col-lg-8 mx-auto">
+        <div className="site-container mt-12 py-6">
+          <div className={ROW}>
+            <div className={MAIN_COLUMN}>
               {curriculum.length === 0 ? (
-                <div className="rounded bg-white py-5 text-center shadow-sm">
-                  <i className="fas fa-book fa-3x text-muted mb-3"></i>
+                <div className="rounded-md bg-white py-12 text-center shadow-sm">
+                  <i className="fas fa-book fa-3x mb-4 text-muted"></i>
                   <h4>
                     No lessons found for {courseTitle}
                     {fallLessonCount !== null && fallLessonCount > 0 && fallCourseData && (
@@ -179,33 +183,32 @@ export default function CourseLessonsPage({ params }: PageProps) {
                       </>
                     )}
                   </h4>
-                  <p className="text-muted mb-4">Start by adding your first lesson!</p>
-                  <Button
-                    variant="primary"
-                    className="btn-primary"
+                  <p className="mb-6 text-muted">Start by adding your first lesson!</p>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
                     onClick={() => setShowEditor(true)}
                   >
                     <i className="fas fa-plus me-1"></i>
                     Add First Lesson
-                  </Button>
+                  </button>
                 </div>
               ) : (
-                <div className="row g-3">
+                <div className="grid gap-4 md:grid-cols-2">
                   {sortedLessons.map((lesson) => (
-                    <div key={lesson.id} className="col-md-6">
-                      <Link
-                        href={`/${normalizedTrack}/${course}/lesson/${lesson.lessonNumber}`}
-                        className="btn btn-primary btn-lg lesson-link d-flex align-items-center justify-content-center min-h-16 w-100 text-white shadow-sm"
-                        data-testid="lesson-link"
-                      >
-                        Lesson {lesson.lessonNumber}: {lesson.title}
-                      </Link>
-                    </div>
+                    <Link
+                      key={lesson.id}
+                      href={`/${normalizedTrack}/${course}/lesson/${lesson.lessonNumber}`}
+                      className="btn btn-primary btn-lg flex min-h-16 w-full items-center justify-center text-center whitespace-pre-line text-white shadow-sm hover:transform-[scale(1.02)]"
+                      data-testid="lesson-link"
+                    >
+                      Lesson {lesson.lessonNumber}: {lesson.title}
+                    </Link>
                   ))}
                 </div>
               )}
 
-              <div className="mt-5 mb-4 text-center">
+              <div className="mt-12 mb-6 text-center">
                 <Link href={`/${normalizedTrack}`} className="btn btn-secondary">
                   ← Back to {trackData.shortTitle} Courses
                 </Link>

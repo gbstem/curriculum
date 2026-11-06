@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Modal, { ModalBody, ModalFooter, ModalHeader } from './Modal';
 
 interface CodeBlockModalProps {
   show: boolean;
@@ -73,45 +73,50 @@ const CodeBlockModal: React.FC<CodeBlockModalProps> = ({ show, onHide, onInsert 
   ];
 
   return (
-    <Modal show={show} onHide={onHide} size="lg" centered data-testid="code-block-modal">
-      <Modal.Header className="bg-dark text-white" closeButton>
-        <Modal.Title>
-          <i className="fas fa-code me-2"></i>
-          Insert Code Block
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Language</Form.Label>
-              <Form.Select value={language} onChange={(e) => setLanguage(e.target.value)}>
-                {supportedLanguages.map((lang) => (
-                  <option key={lang} value={lang}>
-                    {getLanguageDisplayName(lang)}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Col>
-        </Row>
+    <Modal show={show} onHide={onHide} size="lg" centered testId="code-block-modal">
+      <ModalHeader className="bg-dark text-white" onClose={onHide}>
+        <i className="fas fa-code me-2"></i>
+        Insert Code Block
+      </ModalHeader>
+      <ModalBody>
+        <div className="-mx-3 flex flex-wrap">
+          <div className="mb-4 w-full shrink-0 px-3 md:w-1/2">
+            <label htmlFor="code-block-language" className="mb-2">
+              Language
+            </label>
+            <select
+              id="code-block-language"
+              className="select"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              {supportedLanguages.map((lang) => (
+                <option key={lang} value={lang}>
+                  {getLanguageDisplayName(lang)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Code</Form.Label>
-          <Form.Control
-            as="textarea"
+        <div className="mb-4">
+          <label htmlFor="code-block-code" className="mb-2">
+            Code
+          </label>
+          <textarea
+            id="code-block-code"
             rows={10}
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder={`Enter your ${getLanguageDisplayName(language)} code here...`}
-            className="font-monospace"
+            className="input font-mono"
           />
-        </Form.Group>
+        </div>
 
         {code && (
-          <Form.Group className="mb-3">
-            <Form.Label>Preview</Form.Label>
-            <div className="rounded border">
+          <div className="mb-4">
+            <label className="mb-2">Preview</label>
+            <div className="rounded-md border border-divider">
               <SyntaxHighlighter
                 language={language === 'scratchblocks' ? 'text' : language}
                 style={tomorrow}
@@ -123,18 +128,23 @@ const CodeBlockModal: React.FC<CodeBlockModalProps> = ({ show, onHide, onInsert 
                 {code}
               </SyntaxHighlighter>
             </div>
-          </Form.Group>
+          </div>
         )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+      </ModalBody>
+      <ModalFooter>
+        <button type="button" className="btn btn-secondary" onClick={onHide}>
           Cancel
-        </Button>
-        <Button variant="primary" onClick={handleInsert} disabled={!code.trim()}>
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleInsert}
+          disabled={!code.trim()}
+        >
           <i className="fas fa-plus me-2"></i>
           Insert Code Block
-        </Button>
-      </Modal.Footer>
+        </button>
+      </ModalFooter>
     </Modal>
   );
 };
