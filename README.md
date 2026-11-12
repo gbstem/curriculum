@@ -222,7 +222,7 @@ Below is an alphabetical list of the top-level directories and significant confi
 - **`.prettierrc`**: Configuration rules for Prettier, ensuring consistent code formatting across the project.
 - **`.yarnrc.yml`**: Configuration file for Yarn Berry (v4 package manager), defining package management settings.
 - **`AGENTS.md`**: Custom rules and guidelines for AI coding agents interacting with the repository.
-- **`CLAUDE.md`**: Quick reference guide and developer instructions for AI coding assistants.
+- **`CLAUDE.md`**: The conventions every AI coding session needs, linking to topic guides in `docs/` for the details.
 - **`cypress.config.ts`**: The configuration file for our Cypress end-to-end testing environment.
 - **`eslint.config.mjs`**: Configuration rules for ESLint, ensuring consistent code style and checking for common errors across the project.
 - **`firebase.json`**: Configuration for local Firebase Emulator Suite ports and services.
