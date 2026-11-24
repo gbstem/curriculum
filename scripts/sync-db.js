@@ -18,7 +18,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
-const admin = require('firebase-admin');
+const { cert, deleteApp, getApps, initializeApp } = require('firebase-admin/app');
+const { Timestamp, getFirestore } = require('firebase-admin/firestore');
 
 // Load local environment variables from .env.local
 const envPath = path.resolve(process.cwd(), '.env.local');
@@ -58,8 +59,8 @@ function getAdminApp(isProduction) {
   }
 
   // Delete existing apps to avoid "already exists" errors during re-init if any
-  for (const app of admin.apps) {
-    if (app) app.delete();
+  for (const app of getApps()) {
+    if (app) deleteApp(app);
   }
 
   if (isProduction) {
@@ -81,36 +82,36 @@ function getAdminApp(isProduction) {
       !privateKey.includes('...') &&
       clientEmail
     ) {
-      return admin.initializeApp({
-        credential: admin.credential.cert({
+      return initializeApp({
+        credential: cert({
           projectId,
           clientEmail,
           privateKey,
         }),
       });
     } else {
-      return admin.initializeApp({
+      return initializeApp({
         projectId,
       });
     }
   } else {
-    return admin.initializeApp({
+    return initializeApp({
       projectId: 'demo-gbstem-curriculum',
     });
   }
 }
 
-// Convert serialized Timestamp objects back to admin.firestore.Timestamp objects
+// Convert serialized Timestamp objects back to Timestamp objects
 function restoreTimestamps(data) {
   if (data === null || data === undefined) return data;
   if (typeof data === 'object') {
     // Handle admin SDK timestamp (with underscores)
     if (typeof data._seconds === 'number' && typeof data._nanoseconds === 'number') {
-      return new admin.firestore.Timestamp(data._seconds, data._nanoseconds);
+      return new Timestamp(data._seconds, data._nanoseconds);
     }
     // Handle client SDK timestamp (without underscores)
     if (typeof data.seconds === 'number' && typeof data.nanoseconds === 'number') {
-      return new admin.firestore.Timestamp(data.seconds, data.nanoseconds);
+      return new Timestamp(data.seconds, data.nanoseconds);
     }
     const result = Array.isArray(data) ? [] : {};
     for (const key in data) {
@@ -145,7 +146,7 @@ async function pull() {
   if (hasServiceAccount) {
     console.log('Connecting to production Firestore using Service Account (Admin SDK)...');
     const app = getAdminApp(true);
-    const db = app.firestore();
+    const db = getFirestore(app);
 
     for (const colName of COLLECTIONS) {
       console.log(`Fetching collection "${colName}" from production...`);
@@ -213,7 +214,7 @@ async function seed(useProd) {
       : `Connecting to Firestore emulator (seeding from synthetic fixture ${seedFile})...`
   );
   const app = getAdminApp(false);
-  const db = app.firestore();
+  const db = getFirestore(app);
 
   const backupData = JSON.parse(fs.readFileSync(seedFile, 'utf8'));
 

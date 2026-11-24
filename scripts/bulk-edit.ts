@@ -5,7 +5,8 @@
 //   yarn bulk-edit --write       # Execute bulk edit and write changes to Firestore
 //   yarn bulk-edit --dry-run=false
 //
-import * as admin from 'firebase-admin';
+import { cert, getApps, initializeApp } from 'firebase-admin/app';
+import { FieldValue, getFirestore, type Firestore } from 'firebase-admin/firestore';
 import fs from 'fs';
 import path from 'path';
 import { tracks } from '../app/data/tracks';
@@ -33,9 +34,9 @@ export function loadEnvLocal(): void {
 }
 
 // Get or initialize Firebase Admin Firestore instance
-export function getFirestoreDb(): admin.firestore.Firestore {
+export function getFirestoreDb(): Firestore {
   loadEnvLocal();
-  if (!admin.apps.length) {
+  if (!getApps().length) {
     const projectId =
       process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
@@ -50,20 +51,20 @@ export function getFirestoreDb(): admin.firestore.Firestore {
       clientEmail &&
       projectId
     ) {
-      admin.initializeApp({
-        credential: admin.credential.cert({
+      initializeApp({
+        credential: cert({
           projectId,
           clientEmail,
           privateKey,
         }),
       });
     } else {
-      admin.initializeApp({
+      initializeApp({
         projectId: projectId || 'demo-gbstem-curriculum',
       });
     }
   }
-  return admin.firestore();
+  return getFirestore();
 }
 
 /**
@@ -105,7 +106,7 @@ export interface LessonDocument {
 export interface bulkEditOptions {
   editFn?: EditFunction;
   dryRun?: boolean;
-  db?: admin.firestore.Firestore;
+  db?: Firestore;
   backupPath?: string;
 }
 
@@ -163,7 +164,7 @@ export async function runBulkEdit(options: bulkEditOptions = {}): Promise<bulkEd
   console.log('============================================================\n');
 
   let rawDocs: LessonDocument[] = [];
-  let dbInstance: admin.firestore.Firestore | null = options.db || null;
+  let dbInstance: Firestore | null = options.db || null;
 
   if (!dbInstance && !options.backupPath) {
     try {
@@ -275,7 +276,7 @@ export async function runBulkEdit(options: bulkEditOptions = {}): Promise<bulkEd
 
         const versionData = {
           ...editData,
-          versionTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+          versionTimestamp: FieldValue.serverTimestamp(),
           versionNumber: Date.now(),
         };
 
@@ -285,7 +286,7 @@ export async function runBulkEdit(options: bulkEditOptions = {}): Promise<bulkEd
         // 2. Update existing lesson document in curriculum
         await dbInstance.collection('curriculum').doc(doc.id).update({
           content: newContent,
-          lastModified: admin.firestore.FieldValue.serverTimestamp(),
+          lastModified: FieldValue.serverTimestamp(),
         });
 
         result.writtenDocs++;

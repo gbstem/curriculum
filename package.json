@@ -27,8 +27,8 @@
     "@fortawesome/fontawesome-free": "^7.3.1",
     "@headlessui/react": "^2.2.10",
     "@uiw/react-md-editor": "^4.2.3",
-    "firebase": "^12.19.0",
-    "firebase-admin": "^13.10.0",
+    "firebase": "^13.4.0",
+    "firebase-admin": "^14.5.1",
     "iron-session": "^9.1.0",
     "next": "16.4.6",
     "react": "19.3.1",
@@ -98,5 +98,8 @@
       "built": true
     }
   },
-  "packageManager": "yarn@4.18.1"
+  "packageManager": "yarn@4.18.1",
+  "resolutions": {
+    "jwks-rsa": "^3.2.2"
+  }
 }

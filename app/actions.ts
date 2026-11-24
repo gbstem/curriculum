@@ -11,7 +11,7 @@
 
 import { SessionData } from '@/lib/session';
 import { sessionOptions } from '@/lib/sessionOptions';
-import * as admin from 'firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
 import { adminDb } from './firebase-admin';
@@ -247,7 +247,7 @@ export async function saveCurriculumAction(curriculumData: CurriculumItem): Prom
 
     const versionData = {
       ...cleanData,
-      versionTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+      versionTimestamp: FieldValue.serverTimestamp(),
       versionNumber: Date.now(),
     };
 
@@ -265,7 +265,7 @@ export async function saveCurriculumAction(curriculumData: CurriculumItem): Prom
           .doc(id)
           .update({
             ...cleanData,
-            lastModified: admin.firestore.FieldValue.serverTimestamp(),
+            lastModified: FieldValue.serverTimestamp(),
           }),
         `updating existing curriculum item ${sanitizeForLog(id)}`
       );
@@ -275,8 +275,8 @@ export async function saveCurriculumAction(curriculumData: CurriculumItem): Prom
       const docRef = await withTimeout(
         adminDb.collection(CURRICULUM_COLLECTION).add({
           ...cleanData,
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          lastModified: admin.firestore.FieldValue.serverTimestamp(),
+          createdAt: FieldValue.serverTimestamp(),
+          lastModified: FieldValue.serverTimestamp(),
         }),
         'creating new curriculum item'
       );

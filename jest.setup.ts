@@ -37,25 +37,23 @@ export const mockAdminDb = {
 (global as any).mockCollection = mockCollection;
 (global as any).mockAdminDb = mockAdminDb;
 
-// Global mock for firebase-admin and its firestore components
-jest.mock('firebase-admin', () => {
-  const adminNamespace = {
-    initializeApp: jest.fn(),
-    apps: [] as any[],
-    credential: {
-      cert: jest.fn(),
-    },
-    firestore: jest.fn(() => (global as any).mockAdminDb),
-    auth: jest.fn(() => ({})),
-  };
-  (adminNamespace.firestore as any).FieldValue = {
-    serverTimestamp: jest.fn(() => 'mock-server-timestamp'),
-  };
-  return adminNamespace;
-});
+// Global mocks for the modular firebase-admin entry points
+jest.mock('firebase-admin/app', () => ({
+  initializeApp: jest.fn(),
+  getApps: jest.fn(() => []),
+  cert: jest.fn(),
+}));
 
-// Mock firebase-admin/firestore to avoid import resolution issues in tests
-jest.mock('firebase-admin/firestore', () => ({}));
+jest.mock('firebase-admin/auth', () => ({
+  getAuth: jest.fn(() => ({})),
+}));
+
+jest.mock('firebase-admin/firestore', () => ({
+  getFirestore: jest.fn(() => (global as any).mockAdminDb),
+  FieldValue: {
+    serverTimestamp: jest.fn(() => 'mock-server-timestamp'),
+  },
+}));
 
 // Global mock for firebase/app
 jest.mock('firebase/app', () => ({
