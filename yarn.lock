@@ -2779,9 +2779,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@modelcontextprotocol/sdk@npm:^1.24.0":
-  version: 1.32.1
-  resolution: "@modelcontextprotocol/sdk@npm:1.32.1"
+"@modelcontextprotocol/sdk@npm:^1.32.2":
+  version: 1.32.2
+  resolution: "@modelcontextprotocol/sdk@npm:1.32.2"
   dependencies:
     "@hono/node-server": "npm:^1.19.9 || ^2.0.5"
     ajv: "npm:^8.17.1"
@@ -2808,7 +2808,7 @@ __metadata:
       optional: true
     zod:
       optional: false
-  checksum: 10c0/8b6c8ff6aa5358aeb316fedfa2094a4241ce12d98a0f818cee42510ec9149fed21fc75244c5f0e8cb453337f243c09fa8a90425cd2533fd481964d8583a1f0c9
+  checksum: 10c0/31d045fe1121242ee7871f5fc9d5dc1f2ad622d9a9750fab5c14d1a1da227dd7225b16df0e8f22783356981255b22f5da84d1f74985df264ad79f2f00cc6ac7b
   languageName: node
   linkType: hard
 
@@ -4364,9 +4364,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/react-md-editor@npm:^4.2.3":
-  version: 4.2.3
-  resolution: "@uiw/react-md-editor@npm:4.2.3"
+"@uiw/react-md-editor@npm:^4.2.4":
+  version: 4.2.4
+  resolution: "@uiw/react-md-editor@npm:4.2.4"
   dependencies:
     "@babel/runtime": "npm:^7.14.6"
     "@uiw/react-markdown-preview": "npm:^5.2.0"
@@ -4375,7 +4375,7 @@ __metadata:
   peerDependencies:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 10c0/93895f08a00b01a02835575dae68f34e9d8ba4b86b15e60a90ab2c1700a5ef8d90c00cef0fca11f10d6d4c7ca998d8b8cbf0327ec6007b98705a0e0e38718a7c
+  checksum: 10c0/03060e603044829d1b37122aea10b0f866bbf9ffaeb34099f43f252ac4b90a16f8781c155cdecd1d8283553929fceeecaf17049c47a0fc8aee0cad8e12794e8c
   languageName: node
   linkType: hard
 
@@ -6428,16 +6428,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress-terminal-report@npm:^7.4.0":
-  version: 7.4.0
-  resolution: "cypress-terminal-report@npm:7.4.0"
+"cypress-terminal-report@npm:^7.5.0":
+  version: 7.5.0
+  resolution: "cypress-terminal-report@npm:7.5.0"
   dependencies:
     chalk: "npm:^4.0.0"
     compare-versions: "npm:^6.1.1"
+    flatted: "npm:^3.4.4"
     superstruct: "npm:0.14.2"
   peerDependencies:
     cypress: ">=10.0.0"
-  checksum: 10c0/d96853c771d1bc11ecbcedaed68019d7c7604e6b2a928688766b7925b84042a9596b1b029653d02d7c84d935efe535a12ef13922eee24afbfd0f5f9cdf8440a7
+  checksum: 10c0/b48f45fe04603e0b8c38cd3413fbeb8646b2f0476af6299039e0dc01527845fe810c9b26970311c16901aee962152f89d48ff850692f2d39d436b6ad94795d01
   languageName: node
   linkType: hard
 
@@ -7271,9 +7272,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-cypress@npm:^7.0.5":
-  version: 7.0.5
-  resolution: "eslint-plugin-cypress@npm:7.0.5"
+"eslint-plugin-cypress@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "eslint-plugin-cypress@npm:7.2.0"
   dependencies:
     globals: "npm:^17.14.0"
   peerDependencies:
@@ -7282,7 +7283,7 @@ __metadata:
   peerDependenciesMeta:
     "@typescript-eslint/parser":
       optional: true
-  checksum: 10c0/aa13ba2463ecebf1db332038f7ec3cabacf5c7e7b3ea4ccbcd8358355dcbd340d30b73886599fa983b8c354951378b45e246ddb3b7ce60372255f95eb375e0c3
+  checksum: 10c0/a60b0b6e347035b2d5627e484db2da5edd82c0f9d696f3057ab52b0f9f5dcc0c04dcf2547b6554899c5c0a906030063bd3d34a42e42bde682a61d7e1651a517c
   languageName: node
   linkType: hard
 
@@ -7443,15 +7444,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-testing-library@npm:^7.16.2":
-  version: 7.16.2
-  resolution: "eslint-plugin-testing-library@npm:7.16.2"
+"eslint-plugin-testing-library@npm:^7.16.3":
+  version: 7.16.3
+  resolution: "eslint-plugin-testing-library@npm:7.16.3"
   dependencies:
     "@typescript-eslint/scope-manager": "npm:^8.56.0"
     "@typescript-eslint/utils": "npm:^8.56.0"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
-  checksum: 10c0/ea99f41eee929e0b139d927f8a89bef7ffe3bd33c51fc3c2c93d8e9d146e146395e1f7bb8a34d4b5bd9a1ffe7a1879959fc171e952c731e1e8310b079d9d5c97
+  checksum: 10c0/356ad4363102d34cf0280f8e6c098349aafed324cda5a4955dd366292183f92c7507079259783a37bf007b8d2f368be919a9d88508bb39e662d40f99def80ff1
   languageName: node
   linkType: hard
 
@@ -8143,16 +8144,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-tools@npm:^15.36.0":
-  version: 15.36.0
-  resolution: "firebase-tools@npm:15.36.0"
+"firebase-tools@npm:^15.37.0":
+  version: 15.37.0
+  resolution: "firebase-tools@npm:15.37.0"
   dependencies:
     "@electric-sql/pglite": "npm:^0.3.3"
     "@electric-sql/pglite-tools": "npm:^0.2.8"
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
     "@google-cloud/pubsub": "npm:^5.2.0"
     "@inquirer/prompts": "npm:^7.10.1"
-    "@modelcontextprotocol/sdk": "npm:^1.24.0"
+    "@modelcontextprotocol/sdk": "npm:^1.32.2"
     abort-controller: "npm:^3.0.0"
     ajv: "npm:^8.17.1"
     ajv-formats: "npm:3.0.1"
@@ -8206,7 +8207,7 @@ __metadata:
     tcp-port-used: "npm:^1.0.2"
     tmp: "npm:^0.2.3"
     triple-beam: "npm:^1.3.0"
-    undici: "npm:^6.19.0"
+    undici: "npm:^6.29.1"
     update-notifier-cjs: "npm:^5.1.6"
     winston: "npm:^3.0.0"
     winston-transport: "npm:^4.4.0"
@@ -8215,7 +8216,7 @@ __metadata:
     zod: "npm:^4.0.0"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/ab830fcc1d6165cd70324b7f138e873def72878a94901aaf4baf9a673b59ef810ddf70ffcb1d41e1adaabdc0031a0e084a056b179b7757f598ff05dd6856104e
+  checksum: 10c0/035b6ab2d227843bbee37bf069b5df0374084dea21c8bce91b2a91a3f4c5903a3c267d9028d45028b6751e1ccca107b90fbad4f2e1cd48a4c4486d08276f7704
   languageName: node
   linkType: hard
 
@@ -8267,7 +8268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flatted@npm:^3.4.2":
+"flatted@npm:^3.4.2, flatted@npm:^3.4.4":
   version: 3.4.4
   resolution: "flatted@npm:3.4.4"
   checksum: 10c0/a3a52a88ea5a4c333e5a1f097dcd87a037fa31c236a77cf46222c2aa4036ef895ab9bc76138a66d9dc22bdb3652128f9598cd26e7439561bf19f67276e2bc37e
@@ -8494,22 +8495,22 @@ __metadata:
     "@types/node": "npm:^26"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
-    "@uiw/react-md-editor": "npm:^4.2.3"
+    "@uiw/react-md-editor": "npm:^4.2.4"
     cypress: "npm:^16.3.0"
-    cypress-terminal-report: "npm:^7.4.0"
+    cypress-terminal-report: "npm:^7.5.0"
     eslint: "npm:^10"
     eslint-config-next: "npm:16.4.6"
     eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-cypress: "npm:^7.0.5"
+    eslint-plugin-cypress: "npm:^7.2.0"
     eslint-plugin-jest: "npm:^29.17.1"
     eslint-plugin-prettier: "npm:^5.5.7"
     eslint-plugin-tailwindcss: "npm:^4.4.0"
-    eslint-plugin-testing-library: "npm:^7.16.2"
+    eslint-plugin-testing-library: "npm:^7.16.3"
     firebase: "npm:^13.4.0"
     firebase-admin: "npm:^14.5.1"
-    firebase-tools: "npm:^15.36.0"
+    firebase-tools: "npm:^15.37.0"
     husky: "npm:^9.1.7"
-    iron-session: "npm:^9.1.0"
+    iron-session: "npm:^9.1.1"
     jest: "npm:^30.5.2"
     jest-environment-jsdom: "npm:^30.5.2"
     next: "npm:16.4.6"
@@ -9658,13 +9659,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iron-session@npm:^9.1.0":
-  version: 9.1.0
-  resolution: "iron-session@npm:9.1.0"
+"iron-session@npm:^9.1.1":
+  version: 9.1.1
+  resolution: "iron-session@npm:9.1.1"
   dependencies:
     cookie: "npm:^2.0.1"
     iron-webcrypto: "npm:^2.0.0"
-  checksum: 10c0/e91126984329688de9101e201c8861d2fc4acc5fe85ab88d8ec4ceaf72e4c6a9093fad32ed219496b95397921fb3f7dc68ed7b028d2ddea34dedda421b31f78d
+  checksum: 10c0/c7f1d5230662e7c2c8aba78ecb934095b0705b84f54f51393eeb2bae26f20a984b5e00eb4790fc9c6fc6980500cd077d1a6d47625384b07323a6717d0530e672
   languageName: node
   linkType: hard
 
@@ -16259,7 +16260,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^6.19.0":
+"undici@npm:^6.29.1":
   version: 6.29.1
   resolution: "undici@npm:6.29.1"
   checksum: 10c0/2d6970289fcbaca69a484e968fbb5e6fdadf7d9bff30bb5476f71b619d143ec76df1c75a309ac3cb3b3d78238793c613dcaad47dc9d92b63f9e8e73b86ffec23
